@@ -1,64 +1,230 @@
-import Image from "next/image";
+'use client';
+
+import { Button } from './components/Button';
+import { Polaroid } from './components/Polaroid';
+import { Newsletter } from './components/Newsletter';
+import { FadeUp, FadeLeft, FadeRight, FadeIn, StaggerContainer, StaggerItem } from './components/ScrollAnimations';
+
+function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      aria-label={label}
+      className="size-10 flex items-center justify-center hover:opacity-70 transition-opacity"
+    >
+      {children}
+    </a>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <div className="min-h-screen bg-[#F7F3EE] relative overflow-hidden pt-[130px]">
+      {/* Decorative elements */}
+      <img src="/building-block.svg" alt="" className="absolute w-[400px] top-[35%] right-[35%] pointer-events-none" />
+      <img src="/building-block.svg" alt="" className="absolute w-[400px] bottom-[-10%] right-[50%] pointer-events-none" />
+      <img src="/building-block-blue.svg" alt="" className="absolute w-[400px] bottom-[5%] right-[10%] pointer-events-none" />
+      <img src="/building-block-blue.svg" alt="" className="absolute w-[400px] top-[10%] right-[10%] pointer-events-none" />
+
+      <main className="relative z-10">
+        {/* Hero Section - Full viewport height */}
+        <section className="min-h-screen px-[52px] pt-8">
+          <div className="max-w-[874px]">
+            {/* Hero Headline */}
+            <FadeUp>
+              <h1 className="text-[92px] font-medium leading-none tracking-[-0.075em] text-black mb-8">
+                Where NYU&apos;s Founders & Investors Are Made
+              </h1>
+            </FadeUp>
+
+            {/* Description */}
+            <FadeUp delay={0.15}>
+              <p className="text-[28px] font-medium leading-snug tracking-[-0.075em] text-black max-w-[639px] mb-8">
+                Established in 2003, EEG is NYU Stern&apos;s premier entrepreneurship club,
+                immersing students in the worlds of entrepreneurship, technology, and venture
+                capital. To stay up to date, subscribe to our newsletter and follow our socials below!
+              </p>
+            </FadeUp>
+
+            {/* Email Subscription */}
+            <FadeUp delay={0.3}>
+              <div className="flex flex-col gap-4">
+                <Newsletter variant="light" />
+
+                {/* Social Icons */}
+                <div className="flex items-center gap-5">
+                  {/* LinkedIn */}
+                  <SocialIcon href="https://linkedin.com" label="LinkedIn">
+                    <svg className="size-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M33.3333 5H6.66667C5.74619 5 5 5.74619 5 6.66667V33.3333C5 34.2538 5.74619 35 6.66667 35H33.3333C34.2538 35 35 34.2538 35 33.3333V6.66667C35 5.74619 34.2538 5 33.3333 5ZM14.1667 30H9.16667V16.6667H14.1667V30ZM11.6667 14.1667C10.0983 14.1667 8.83333 12.9017 8.83333 11.3333C8.83333 9.765 10.0983 8.5 11.6667 8.5C13.235 8.5 14.5 9.765 14.5 11.3333C14.5 12.9017 13.235 14.1667 11.6667 14.1667ZM30.8333 30H25.8333V23.3333C25.8333 21.4917 25.8 19.1667 23.3333 19.1667C20.8333 19.1667 20.5 21.1667 20.5 23.1667V30H15.5V16.6667H20.3333V18.8333H20.4C21.0667 17.5667 22.7333 16.2333 25.2333 16.2333C30.3 16.2333 30.8333 19.5333 30.8333 23.8333V30Z" fill="black"/>
+                    </svg>
+                  </SocialIcon>
+
+                  {/* X (Twitter) */}
+                  <SocialIcon href="https://x.com" label="X">
+                    <svg className="size-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M29.6875 6.25H34.3125L23.6562 18.4375L36.25 33.75H26.25L18.5938 23.9062L9.84375 33.75H5.15625L16.5625 20.625L4.375 6.25H14.6875L21.5625 15.1562L29.6875 6.25ZM27.8125 30.9375H30.3125L12.8125 8.75H10.1562L27.8125 30.9375Z" fill="black"/>
+                    </svg>
+                  </SocialIcon>
+
+                  {/* Instagram */}
+                  <SocialIcon href="https://instagram.com" label="Instagram">
+                    <svg className="size-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20 10.625C16.875 10.625 16.4844 10.6406 15.2656 10.6969C14.0469 10.7531 13.2031 10.9531 12.4531 11.25C11.6875 11.5469 11.0156 11.9844 10.4375 12.5625C9.85938 13.1406 9.42188 13.8125 9.125 14.5781C8.82812 15.3281 8.62813 16.1719 8.57188 17.3906C8.51563 18.6094 8.5 19 8.5 22.125C8.5 25.25 8.51563 25.6406 8.57188 26.8594C8.62813 28.0781 8.82812 28.9219 9.125 29.6719C9.42188 30.4375 9.85938 31.1094 10.4375 31.6875C11.0156 32.2656 11.6875 32.7031 12.4531 33C13.2031 33.2969 14.0469 33.4969 15.2656 33.5531C16.4844 33.6094 16.875 33.625 20 33.625C23.125 33.625 23.5156 33.6094 24.7344 33.5531C25.9531 33.4969 26.7969 33.2969 27.5469 33C28.3125 32.7031 28.9844 32.2656 29.5625 31.6875C30.1406 31.1094 30.5781 30.4375 30.875 29.6719C31.1719 28.9219 31.3719 28.0781 31.4281 26.8594C31.4844 25.6406 31.5 25.25 31.5 22.125C31.5 19 31.4844 18.6094 31.4281 17.3906C31.3719 16.1719 31.1719 15.3281 30.875 14.5781C30.5781 13.8125 30.1406 13.1406 29.5625 12.5625C28.9844 11.9844 28.3125 11.5469 27.5469 11.25C26.7969 10.9531 25.9531 10.7531 24.7344 10.6969C23.5156 10.6406 23.125 10.625 20 10.625ZM20 12.6875C23.0625 12.6875 23.4219 12.7031 24.625 12.7594C25.7344 12.8125 26.3438 13.0031 26.7469 13.1656C27.2812 13.3813 27.6719 13.6406 28.0781 14.0469C28.4844 14.4531 28.7438 14.8438 28.9594 15.3781C29.1219 15.7813 29.3125 16.3906 29.3656 17.5C29.4219 18.7031 29.4375 19.0625 29.4375 22.125C29.4375 25.1875 29.4219 25.5469 29.3656 26.75C29.3125 27.8594 29.1219 28.4688 28.9594 28.8719C28.7438 29.4062 28.4844 29.7969 28.0781 30.2031C27.6719 30.6094 27.2812 30.8688 26.7469 31.0844C26.3438 31.2469 25.7344 31.4375 24.625 31.4906C23.4219 31.5469 23.0625 31.5625 20 31.5625C16.9375 31.5625 16.5781 31.5469 15.375 31.4906C14.2656 31.4375 13.6562 31.2469 13.2531 31.0844C12.7188 30.8688 12.3281 30.6094 11.9219 30.2031C11.5156 29.7969 11.2562 29.4062 11.0406 28.8719C10.8781 28.4688 10.6875 27.8594 10.6344 26.75C10.5781 25.5469 10.5625 25.1875 10.5625 22.125C10.5625 19.0625 10.5781 18.7031 10.6344 17.5C10.6875 16.3906 10.8781 15.7813 11.0406 15.3781C11.2562 14.8438 11.5156 14.4531 11.9219 14.0469C12.3281 13.6406 12.7188 13.3813 13.2531 13.1656C13.6562 13.0031 14.2656 12.8125 15.375 12.7594C16.5781 12.7031 16.9375 12.6875 20 12.6875ZM20 16.375C17.0938 16.375 14.75 18.7188 14.75 21.625C14.75 24.5312 17.0938 26.875 20 26.875C22.9062 26.875 25.25 24.5312 25.25 21.625C25.25 18.7188 22.9062 16.375 20 16.375ZM20 24.8125C18.2344 24.8125 16.8125 23.3906 16.8125 21.625C16.8125 19.8594 18.2344 18.4375 20 18.4375C21.7656 18.4375 23.1875 19.8594 23.1875 21.625C23.1875 23.3906 21.7656 24.8125 20 24.8125ZM27.5469 16.1406C27.5469 16.8906 26.9375 17.5 26.1875 17.5C25.4375 17.5 24.8281 16.8906 24.8281 16.1406C24.8281 15.3906 25.4375 14.7812 26.1875 14.7812C26.9375 14.7812 27.5469 15.3906 27.5469 16.1406Z" fill="black"/>
+                    </svg>
+                  </SocialIcon>
+                </div>
+              </div>
+            </FadeUp>
+          </div>
+        </section>
+
+        {/* Programs Section */}
+        <section className="min-h-screen px-[52px] py-16 bg-[#F7F3EE]">
+          <FadeUp>
+            <h2 className="text-[28px] font-bold text-[#041540] tracking-[-0.075em] mb-2">
+              /programs
+            </h2>
+          </FadeUp>
+          <FadeUp delay={0.1}>
+            <p className="text-[28px] font-medium text-black tracking-[-0.075em] mb-8 max-w-[1183px]">
+              Whether you&apos;re interested in startups, investing, or are already building, our semester-long programs bring students into NYU&apos;s startup, tech, and venture capital ecosystem.
+            </p>
+          </FadeUp>
+
+          <StaggerContainer className="flex flex-col gap-8" staggerDelay={0.15}>
+            {/* Startup Program */}
+            <StaggerItem>
+              <div className="border-t border-black pt-8">
+                <div className="flex items-center gap-12">
+                  <h3 className="text-[46px] font-bold text-[#AD1DE0] tracking-[-0.075em] min-w-[200px]">
+                    /startup
+                  </h3>
+                  <p className="text-[28px] font-medium text-black tracking-[-0.075em] flex-1">
+                    Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah
+                  </p>
+                  <div className="flex flex-col gap-5">
+                    <Button size="lg" className="w-[175px]">Learn More</Button>
+                    <Button size="lg" className="w-[175px]">Apply</Button>
+                  </div>
+                </div>
+              </div>
+            </StaggerItem>
+
+            {/* Investing Program */}
+            <StaggerItem>
+              <div className="border-t border-black pt-8">
+                <div className="flex items-center gap-12">
+                  <h3 className="text-[46px] font-bold text-[#2DB67D] tracking-[-0.075em] min-w-[200px]">
+                    /investing
+                  </h3>
+                  <p className="text-[28px] font-medium text-black tracking-[-0.075em] flex-1">
+                    Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah
+                  </p>
+                  <div className="flex flex-col gap-5">
+                    <Button size="lg" className="w-[175px]">Learn More</Button>
+                    <Button size="lg" className="w-[175px]">Apply</Button>
+                  </div>
+                </div>
+              </div>
+            </StaggerItem>
+
+            {/* EIR Program */}
+            <StaggerItem>
+              <div className="border-t border-black pt-8">
+                <div className="flex items-center gap-12">
+                  <h3 className="text-[46px] font-bold text-[#F0C75B] tracking-[-0.075em] min-w-[200px]">
+                    /eir
+                  </h3>
+                  <p className="text-[28px] font-medium text-black tracking-[-0.075em] flex-1">
+                    Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah
+                  </p>
+                  <div className="flex flex-col gap-5">
+                    <Button size="lg" className="w-[175px]">Learn More</Button>
+                    <Button size="lg" className="w-[175px]">Learn More</Button>
+                  </div>
+                </div>
+              </div>
+            </StaggerItem>
+
+            {/* Bottom border */}
+            <StaggerItem>
+              <div className="border-t border-black"></div>
+            </StaggerItem>
+          </StaggerContainer>
+        </section>
+
+        {/* Events Section */}
+        <section className="min-h-screen px-[52px] py-16 bg-[#F7F3EE] relative">
+          <FadeUp>
+            <h2 className="text-[28px] font-bold text-[#041540] tracking-[-0.075em] mb-8">
+              /events
+            </h2>
+          </FadeUp>
+
+          <div className="flex gap-16">
+            {/* General Meetings Card */}
+            <FadeLeft className="bg-white p-8 max-w-[420px] shadow-sm">
+              <h3 className="text-[24px] font-bold text-[#0115DF] underline mb-4">
+                General Meetings
+              </h3>
+              <p className="text-[18px] font-medium text-black leading-relaxed mb-4">
+                We host our weekly speaker series on Thursdays @ 12:30 pm. All members of the NYU community are welcome to attend!
+              </p>
+              <p className="text-[18px] font-medium text-black leading-relaxed mb-6">
+                So far, we&apos;ve hosted over 250 chats with founders, operators and investors - the best in their fields. Subscribe to our newsletter to stay updated!
+              </p>
+
+              {/* Company Logos */}
+              <div className="flex items-center gap-4">
+                {/* Placeholder logos - replace with actual images */}
+                <div className="w-[60px] h-[60px] bg-black flex items-center justify-center">
+                  <img src="a16z.png" alt="A16Z" className="w-10 h-10" />
+                </div>
+                <div className="w-[60px] h-[60px] flex items-center justify-center">
+                  <img src="figma.png" alt="Figma" className="w-10 h-10" />
+                </div>
+                <div className="w-[60px] h-[60px] flex items-center justify-center">
+                  <img src="lux_capital_logo.jpeg" alt="Lux Capital" className="w-10 h-10" />
+                </div>
+                <div className="w-[60px] h-[60px] bg-[#0095F6] rounded-full flex items-center justify-center">
+                  <img src="venmo.png" alt="Venmo" className="w-10 h-10" />
+                </div>
+              </div>
+            </FadeLeft>
+
+            {/* Polaroid Photos */}
+            <div className="relative flex-1 min-h-[500px]">
+              <FadeIn delay={0.2}>
+                <Polaroid
+                  src="/lux.jpeg"
+                  alt="EEG Event"
+                  caption="eeg/lux-capital"
+                  rotation={-5}
+                  className="absolute top-0 left-[10%] w-[280px]"
+                />
+              </FadeIn>
+              <FadeIn delay={0.4}>
+                <Polaroid
+                  src="/varun-rana.png"
+                  alt="Varun Rana"
+                  caption="eeg/varun-rana"
+                  rotation={8}
+                  className="absolute top-[30%] right-[5%] w-[260px]"
+                />
+              </FadeIn>
+              <FadeIn delay={0.6}>
+                <Polaroid
+                  src="/beli.png"
+                  alt="EEG Event"
+                  caption="eeg/beli"
+                  rotation={-3}
+                  className="absolute bottom-0 left-[20%] w-[300px]"
+                />
+              </FadeIn>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );
