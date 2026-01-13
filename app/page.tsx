@@ -1,9 +1,10 @@
 'use client';
 
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Button } from './components/Button';
-import { Polaroid } from './components/Polaroid';
 import { Newsletter } from './components/Newsletter';
-import { FadeUp, FadeLeft, FadeRight, FadeIn, StaggerContainer, StaggerItem } from './components/ScrollAnimations';
+import { FadeUp, FadeLeft, FadeIn, StaggerContainer, StaggerItem } from './components/ScrollAnimations';
+import { Polaroid } from './components/Polaroid';
 
 function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
@@ -17,14 +18,87 @@ function SocialIcon({ href, label, children }: { href: string; label: string; ch
   );
 }
 
+// Parallax decorative element
+function ParallaxDecoration({
+  src,
+  className,
+  speed = 0.5,
+  position = 'fixed'
+}: {
+  src: string;
+  className: string;
+  speed?: number;
+  position?: 'fixed' | 'absolute';
+}) {
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 3000], [0, -300 * speed]);
+
+  return (
+    <motion.img
+      src={src}
+      alt=""
+      style={{ y }}
+      className={`${position} pointer-events-none ${className}`}
+    />
+  );
+}
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#F7F3EE] relative overflow-hidden pt-[130px]">
-      {/* Decorative elements */}
-      <img src="/building-block.svg" alt="" className="absolute w-[400px] top-[35%] right-[35%] pointer-events-none" />
-      <img src="/building-block.svg" alt="" className="absolute w-[400px] bottom-[-10%] right-[50%] pointer-events-none" />
-      <img src="/building-block-blue.svg" alt="" className="absolute w-[400px] bottom-[5%] right-[10%] pointer-events-none" />
-      <img src="/building-block-blue.svg" alt="" className="absolute w-[400px] top-[10%] right-[10%] pointer-events-none" />
+      {/* Parallax Decorative elements - layered throughout page */}
+
+      {/* Hero Section decorations */}
+      {/* Large blue - right edge, bleeds off screen */}
+      <ParallaxDecoration
+        src="/building-block-blue.svg"
+        className="w-[500px] top-[15vh] right-[-5vw] opacity-50"
+        speed={0.15}
+      />
+      {/* Pink - left side, balances composition */}
+      <ParallaxDecoration
+        src="/building-block.svg"
+        className="w-[300px] top-[55vh] left-[3vw] opacity-50"
+        speed={0.25}
+      />
+      {/* Small blue accent - top right */}
+      <ParallaxDecoration
+        src="/building-block-blue.svg"
+        className="w-[180px] top-[8vh] right-[18vw] opacity-35"
+        speed={0.1}
+      />
+
+      {/* Programs Section decorations */}
+      {/* Pink - right side */}
+      <ParallaxDecoration
+        src="/building-block.svg"
+        className="w-[320px] top-[105vh] right-[6vw] opacity-45"
+        speed={0.35}
+        position="absolute"
+      />
+      {/* Blue - left edge, bleeds off */}
+      <ParallaxDecoration
+        src="/building-block-blue.svg"
+        className="w-[380px] top-[135vh] left-[-6vw] opacity-40"
+        speed={0.3}
+        position="absolute"
+      />
+
+      {/* Events Section decorations */}
+      {/* Pink - right */}
+      <ParallaxDecoration
+        src="/building-block.svg"
+        className="w-[260px] top-[195vh] right-[22vw] opacity-45"
+        speed={0.4}
+        position="absolute"
+      />
+      {/* Blue - bottom left */}
+      <ParallaxDecoration
+        src="/building-block-blue.svg"
+        className="w-[300px] top-[240vh] left-[8vw] opacity-40"
+        speed={0.45}
+        position="absolute"
+      />
 
       <main className="relative z-10">
         {/* Hero Section - Full viewport height */}
@@ -101,7 +175,7 @@ export default function Home() {
                     /startup
                   </h3>
                   <p className="text-[28px] font-medium text-black tracking-[-0.075em] flex-1">
-                    Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah
+                  A 9-week, build-from-zero accelerator where you interview and validate a real market gap, design and ship a product, and ultimately take it to market.
                   </p>
                   <div className="flex flex-col gap-5">
                     <Button size="lg" className="w-[175px]">Learn More</Button>
@@ -119,9 +193,8 @@ export default function Home() {
                     /investing
                   </h3>
                   <p className="text-[28px] font-medium text-black tracking-[-0.075em] flex-1">
-                    Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah
-                  </p>
-                  <div className="flex flex-col gap-5">
+                  An intensive 9-week program focused on how real investors evaluate startups.
+                  You’ll break down deals, analyze companies, build investment theses, and learn how funds source, diligence, and decide</p>               <div className="flex flex-col gap-5">
                     <Button size="lg" className="w-[175px]">Learn More</Button>
                     <Button size="lg" className="w-[175px]">Apply</Button>
                   </div>
@@ -137,11 +210,10 @@ export default function Home() {
                     /eir
                   </h3>
                   <p className="text-[28px] font-medium text-black tracking-[-0.075em] flex-1">
-                    Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah blah Learn how to build blah
-                  </p>
-                  <div className="flex flex-col gap-5">
+                  A selective program for NYU founders who are actively building.
+                  Get 1-on-1 mentorship, hands-on workshops, and direct access to venture capitalists who help you sharpen your strategy, refine your pitch, and prepare for fundraising.</p>                  <div className="flex flex-col gap-5">
                     <Button size="lg" className="w-[175px]">Learn More</Button>
-                    <Button size="lg" className="w-[175px]">Learn More</Button>
+                    <Button size="lg" className="w-[175px]">Apply</Button>
                   </div>
                 </div>
               </div>
@@ -162,65 +234,46 @@ export default function Home() {
             </h2>
           </FadeUp>
 
-          <div className="flex gap-16">
+          <div className="flex gap-8">
             {/* General Meetings Card */}
-            <FadeLeft className="bg-white p-8 max-w-[420px] shadow-sm">
-              <h3 className="text-[24px] font-bold text-[#0115DF] underline mb-4">
+            <FadeLeft className="bg-[#d9d9d9] border border-black px-10 py-10 w-[506px] flex flex-col gap-6 shrink-0">
+              <h3 className="text-[28px] font-bold text-[#041540] tracking-[-0.075em]">
                 General Meetings
               </h3>
-              <p className="text-[18px] font-medium text-black leading-relaxed mb-4">
-                We host our weekly speaker series on Thursdays @ 12:30 pm. All members of the NYU community are welcome to attend!
-              </p>
-              <p className="text-[18px] font-medium text-black leading-relaxed mb-6">
-                So far, we&apos;ve hosted over 250 chats with founders, operators and investors - the best in their fields. Subscribe to our newsletter to stay updated!
-              </p>
+              <div className="text-[28px] font-medium text-black tracking-[-0.075em] leading-snug">
+                <p className="mb-4">
+                  We host our weekly speaker series on Thursdays @ 12:30 pm. All members of the NYU community are welcome to attend!
+                </p>
+                <p>
+                  So far, we&apos;ve hosted over 250 chats with founders, operators and investors - the best in their fields. Subscribe to our newsletter to stay updated!
+                </p>
+              </div>
 
-              {/* Company Logos */}
-              <div className="flex items-center gap-4">
-                {/* Placeholder logos - replace with actual images */}
-                <div className="w-[60px] h-[60px] bg-black flex items-center justify-center">
-                  <img src="a16z.png" alt="A16Z" className="w-10 h-10" />
-                </div>
-                <div className="w-[60px] h-[60px] flex items-center justify-center">
-                  <img src="figma.png" alt="Figma" className="w-10 h-10" />
-                </div>
-                <div className="w-[60px] h-[60px] flex items-center justify-center">
-                  <img src="lux_capital_logo.jpeg" alt="Lux Capital" className="w-10 h-10" />
-                </div>
-                <div className="w-[60px] h-[60px] bg-[#0095F6] rounded-full flex items-center justify-center">
-                  <img src="venmo.png" alt="Venmo" className="w-10 h-10" />
-                </div>
+              {/* Company Logos - natural aspect ratios with max-width constraint */}
+              <div className="flex items-center gap-6 mt-2">
+                <img src="/lux_capital_logo.jpeg" alt="Lux Capital" className="h-[75px] w-auto max-w-[100px] object-contain" />
+                <img src="/a16z.png" alt="A16Z" className="h-[73px] w-auto max-w-[100px] object-contain" />
+                <img src="/figma.png" alt="Figma" className="h-[94px] w-auto max-w-[100px] object-contain" />
+                <img src="/venmo.png" alt="Venmo" className="h-[91px] w-auto max-w-[100px] object-contain" />
               </div>
             </FadeLeft>
 
-            {/* Polaroid Photos */}
-            <div className="relative flex-1 min-h-[500px]">
-              <FadeIn delay={0.2}>
-                <Polaroid
-                  src="/lux.jpeg"
-                  alt="EEG Event"
-                  caption="eeg/lux-capital"
-                  rotation={-5}
-                  className="absolute top-0 left-[10%] w-[280px]"
-                />
+            {/* Polaroid Photos - larger with shadows */}
+            <div className="relative flex-1 max-w-[1250px] min-h-[800px]">
+              <FadeIn delay={0.2} className="absolute w-[450px] left-[3%] hover:z-50">
+                <Polaroid src="/lux.jpeg" alt="Lux Capital" caption="eeg/lux-capital" rotation={-6} />
               </FadeIn>
-              <FadeIn delay={0.4}>
-                <Polaroid
-                  src="/varun-rana.png"
-                  alt="Varun Rana"
-                  caption="eeg/varun-rana"
-                  rotation={8}
-                  className="absolute top-[30%] right-[5%] w-[260px]"
-                />
+              <FadeIn delay={0.8} className="absolute w-[450px] top-[0] right-[5%] hover:z-50">
+                <Polaroid src="/zfellows.jpeg" alt="Zfellows" caption="eeg/zfellows" rotation={0}/>
               </FadeIn>
-              <FadeIn delay={0.6}>
-                <Polaroid
-                  src="/beli.png"
-                  alt="EEG Event"
-                  caption="eeg/beli"
-                  rotation={-3}
-                  className="absolute bottom-0 left-[20%] w-[300px]"
-                />
+              <FadeIn delay={0.4} className="absolute w-[450px] bottom-[20%] left-[35%] hover:z-50">
+                <Polaroid src="/beli.png" alt="Beli" caption="eeg/beli" rotation={6} />
+              </FadeIn>
+              <FadeIn delay={0.6} className="absolute w-[450px] bottom-0 left-[10%] hover:z-50">
+                <Polaroid src="/varun-rana.png" alt="Varun Rana" caption="eeg/varun-rana" rotation={0}/>
+              </FadeIn>
+              <FadeIn delay={0.9} className="absolute w-[450px] bottom-0 right-[0%] hover:z-50">
+                <Polaroid src="/EEGBobby.jpeg" alt="Bobby Shmurda" caption="eeg/bobby-shmurda" rotation={0}/>
               </FadeIn>
             </div>
           </div>

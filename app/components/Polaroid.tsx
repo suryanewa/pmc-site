@@ -1,3 +1,7 @@
+'use client';
+
+import { motion } from 'framer-motion';
+
 interface PolaroidProps {
   src: string;
   alt: string;
@@ -14,9 +18,11 @@ export function Polaroid({
   className = '',
 }: PolaroidProps) {
   return (
-    <div
-      className={`bg-white p-3 pb-12 shadow-lg ${className}`}
-      style={{ transform: `rotate(${rotation}deg)` }}
+    <motion.div
+      className={`bg-white p-3 pb-6 shadow-lg cursor-grab ${className}`}
+      initial={{ rotate: rotation }}
+      whileHover={{ scale: 1.05, zIndex: 50, rotate: rotation }}
+      transition={{ duration: 0.2 }}
     >
       <div className="w-full aspect-[4/3] overflow-hidden">
         <img
@@ -30,6 +36,6 @@ export function Polaroid({
           {caption}
         </p>
       )}
-    </div>
+    </motion.div>
   );
 }
