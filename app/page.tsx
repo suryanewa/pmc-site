@@ -175,7 +175,7 @@ export default function Home() {
                     /startup
                   </h3>
                   <p className="text-[28px] font-medium text-black tracking-[-0.075em] flex-1">
-                  A 9-week, build-from-zero accelerator where you interview and validate a real market gap, design and ship a product, and ultimately take it to market.
+                  A 9-week, build-from-zero accelerator. You'll interview users to validate a real market gap, design and ship a product, and ultimately take it to market and maximize revenue.
                   </p>
                   <div className="flex flex-col gap-5">
                     <Button size="lg" className="w-[175px]">Learn More</Button>
