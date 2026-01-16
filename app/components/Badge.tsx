@@ -4,6 +4,7 @@ interface BadgeProps {
   arrowPosition?: 'top' | 'bottom' | 'left' | 'right';
   arrowRotation?: number;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export function Badge({
@@ -12,21 +13,22 @@ export function Badge({
   arrowPosition = 'right',
   arrowRotation = 0,
   className = '',
+  style = {},
 }: BadgeProps) {
   const positionClasses = {
-    top: 'bottom-full left-1/2 -translate-x-1/2 mb-1',
-    bottom: 'top-full left-1/2 -translate-x-1/2 mt-1',
-    left: 'right-full top-1/2 -translate-y-1/2 mr-1',
-    right: 'left-full top-1/2 -translate-y-1/2 ml-1',
+    top: 'bottom-full left-1/2 -translate-x-1/2 mb-3',
+    bottom: 'top-full left-1/2 -translate-x-1/2 mt-3',
+    left: 'right-full top-1/2 -translate-y-1/2 mr-3',
+    right: 'left-full top-1/2 -translate-y-1/2 ml-3',
   };
 
   return (
     <div
       className={`absolute ${className}`}
-      style={{ transform: `rotate(${rotation}deg)` }}
+      style={{ transform: `rotate(${rotation}deg)`, ...style }}
     >
       <div className="relative bg-[#AD1DE0] border-[4px] border-black px-4 py-3">
-        <span className="font-bold text-black text-xl tracking-tight capitalize">
+        <span className="font-bold text-black text-xl tracking-tight capitalize whitespace-nowrap">
           {children}
         </span>
 

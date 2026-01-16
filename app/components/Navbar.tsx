@@ -7,6 +7,12 @@ interface NavbarProps {
   logo: React.ReactNode;
 }
 
+const programsDropdownItems = [
+  { label: '/startup', href: '/programs/startup' },
+  { label: '/investing', href: '/programs/investing' },
+  { label: '/eir', href: '/programs/eir' },
+];
+
 export function Navbar({ logo }: NavbarProps) {
   const [isCompact, setIsCompact] = useState(false);
 
@@ -25,15 +31,32 @@ export function Navbar({ logo }: NavbarProps) {
         isCompact ? 'py-4 shadow-sm' : 'py-[43px]'
       }`}
     >
-      <div className="flex items-center gap-[2px]">{logo}</div>
+      <a href="/" className="flex items-center gap-[2px]">{logo}</a>
 
       <div className="flex items-center gap-[60px]">
-        <a
-          href="/programs"
-          className="text-[#041540] text-lg font-medium hover:opacity-70 transition-opacity"
-        >
-          EEG/programs
-        </a>
+        {/* Programs dropdown */}
+        <div className="relative group">
+          <a
+            href="/programs"
+            className="text-[#041540] text-lg font-medium hover:opacity-70 transition-opacity"
+          >
+            EEG/programs
+          </a>
+          {/* Dropdown menu */}
+          <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <div className="bg-[#F7F3EE] border border-[#041540]/10 rounded-lg shadow-lg py-2 min-w-[160px]">
+              {programsDropdownItems.map((item) => (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  className="block px-4 py-2 text-[#041540] text-base font-medium hover:bg-[#041540]/5 transition-colors"
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
         <a
           href="/people"
           className="text-[#041540] text-lg font-medium hover:opacity-70 transition-opacity"

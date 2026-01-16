@@ -12,11 +12,11 @@ export function PhaseCard({
   className = '',
 }: PhaseCardProps) {
   return (
-    <div className={`w-[280px] ${side === 'left' ? 'mr-auto' : 'ml-auto'} ${className}`}>
+    <div className={`w-[350px] ${className}`}>
       <div className="bg-[#0115DF] px-4 py-2 rounded-t-lg">
-        <span className="text-white font-medium text-lg tracking-tight">{title}</span>
+        <span className="block w-full text-white font-bold text-center text-lg tracking-tight">{title}</span>
       </div>
-      <div className="bg-white p-4 rounded-b-lg">
+      <div className="bg-white p-4 rounded-b-lg"> 
         <p className="text-black font-medium text-lg tracking-tight leading-snug">{description}</p>
       </div>
     </div>

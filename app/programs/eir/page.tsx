@@ -81,9 +81,9 @@ export default function StartupPage() {
       {/* Background illustration - extends beyond hero with fade */}
       <div className="absolute top-0 left-0 w-full h-[110vh] pointer-events-none">
         <img
-          src="/jobs.svg"
+          src="/bill.png"
           alt=""
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover opacity-20"
         />
         {/* Gradient fade overlay */}
         <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-b from-transparent to-[#1e1e1e]" />
@@ -92,7 +92,7 @@ export default function StartupPage() {
       {/* Dark Navbar - transparent in hero, solid when scrolled */}
       <nav className={`flex items-center justify-between w-full px-[52px] py-[43px] fixed top-0 left-0 right-0 z-[60] transition-colors duration-300 ${isPastHero ? 'bg-[#1e1e1e]' : 'bg-transparent'}`}>
         <a href="/" className="flex items-center">
-          <img src="/startup.svg" alt="EEG Startup" className="h-[44px]" />
+          <img src="/eir.svg" alt="EEG Startup" className="h-[44px]" />
         </a>
 
         <div className="flex items-center gap-[60px]">
@@ -145,20 +145,20 @@ export default function StartupPage() {
         <div className="flex flex-col gap-8 max-w-[874px]">
           {/* Heading */}
           <FadeUp>
-            <h1 className="text-[92px] font-medium leading-none tracking-[-0.075em] text-white">
-              Startup Team
+            <h1 className="text-[92px] font-medium leading-none tracking-[-0.075em] text-white whitespace-nowrap">
+              Entrepreneurs In Residence
             </h1>
           </FadeUp>
 
           {/* Decoration Icons Row */}
           <StaggerContainer className="flex items-center gap-[55px] flex-wrap pr-[92px]">
-            <StaggerItem><img src="/dec-1.svg" alt="" className="size-16" /></StaggerItem>
-            <StaggerItem><img src="/dec-2.svg" alt="" className="size-16" /></StaggerItem>
-            <StaggerItem><img src="/dec-3.svg" alt="" className="size-16" /></StaggerItem>
-            <StaggerItem><img src="/dec-4.svg" alt="" className="size-16" /></StaggerItem>
-            <StaggerItem><img src="/dec-5.svg" alt="" className="size-16" /></StaggerItem>
-            <StaggerItem><img src="/dec-6.svg" alt="" className="size-16" /></StaggerItem>
-            <StaggerItem><img src="/dec-7.svg" alt="" className="size-16" /></StaggerItem>
+            <StaggerItem><img src="/design-color-palette-sample.svg" alt="" className="size-16" /></StaggerItem>
+            <StaggerItem><img src="/design-ruler.svg" alt="" className="size-16" /></StaggerItem>
+            <StaggerItem><img src="/design-layer.svg" alt="" className="size-16" /></StaggerItem>
+            <StaggerItem><img src="/design-block.svg" alt="" className="size-16" /></StaggerItem>
+            <StaggerItem><img src="/design-ruler.svg" alt="" className="size-16" /></StaggerItem>
+            <StaggerItem><img src="/design-website.svg" alt="" className="size-16" /></StaggerItem>
+            <StaggerItem><img src="/design-coding.svg" alt="" className="size-16" /></StaggerItem>
           </StaggerContainer>
 
           {/* Description */}
