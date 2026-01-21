@@ -14,11 +14,12 @@ const programsDropdownItems = [
 ];
 
 export function Navbar({ logo }: NavbarProps) {
-  const [isCompact, setIsCompact] = useState(false);
+  const [isPastHero, setIsPastHero] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsCompact(window.scrollY > 100);
+      const heroThreshold = window.innerHeight * 0.8;
+      setIsPastHero(window.scrollY > heroThreshold);
     };
 
     window.addEventListener('scroll', handleScroll);
@@ -27,8 +28,8 @@ export function Navbar({ logo }: NavbarProps) {
 
   return (
     <nav
-      className={`flex items-center justify-between w-full px-[52px] fixed top-0 left-0 right-0 z-50 bg-[#F7F3EE] transition-all duration-300 ${
-        isCompact ? 'py-4 shadow-sm' : 'py-[43px]'
+      className={`flex items-center justify-between w-full px-[80px] fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isPastHero ? 'py-4 shadow-sm bg-[#F7F3EE]' : 'py-[43px] bg-transparent'
       }`}
     >
       <a href="/" className="flex items-center gap-[2px]">{logo}</a>

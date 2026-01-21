@@ -102,7 +102,7 @@ export default function Home() {
 
       <main className="relative z-10">
         {/* Hero Section - Full viewport height */}
-        <section className="min-h-screen px-[52px] pt-8">
+        <section className="min-h-screen px-[80px] pt-8">
           <div className="max-w-[874px]">
             {/* Hero Headline */}
             <FadeUp>
@@ -154,7 +154,7 @@ export default function Home() {
         </section>
 
         {/* Programs Section */}
-        <section className="min-h-screen px-[52px] py-16 bg-[#F7F3EE]">
+        <section className="min-h-screen px-[80px] py-16 bg-[#F7F3EE]">
           <FadeUp>
             <h2 className="text-[28px] font-bold text-[#041540] tracking-[-0.075em] mb-2">
               /programs
@@ -227,7 +227,7 @@ export default function Home() {
         </section>
 
         {/* Events Section */}
-        <section className="min-h-screen px-[52px] py-16 bg-[#F7F3EE] relative">
+        <section className="min-h-screen px-[80px] py-16 bg-[#F7F3EE] relative">
           <FadeUp>
             <h2 className="text-[28px] font-bold text-[#041540] tracking-[-0.075em] mb-8">
               /events

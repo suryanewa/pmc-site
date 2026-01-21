@@ -89,8 +89,8 @@ export default function StartupPage() {
         <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-b from-transparent to-[#1e1e1e]" />
       </div>
 
-      {/* Dark Navbar - transparent in hero, solid when scrolled */}
-      <nav className={`flex items-center justify-between w-full px-[52px] py-[43px] fixed top-0 left-0 right-0 z-[60] transition-colors duration-300 ${isPastHero ? 'bg-[#1e1e1e]' : 'bg-transparent'}`}>
+      {/* Dark Navbar - transparent in hero, solid + compact when scrolled */}
+      <nav className={`flex items-center justify-between w-full px-[80px] fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${isPastHero ? 'py-4 shadow-sm bg-[#1e1e1e]' : 'py-[43px] bg-transparent'}`}>
         <a href="/" className="flex items-center">
           <img src="/eir.svg" alt="EEG Startup" className="h-[44px]" />
         </a>
@@ -141,7 +141,7 @@ export default function StartupPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative z-10 px-[67px] pt-[247px] min-h-screen">
+      <section className="relative z-10 px-[80px] pt-[247px] min-h-screen">
         <div className="flex flex-col gap-8 max-w-[874px]">
           {/* Heading */}
           <FadeUp>
@@ -178,7 +178,7 @@ export default function StartupPage() {
       </section>
 
       {/* Curriculum Section */}
-      <section className="relative z-10 px-[72px] pt-24 pb-24">
+      <section className="relative z-10 px-[80px] pt-24 pb-24">
         <FadeUp>
           <h2 className="text-[28px] font-medium text-white tracking-[-0.075em] mb-16">
             /curriculum

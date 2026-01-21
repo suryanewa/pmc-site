@@ -7,6 +7,7 @@ interface FooterProps {
 export function Footer({ variant = 'dark' }: FooterProps) {
   const isDark = variant === 'dark';
 
+  const imgSrc = isDark ? '/eeg-logo-white.svg' : '/eeg-logo.svg';
   const bgColor = isDark ? 'bg-[#1a1a1a]' : 'bg-[#F7F3EE]';
   const textColor = isDark ? 'text-white' : 'text-black';
   const textMutedColor = isDark ? 'text-white/80' : 'text-black/70';
@@ -14,11 +15,11 @@ export function Footer({ variant = 'dark' }: FooterProps) {
   const iconFill = isDark ? 'white' : 'black';
 
   return (
-    <footer className={`${bgColor} px-[52px] py-12`}>
+    <footer className={`${bgColor} px-[80px] py-12`}>
       <div className="flex items-start justify-between">
         {/* Logo */}
         <a href="/">
-          <img src="/eeg-logo.svg" alt="EEG" className="h-[44px]" />
+          <img src={`${imgSrc}`} alt="EEG" className="h-[44px]" />
         </a>
 
         {/* Links Columns */}
