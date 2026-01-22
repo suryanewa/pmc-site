@@ -98,12 +98,9 @@ export default function StartupPage() {
         <div className="flex items-center gap-[60px]">
           {/* Programs dropdown */}
           <div className="relative group">
-            <a
-              href="/programs"
-              className="text-white text-lg font-medium hover:opacity-70 transition-opacity"
-            >
+            <span className="text-white text-lg font-medium hover:opacity-70 transition-opacity cursor-default">
               EEG/programs
-            </a>
+            </span>
             {/* Dropdown menu */}
             <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
               <div className="bg-[#1e1e1e] border border-white/10 rounded-lg shadow-lg py-2 min-w-[160px]">
@@ -186,7 +183,7 @@ export default function StartupPage() {
 
         {/* Timeline with Phase Cards */}
         <FadeIn delay={0.2}>
-          <Timeline phases={curriculumPhases} minHeight={800} />
+          <Timeline phases={curriculumPhases} minHeight={800} badgeVariant="green" />
         </FadeIn>
       </section>
 

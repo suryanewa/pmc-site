@@ -37,12 +37,9 @@ export function Navbar({ logo }: NavbarProps) {
       <div className="flex items-center gap-[60px]">
         {/* Programs dropdown */}
         <div className="relative group">
-          <a
-            href="/programs"
-            className="text-[#041540] text-lg font-medium hover:opacity-70 transition-opacity"
-          >
+          <span className="text-[#041540] text-lg font-medium hover:opacity-70 transition-opacity cursor-default">
             EEG/programs
-          </a>
+          </span>
           {/* Dropdown menu */}
           <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
             <div className="bg-[#F7F3EE] border border-[#041540]/10 rounded-lg shadow-lg py-2 min-w-[160px]">

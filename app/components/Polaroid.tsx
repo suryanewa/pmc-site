@@ -19,7 +19,7 @@ export function Polaroid({
 }: PolaroidProps) {
   return (
     <motion.div
-      className={`bg-white p-3 pb-6 shadow-lg cursor-grab ${className}`}
+      className={`bg-white p-3 pb-3 shadow-lg cursor-grab ${className}`}
       initial={{ rotate: rotation }}
       whileHover={{ scale: 1.05, zIndex: 50, rotate: rotation }}
       transition={{ duration: 0.2 }}
@@ -32,7 +32,7 @@ export function Polaroid({
         />
       </div>
       {caption && (
-        <p className="mt-2 text-center text-sm text-gray-700 font-medium">
+        <p className="mt-2 text-center text-base tracking-wide text-gray-1000 font-gotham">
           {caption}
         </p>
       )}

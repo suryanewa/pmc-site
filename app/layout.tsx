@@ -1,12 +1,20 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Footer } from "./components/Footer";
 import { Navbar } from "./components/Navbar";
+import { Preloader } from "./components/Preloader";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
+});
+
+const gothamMedium = localFont({
+  src: "../public/fonts/Gotham Medium.otf",
+  variable: "--font-gotham",
+  weight: "500",
 });
 
 export const metadata: Metadata = {
@@ -21,7 +29,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${inter.className} antialiased`}>
+      <body className={`${inter.variable} ${gothamMedium.variable} ${inter.className} antialiased`}>
+        <Preloader />
         <Navbar logo={<img src="/eeg-logo.svg" alt="EEG Logo" className="w-[100px]" />} />
         {children}
         <Footer />

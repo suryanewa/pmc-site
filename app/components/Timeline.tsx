@@ -1,7 +1,7 @@
 'use client';
 
 import { PhaseCard } from './PhaseCard';
-import { Badge } from './Badge';
+import { Badge, BadgeVariant } from './Badge';
 
 interface PhaseBadge {
   text: string;
@@ -24,12 +24,14 @@ interface TimelineProps {
   phases: TimelinePhase[];
   minHeight?: number;
   className?: string;
+  badgeVariant?: BadgeVariant;
 }
 
 export function Timeline({
   phases,
   minHeight = 800,
-  className = ''
+  className = '',
+  badgeVariant = 'purple'
 }: TimelineProps) {
   // Separate phases by side (alternating left-right-left-right)
   const leftPhases = phases.filter((_, index) => index % 2 === 0);
@@ -65,6 +67,7 @@ export function Timeline({
                   rotation={badge.rotation}
                   arrowPosition={badge.arrowPosition}
                   arrowRotation={badge.arrowRotation}
+                  variant={badgeVariant}
                   className=""
                   style={{
                     left: badge.offsetX,
@@ -104,6 +107,7 @@ export function Timeline({
                   rotation={badge.rotation}
                   arrowPosition={badge.arrowPosition}
                   arrowRotation={badge.arrowRotation}
+                  variant={badgeVariant}
                   className=""
                   style={{
                     left: badge.offsetX,

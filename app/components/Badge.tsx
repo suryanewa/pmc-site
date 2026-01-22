@@ -1,3 +1,5 @@
+type BadgeVariant = 'purple' | 'green' | 'orange';
+
 interface BadgeProps {
   children: string;
   rotation?: number;
@@ -5,7 +7,14 @@ interface BadgeProps {
   arrowRotation?: number;
   className?: string;
   style?: React.CSSProperties;
+  variant?: BadgeVariant;
 }
+
+const variantConfig: Record<BadgeVariant, { color: string; pointer: string }> = {
+  purple: { color: '#AD1DE0', pointer: '/pointer.svg' },
+  green: { color: '#2DB67D', pointer: '/pointer-green.svg' },
+  orange: { color: '#ECB22F', pointer: '/pointer-orange.svg' },
+};
 
 export function Badge({
   children,
@@ -14,6 +23,7 @@ export function Badge({
   arrowRotation = 0,
   className = '',
   style = {},
+  variant = 'purple',
 }: BadgeProps) {
   const positionClasses = {
     top: 'bottom-full left-1/2 -translate-x-1/2 mb-3',
@@ -22,18 +32,20 @@ export function Badge({
     right: 'left-full top-1/2 -translate-y-1/2 ml-3',
   };
 
+  const { color, pointer } = variantConfig[variant];
+
   return (
     <div
       className={`absolute ${className}`}
       style={{ transform: `rotate(${rotation}deg)`, ...style }}
     >
-      <div className="relative bg-[#AD1DE0] border-[4px] border-black px-4 py-3">
+      <div className="relative border-[4px] border-black px-4 py-3" style={{ backgroundColor: color }}>
         <span className="font-bold text-black text-xl tracking-tight capitalize whitespace-nowrap">
           {children}
         </span>
 
         <img
-          src="/pointer.svg"
+          src={pointer}
           alt=""
           className={`absolute ${positionClasses[arrowPosition]}`}
           style={{ transform: `rotate(${arrowRotation}deg)` }}
@@ -42,3 +54,5 @@ export function Badge({
     </div>
   );
 }
+
+export type { BadgeVariant };

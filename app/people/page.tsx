@@ -8,25 +8,39 @@ import { LeadershipMember } from '../components/LeadershipMember';
 
 // Placeholder polaroid data - images and captions to be added later
 const communityPolaroids = [
-  { id: 1, src: '', alt: 'Community photo 1', caption: '', rotation: -14 },
-  { id: 2, src: '', alt: 'Community photo 2', caption: '', rotation: 3 },
-  { id: 3, src: '', alt: 'Community photo 3', caption: '', rotation: 7 },
-  { id: 4, src: '', alt: 'Community photo 4', caption: '', rotation: -5 },
-  { id: 5, src: '', alt: 'Community photo 5', caption: '', rotation: 0 },
-  { id: 6, src: '', alt: 'Community photo 6', caption: '', rotation: -3 },
-  { id: 7, src: '', alt: 'Community photo 7', caption: '', rotation: 5 },
+  { id: 1, src: '/community/social.png', alt: 'Community photo 1', caption: "Social @ Andrew's roof", rotation: -14 },
+  { id: 2, src: '/community/figmanerds.png', alt: 'Community photo 2', caption: 'Figma Workshop!!!', rotation: 3 },
+  { id: 3, src: '/community/pie-a-prez.png', alt: 'Community photo 3', caption: 'Pie a Prez', rotation: 7 },
+  { id: 4, src: '/community/retreat-f2025.png', alt: 'Community photo 4', caption: 'Retreat Fall 2025', rotation: -5 },
+  { id: 5, src: '/community/retreat-s2025.png', alt: 'Community photo 5', caption: 'Retreat Spring 2025', rotation: 0 },
+  { id: 6, src: '/community/cooking.png', alt: 'Community photo 6', caption: 'Semesterly Cooking Challenge', rotation: -3 },
+  { id: 7, src: '/community/fun.png', alt: 'Community photo 7', caption: 'muscles', rotation: 5 },
 ];
 
 // Placeholder leadership data - images to be added later
 const leadershipMembers = [
-  { id: 1, src: '', name: 'firstname-lastname', role: 'role' },
-  { id: 2, src: '', name: 'firstname-lastname', role: 'role' },
-  { id: 3, src: '', name: 'firstname-lastname', role: 'role' },
-  { id: 4, src: '', name: 'firstname-lastname', role: 'role' },
-  { id: 5, src: '', name: 'firstname-lastname', role: 'role' },
-  { id: 6, src: '', name: 'firstname-lastname', role: 'role' },
-  { id: 7, src: '', name: 'firstname-lastname', role: 'role' },
-  { id: 8, src: '', name: 'firstname-lastname', role: 'role' },
+  { id: 1, src: '/profiles/seb.png', name: 'sebastian-strasser', role: 'president' },
+  { id: 2, src: '/profiles/mikhail.png', name: 'mikhail-bond', role: 'vice-president' },
+  { id: 3, src: '/profiles/jai.jpg', name: 'jai-tamboli', role: 'vice-president' },
+  { id: 4, src: '/profiles/rifa.jpg', name: 'rifa-gowani', role: 'growth-lead' },
+  { id: 5, src: '/profiles/brian.jpg', name: 'brian-dai', role: 'startup-lead' },
+  { id: 6, src: '/profiles/yash.jpg', name: 'yash-pandya', role: 'investing-lead' },
+  { id: 7, src: '/profiles/vihaan.jpg', name: 'vihaan-agarwal', role: 'eir-lead' },
+  { id: 8, src: '/profiles/zaara.jpg', name: 'zaara-israni', role: 'marketing-lead' },
+  { id: 9, src: '/profiles/nicole.jpg', name: 'nicole-hwang', role: 'community-lead' },
+  { id: 10, src: '/profiles/sophia.jpg', name: 'sophia-chen', role: 'community-lead' },
+  { id: 11, src: '/profiles/pranav.jpg', name: 'pranav-sarma', role: 'treasurer' },
+  { id: 12, src: '', name: 'lia-kostas', role: 'growth' },
+  { id: 13, src: '', name: 'xander-wanagel', role: 'growth' },
+  { id: 14, src: '', name: 'surya-newa', role: 'startup' },
+  { id: 15, src: '/profiles/neel.jpg', name: 'neel-khurana', role: 'investing' },
+  { id: 16, src: '/profiles/shray.jpg', name: 'shray-patel', role: 'investing' },
+  { id: 17, src: '', name: 'jessie-lee', role: 'marketing' },
+  { id: 18, src: '', name: 'priscilla-tu', role: 'marketing' },
+  { id: 19, src: '', name: 'marco-kosasih', role: 'marketing' },
+  { id: 20, src: '', name: 'katherine-graci', role: 'community' },
+  { id: 21, src: '/profiles/dustin.jpg', name: 'dustin-he', role: 'community' },
+
 ];
 
 const programsDropdownItems = [
@@ -59,12 +73,9 @@ export default function PeoplePage() {
         <div className="flex items-center gap-[60px]">
           {/* Programs dropdown */}
           <div className="relative group">
-            <a
-              href="/programs"
-              className="text-[#041540] text-lg font-medium hover:opacity-70 transition-opacity"
-            >
+            <span className="text-[#041540] text-lg font-medium hover:opacity-70 transition-opacity cursor-default">
               EEG/programs
-            </a>
+            </span>
             {/* Dropdown menu */}
             <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
               <div className="bg-[#F7F3EE] border border-[#041540]/10 rounded-lg shadow-lg py-2 min-w-[160px]">
@@ -135,7 +146,7 @@ export default function PeoplePage() {
         </FadeUp>
 
         {/* Scattered Polaroids Container */}
-        <div className="relative h-[700px] w-full">
+        <div className="relative h-[1000px] w-full">
           {/* Row 1 - Top polaroids */}
           <FadeIn delay={0.2}>
             <Polaroid
@@ -143,7 +154,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[0].alt}
               caption={communityPolaroids[0].caption}
               rotation={communityPolaroids[0].rotation}
-              className="absolute w-[320px] left-[2%] top-[5%] z-10"
+              className="absolute w-[400px] left-[2%] top-[5%] z-10"
             />
           </FadeIn>
 
@@ -153,7 +164,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[1].alt}
               caption={communityPolaroids[1].caption}
               rotation={communityPolaroids[1].rotation}
-              className="absolute w-[280px] left-[30%] top-[0%] z-20"
+              className="absolute w-[400px] left-[30%] top-[0%] z-20"
             />
           </FadeIn>
 
@@ -163,7 +174,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[2].alt}
               caption={communityPolaroids[2].caption}
               rotation={communityPolaroids[2].rotation}
-              className="absolute w-[300px] right-[15%] top-[2%] z-10"
+              className="absolute w-[400px] right-[15%] top-[2%] z-10"
             />
           </FadeIn>
 
@@ -174,7 +185,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[3].alt}
               caption={communityPolaroids[3].caption}
               rotation={communityPolaroids[3].rotation}
-              className="absolute w-[340px] left-[0%] top-[45%] z-30"
+              className="absolute w-[400px] left-[0%] top-[45%] z-30"
             />
           </FadeIn>
 
@@ -184,7 +195,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[4].alt}
               caption={communityPolaroids[4].caption}
               rotation={communityPolaroids[4].rotation}
-              className="absolute w-[320px] left-[28%] top-[50%] z-20"
+              className="absolute w-[400px] left-[28%] top-[50%] z-20"
             />
           </FadeIn>
 
@@ -194,7 +205,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[5].alt}
               caption={communityPolaroids[5].caption}
               rotation={communityPolaroids[5].rotation}
-              className="absolute w-[300px] right-[25%] top-[48%] z-30"
+              className="absolute w-[400px] right-[25%] top-[48%] z-30"
             />
           </FadeIn>
 
@@ -204,14 +215,14 @@ export default function PeoplePage() {
               alt={communityPolaroids[6].alt}
               caption={communityPolaroids[6].caption}
               rotation={communityPolaroids[6].rotation}
-              className="absolute w-[290px] right-[2%] top-[52%] z-10"
+              className="absolute w-[400px] right-[2%] top-[52%] z-10"
             />
           </FadeIn>
         </div>
       </section>
 
       {/* Leadership Section */}
-      <section className="relative px-[80px] pb-32">
+      <section id="leadership-spring-26" className="relative px-[80px] pb-32">
         {/* Section Header */}
         <FadeUp>
           <h2 className="text-[28px] font-medium text-[#041540] tracking-[-0.075em] mb-4">
@@ -225,7 +236,7 @@ export default function PeoplePage() {
         </FadeIn>
 
         {/* Leadership Grid - 4 columns */}
-        <div className="grid grid-cols-4 gap-x-6 gap-y-12">
+        <div className="grid grid-cols-5 gap-x-6 gap-y-12">
           {leadershipMembers.map((member) => (
             <LeadershipMember
               key={member.id}
