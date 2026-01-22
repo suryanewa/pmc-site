@@ -10,7 +10,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --font-gotham: var(--font-gotham);
+  --font-gotham-medium: var(--font-gotham-medium);
+  --font-gotham-bold: var(--font-gotham-bold);
 }
 
 @media (prefers-color-scheme: dark) {

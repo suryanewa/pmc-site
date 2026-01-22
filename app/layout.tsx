@@ -13,8 +13,14 @@ const inter = Inter({
 
 const gothamMedium = localFont({
   src: "../public/fonts/Gotham Medium.otf",
-  variable: "--font-gotham",
+  variable: "--font-gotham-medium",
   weight: "500",
+});
+
+const gothamBold = localFont({
+  src: "../public/fonts/Gotham Bold.otf",
+  variable: "--font-gotham-bold",
+  weight: "700",
 });
 
 export const metadata: Metadata = {
@@ -29,7 +35,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${gothamMedium.variable} ${inter.className} antialiased`}>
+      <body className={`${inter.variable} ${gothamMedium.variable} ${gothamBold.variable} ${inter.className} antialiased`}>
         <Preloader />
         <Navbar logo={<img src="/eeg-logo.svg" alt="EEG Logo" className="w-[100px]" />} />
         {children}

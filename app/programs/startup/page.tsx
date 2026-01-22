@@ -2,64 +2,77 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '../../components/Button';
-import { Timeline } from '../../components/Timeline';
+import { Timeline } from '@/components/ui/timeline';
 import { Footer } from '../../components/Footer';
 import { FadeUp, FadeIn, StaggerContainer, StaggerItem } from '../../components/ScrollAnimations';
 
-const curriculumPhases = [
+const curriculumData = [
   {
-    id: 'validation',
-    title: 'Phase 1: Validation',
-    description: "In weeks 1-3, you'll learn how to interview users and validate problems that are actually worth building for.",
-    badges: [
-      {
-        text: 'Validate',
-        rotation: -15,
-        arrowPosition: 'right' as const,
-        arrowRotation: 50,
-        offsetX: -120,
-        offsetY: 170,
-      }
-    ]
+    title: "Weeks 1-3",
+    content: (
+      <div>
+        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 1: Validation</h4>
+        <p className="text-neutral-300 text-base md:text-lg mb-6">
+          You&apos;ll learn how to interview users and validate problems that are actually worth building for.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm">
+            User Interviews
+          </span>
+          <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm">
+            Problem Discovery
+          </span>
+          <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm">
+            Market Research
+          </span>
+        </div>
+      </div>
+    ),
   },
   {
-    id: 'build',
-    title: 'Phase 2: Build',
-    description: "In weeks 4-6, you'll turn your validated problem into a real-world solution. Using the latest AI tools, you'll learn to design and ship fast.",
-    badges: [
-      {
-        text: 'Ship Fast',
-        rotation: 15,
-        arrowPosition: 'left' as const,
-        arrowRotation: -50,
-        offsetX: 500,
-        offsetY: 80,
-      },
-      {
-        text: 'Build!',
-        rotation: 5,
-        arrowPosition: 'right' as const,
-        arrowRotation: 30,
-        offsetX: 100,
-        offsetY: 200,
-      }
-    ]
+    title: "Weeks 4-6",
+    content: (
+      <div>
+        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 2: Build</h4>
+        <p className="text-neutral-300 text-base md:text-lg mb-6">
+          You&apos;ll turn your validated problem into a real-world solution. Using the latest AI tools, you&apos;ll learn to design and ship fast.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm">
+            AI-Powered Development
+          </span>
+          <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm">
+            Product Design
+          </span>
+          <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm">
+            Ship Fast
+          </span>
+        </div>
+      </div>
+    ),
   },
   {
-    id: 'gtm',
-    title: 'Phase 3: Go-To-Market',
-    description: "In weeks 7-9, it's all about taking your product to market. This is the culmination of your work – go out and figure how to maximize revenue.",
-    badges: [
-      {
-        text: 'Revenue',
-        rotation: 10,
-        arrowPosition: 'left' as const,
-        arrowRotation: -40,
-        offsetX: 150,
-        offsetY: 220,
-      }
-    ]
-  }
+    title: "Weeks 7-9",
+    content: (
+      <div>
+        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 3: Go-To-Market</h4>
+        <p className="text-neutral-300 text-base md:text-lg mb-6">
+          It&apos;s all about taking your product to market. This is the culmination of your work – go out and figure how to maximize revenue.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm">
+            Launch Strategy
+          </span>
+          <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm">
+            Growth Tactics
+          </span>
+          <span className="px-4 py-2 bg-purple-500/20 border border-purple-500/30 rounded-full text-purple-300 text-sm">
+            Revenue
+          </span>
+        </div>
+      </div>
+    ),
+  },
 ];
 
 export default function StartupPage() {
@@ -175,16 +188,18 @@ export default function StartupPage() {
       </section>
 
       {/* Curriculum Section */}
-      <section className="relative z-10 px-[80px] pt-24 pb-24">
+      <section className="relative z-10 px-[80px] pt-24 pb-24 min-h-[1000vh]">
         <FadeUp>
-          <h2 className="text-[28px] font-medium text-white tracking-[-0.075em] mb-16">
+          <h2 className="text-[28px] font-medium text-white tracking-[-0.075em] mb-0">
             /curriculum
           </h2>
         </FadeUp>
 
         {/* Timeline with Phase Cards */}
         <FadeIn delay={0.2}>
-          <Timeline phases={curriculumPhases} minHeight={800} badgeVariant="purple" />
+          <div className="dark">
+            <Timeline data={curriculumData} showHeader={false} />
+          </div>
         </FadeIn>
       </section>
 

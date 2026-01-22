@@ -5,6 +5,7 @@ import { Button } from './components/Button';
 import { Newsletter } from './components/Newsletter';
 import { FadeUp, FadeLeft, FadeIn, StaggerContainer, StaggerItem } from './components/ScrollAnimations';
 import { Polaroid } from './components/Polaroid';
+import { ProgramCard } from './components/ProgramCard';
 import Link from "next/link";
 
 function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
@@ -193,76 +194,34 @@ export default function Home() {
               /programs
             </h2>
           </FadeUp>
-          <FadeUp delay={0.1}>
-            <p className="text-[28px] font-medium text-black tracking-[-0.075em] mb-8 max-w-[1183px]">
-              Whether you&apos;re interested in startups, investing, or are already building, our semester-long programs bring students into NYU&apos;s startup, tech, and venture capital ecosystem.
-            </p>
-          </FadeUp>
+            <FadeUp delay={0.1}>
+              <p className="text-[28px] font-medium text-black tracking-[-0.075em] mb-8 max-w-[1183px]">
+                Whether you&apos;re interested in startups, investing, or are already building, our semester-long programs bring students into NYU&apos;s startup, tech, and venture capital ecosystem.
+              </p>
+            </FadeUp>
 
-          <StaggerContainer className="flex flex-col gap-8" staggerDelay={0.15}>
-            {/* Startup Program */}
-            <StaggerItem>
-              <div className="border-t border-black pt-8">
-                <div className="flex items-center gap-12">
-                  <h3 className="text-[46px] font-bold text-[#AD1DE0] tracking-[-0.075em] min-w-[200px]">
-                    /startup
-                  </h3>
-                  <p className="text-[28px] font-medium text-black tracking-[-0.075em] flex-1">
-                  A 9-week, build-from-zero accelerator. You'll interview users to validate a real market gap, design and ship a product, and ultimately take it to market and maximize revenue.
-                  </p>
-                  <div className="flex flex-col gap-5">
-                    <Button size="lg" className="w-[175px]">
-                      <Link href="/programs/startup">Learn More</Link>
-                    </Button>
-                    <Button size="lg" className="w-[175px]">Apply</Button>
-                  </div>
-                </div>
+            <FadeUp delay={0.2}>
+              <div className="grid grid-cols-3 gap-8 max-w-[1200px] mx-auto">
+                <ProgramCard
+                  title="/startup"
+                  description="A 9-week, build-from-zero accelerator. You'll interview users to validate a real market gap, design and ship a product, and ultimately take it to market and maximize revenue."
+                  accentColor="#AD1DE0"
+                  learnMoreHref="/programs/startup"
+                />
+                <ProgramCard
+                  title="/investing"
+                  description="An intensive 9-week program focused on how real investors evaluate startups. You'll break down deals, analyze companies, build investment theses, and learn how funds source, diligence, and decide."
+                  accentColor="#2DB67D"
+                  learnMoreHref="/programs/investing"
+                />
+                <ProgramCard
+                  title="/eir"
+                  description="A selective program for NYU founders who are actively building. Get 1-on-1 mentorship, hands-on workshops, and direct access to venture capitalists who help you sharpen your strategy, refine your pitch, and prepare for fundraising."
+                  accentColor="#F0C75B"
+                  learnMoreHref="/programs/eir"
+                />
               </div>
-            </StaggerItem>
-
-            {/* Investing Program */}
-            <StaggerItem>
-              <div className="border-t border-black pt-8">
-                <div className="flex items-center gap-12">
-                  <h3 className="text-[46px] font-bold text-[#2DB67D] tracking-[-0.075em] min-w-[200px]">
-                    /investing
-                  </h3>
-                  <p className="text-[28px] font-medium text-black tracking-[-0.075em] flex-1">
-                  An intensive 9-week program focused on how real investors evaluate startups.
-                  You’ll break down deals, analyze companies, build investment theses, and learn how funds source, diligence, and decide</p>               <div className="flex flex-col gap-5">
-                  <Button size="lg" className="w-[175px]">
-                      <Link href="/programs/investing">Learn More</Link>
-                    </Button>
-                    <Button size="lg" className="w-[175px]">Apply</Button>
-                  </div>
-                </div>
-              </div>
-            </StaggerItem>
-
-            {/* EIR Program */}
-            <StaggerItem>
-              <div className="border-t border-black pt-8">
-                <div className="flex items-center gap-12">
-                  <h3 className="text-[46px] font-bold text-[#F0C75B] tracking-[-0.075em] min-w-[200px]">
-                    /eir
-                  </h3>
-                  <p className="text-[28px] font-medium text-black tracking-[-0.075em] flex-1">
-                  A selective program for NYU founders who are actively building.
-                  Get 1-on-1 mentorship, hands-on workshops, and direct access to venture capitalists who help you sharpen your strategy, refine your pitch, and prepare for fundraising.</p>                  <div className="flex flex-col gap-5">
-                  <Button size="lg" className="w-[175px]">
-                      <Link href="/programs/eir">Learn More</Link>
-                    </Button>
-                    <Button size="lg" className="w-[175px]">Apply</Button>
-                  </div>
-                </div>
-              </div>
-            </StaggerItem>
-
-            {/* Bottom border */}
-            <StaggerItem>
-              <div className="border-t border-black"></div>
-            </StaggerItem>
-          </StaggerContainer>
+            </FadeUp>
         </section>
 
         {/* Events Section */}
