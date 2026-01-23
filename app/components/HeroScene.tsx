@@ -97,7 +97,7 @@ function MacModel({
   );
 }
 
-// Camera animation controller based on scroll - zooms OUT then pans RIGHT
+// Camera animation controller - slight zoom + lateral pan
 function CameraController({ scrollProgress }: { scrollProgress: number }) {
   const { camera } = useThree();
   const currentProgress = useRef(0);
@@ -107,25 +107,25 @@ function CameraController({ scrollProgress }: { scrollProgress: number }) {
     currentProgress.current += (scrollProgress - currentProgress.current) * delta * 5;
     
     // Animation completes at 50% scroll, leaving rest for static view with text
-    const animProgress = Math.min(currentProgress.current / 0.5, 1); // Full animation in first 50% of scroll
+    const animProgress = Math.min(currentProgress.current / 0.5, 1);
     
-    // Phase 1 (0-25% scroll): Zoom out from screen to full Mac view
-    // Phase 2 (25-50% scroll): Pan camera RIGHT so Mac appears on the RIGHT side of screen
+    // Phase 1 (0-25% scroll): Slight zoom
+    // Phase 2 (25-50% scroll): Lateral pan
     
-    const zoomProgress = Math.min(animProgress * 2, 1); // 0-1 during first half of animation
-    const panProgress = Math.max((animProgress - 0.5) * 2, 0); // 0-1 during second half of animation
+    const zoomProgress = Math.min(animProgress * 2, 1);
+    const panProgress = Math.max((animProgress - 0.5) * 2, 0);
     
-    // Zoom: start at screen level, end at good viewing distance
-    const startZ = 0.0;  // At screen level - fills viewport
-    const endZ = 6;      // Shows full Mac nicely
+    // Zoom: start showing Mac, zoom out slightly
+    const startZ = 4;    // Start showing full Mac
+    const endZ = 6;      // Zoom out a bit
     const z = startZ + (endZ - startZ) * zoomProgress;
     
-    // Pan: move camera LEFT so Mac appears on RIGHT side of screen (no rotation)
+    // Pan: move camera LEFT so Mac appears on RIGHT side
     const startX = 0;
-    const endX = -2;  // Camera moves left, Mac appears on right
+    const endX = -2;
     const x = startX + (endX - startX) * panProgress;
     
-    // Y position: lower to reduce space at top
+    // Y position
     const startY = 0.2;
     const endY = 0;
     const y = startY + (endY - startY) * zoomProgress;
@@ -144,7 +144,6 @@ useGLTF.preload("/mac_edited.glb");
 export function HeroScene({ scrollProgress = 0 }: HeroSceneProps) {
   const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
   const [modelReady, setModelReady] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Load video and start playing immediately
   useEffect(() => {
@@ -173,23 +172,6 @@ export function HeroScene({ scrollProgress = 0 }: HeroSceneProps) {
     };
   }, []);
 
-  // Sync the overlay video with the texture video
-  useEffect(() => {
-    if (videoEl && videoRef.current) {
-      const syncVideos = () => {
-        if (videoRef.current && videoEl) {
-          videoRef.current.currentTime = videoEl.currentTime;
-        }
-      };
-      // Sync on timeupdate
-      videoEl.addEventListener('timeupdate', syncVideos);
-      return () => videoEl.removeEventListener('timeupdate', syncVideos);
-    }
-  }, [videoEl]);
-
-  // Sudden cut - overlay disappears completely after 15% scroll (no fade/blur)
-  const showOverlay = scrollProgress < 0.15;
-
   return (
     <div className="w-full h-full relative overflow-hidden">
       {/* Loading state */}
@@ -203,7 +185,7 @@ export function HeroScene({ scrollProgress = 0 }: HeroSceneProps) {
 
       {/* 3D Canvas with Mac */}
       <Canvas
-        camera={{ position: [0, 0.2, 0.0], fov: 45 }}
+        camera={{ position: [0, 0.2, 4], fov: 45 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
         onCreated={({ gl }) => {
@@ -237,21 +219,6 @@ export function HeroScene({ scrollProgress = 0 }: HeroSceneProps) {
         {/* Environment */}
         <Environment preset="city" />
       </Canvas>
-
-      {/* Fullscreen video overlay - sudden cut to reveal Mac */}
-      {showOverlay && (
-        <div className="absolute inset-0 z-20 pointer-events-none">
-          <video
-            ref={videoRef}
-            src="/140912-776415326_small.mp4"
-            className="w-full h-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
-        </div>
-      )}
     </div>
   );
 }
