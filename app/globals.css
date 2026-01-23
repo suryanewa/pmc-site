@@ -12,6 +12,32 @@
   --font-mono: var(--font-geist-mono);
   --font-gotham-medium: var(--font-gotham-medium);
   --font-gotham-bold: var(--font-gotham-bold);
+  
+  @keyframes scroll {
+    to {
+      transform: translate(calc(-50% - 0.5rem));
+    }
+  }
+  
+  @keyframes subtle-float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+  
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,8 +47,93 @@
   }
 }
 
+/* Base HTML smooth scroll (fallback if Lenis fails) */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Lenis smooth scroll styles */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Gotham font utility classes */
+.font-gotham {
+  font-family: var(--font-gotham-medium), system-ui, sans-serif;
+}
+
+.font-gotham-bold {
+  font-family: var(--font-gotham-bold), system-ui, sans-serif;
+}
+
+/* Marquee animation */
+.animate-scroll {
+  animation: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+}
+
+/* Subtle float for decorative elements */
+.animate-subtle-float {
+  animation: subtle-float 8s ease-in-out infinite;
+}
+
+/* Custom scrollbar - minimal */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #041540;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0115DF;
+}
+
+/* Selection color */
+::selection {
+  background: #0115DF;
+  color: white;
+}
+
+/* Smooth transitions for all interactive elements */
+a, button {
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hide scrollbar during preloader */
+body.loading {
+  overflow: hidden;
+}
+
+/* Focus visible styles for accessibility */
+:focus-visible {
+  outline: 2px solid #0115DF;
+  outline-offset: 2px;
 }
