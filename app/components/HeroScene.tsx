@@ -5,9 +5,6 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { useGLTF, Environment, ContactShadows } from "@react-three/drei";
 import { useEffect, useMemo, useState, useRef } from "react";
 
-interface HeroSceneProps {
-  scrollProgress?: number; // 0 to 1, where 0 = top, 1 = scrolled past hero
-}
 
 // Mac model with video texture - always shows video
 function MacModel({ 
@@ -97,43 +94,14 @@ function MacModel({
   );
 }
 
-// Camera animation controller - slight zoom + lateral pan
-function CameraController({ scrollProgress }: { scrollProgress: number }) {
+// Static camera - Mac positioned on right side of screen
+function CameraController() {
   const { camera } = useThree();
-  const currentProgress = useRef(0);
 
-  useFrame((_, delta) => {
-    // Smooth interpolation towards target scroll progress
-    currentProgress.current += (scrollProgress - currentProgress.current) * delta * 5;
-    
-    // Animation completes at 50% scroll, leaving rest for static view with text
-    const animProgress = Math.min(currentProgress.current / 0.5, 1);
-    
-    // Phase 1 (0-25% scroll): Slight zoom
-    // Phase 2 (25-50% scroll): Lateral pan
-    
-    const zoomProgress = Math.min(animProgress * 2, 1);
-    const panProgress = Math.max((animProgress - 0.5) * 2, 0);
-    
-    // Zoom: start showing Mac, zoom out slightly
-    const startZ = 4;    // Start showing full Mac
-    const endZ = 6;      // Zoom out a bit
-    const z = startZ + (endZ - startZ) * zoomProgress;
-    
-    // Pan: move camera LEFT so Mac appears on RIGHT side
-    const startX = 0;
-    const endX = -2;
-    const x = startX + (endX - startX) * panProgress;
-    
-    // Y position
-    const startY = 0.2;
-    const endY = 0;
-    const y = startY + (endY - startY) * zoomProgress;
-    
-    camera.position.set(x, y, z);
-    
-    // Look slightly down to frame Mac better
-    camera.lookAt(0, -0.5, 0);
+  useFrame(() => {
+    // Camera positioned to put Mac on far right, slight angle
+    camera.position.set(3.5, 0.3, 5);
+    camera.lookAt(1, -0.2, 0);
   });
 
   return null;
@@ -141,7 +109,7 @@ function CameraController({ scrollProgress }: { scrollProgress: number }) {
 
 useGLTF.preload("/mac_edited.glb");
 
-export function HeroScene({ scrollProgress = 0 }: HeroSceneProps) {
+export function HeroScene() {
   const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
   const [modelReady, setModelReady] = useState(false);
 
@@ -193,7 +161,7 @@ export function HeroScene({ scrollProgress = 0 }: HeroSceneProps) {
         }}
         style={{ background: "#F7F3EE" }}
       >
-        <CameraController scrollProgress={scrollProgress} />
+        <CameraController />
         
         {/* Lighting */}
         <ambientLight intensity={0.4} />
@@ -209,11 +177,11 @@ export function HeroScene({ scrollProgress = 0 }: HeroSceneProps) {
         
         {/* Soft blob shadow underneath Mac */}
         <ContactShadows 
-          position={[0, -2.5, 0]} 
-          opacity={0.15} 
-          scale={4} 
-          blur={2.5} 
-          far={2}
+          position={[0, -2.2, 0]} 
+          opacity={0.2} 
+          scale={5} 
+          blur={2} 
+          far={3}
         />
         
         {/* Environment */}

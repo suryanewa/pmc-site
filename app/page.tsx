@@ -1,19 +1,12 @@
 'use client';
 
-import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
-import { useRef, Suspense, useState } from 'react';
-import dynamic from 'next/dynamic';
+import { motion } from 'framer-motion';
+import { useRef } from 'react';
 import { Newsletter } from './components/Newsletter';
 import { FadeUp, FadeIn } from './components/ScrollAnimations';
 import { Polaroid } from './components/Polaroid';
 import Link from "next/link";
 import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards';
-
-// Dynamic import for Three.js scene to avoid SSR issues
-const HeroScene = dynamic(() => import('./components/HeroScene').then(mod => ({ default: mod.HeroScene })), {
-  ssr: false,
-  loading: () => <div className="w-full h-full bg-transparent" />
-});
 
 function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
@@ -93,95 +86,89 @@ function AnimatedStat({ number, label, delay = 0 }: { number: string; label: str
 
 export default function Home() {
   const heroRef = useRef(null);
-  const [scrollProgress, setScrollProgress] = useState(0);
-  
-  const { scrollYProgress: heroScrollProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  });
-
-  // Track scroll progress as state for HeroScene
-  useMotionValueEvent(heroScrollProgress, "change", (latest) => {
-    setScrollProgress(latest);
-  });
-
-  // Parallax effects for hero section
-  const heroY = useTransform(heroScrollProgress, [0, 1], [0, 150]);
-  const heroOpacity = useTransform(heroScrollProgress, [0, 0.8], [1, 0]);
-  
-  // Text should appear (~35-50% scroll), comes from bottom
-  const textOpacity = useTransform(heroScrollProgress, [0.35, 0.45], [0, 1]);
-  const textY = useTransform(heroScrollProgress, [0.35, 0.45], [40, 0]);
 
   return (
     <div className="min-h-screen relative">
       <main>
-        {/* Hero Section - Taller to allow scroll-based animation + extra space after */}
+        {/* Hero Section - Clean, minimal, premium */}
         <section 
           ref={heroRef}
-          className="h-[300vh] relative bg-[#F7F3EE]"
+          className="min-h-screen relative bg-[#F7F3EE] flex items-center justify-center"
         >
-          {/* Sticky container for 3D scene */}
-          <div className="sticky top-0 h-screen">
-            {/* 3D Mac Scene - Fullscreen */}
+          {/* Main content - Centered */}
+          <div className="w-full max-w-[1200px] mx-auto px-6 md:px-12 lg:px-20 py-32 text-center">
+            <motion.p 
+              className="text-xs tracking-[0.25em] uppercase text-[#041540]/40 font-medium mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            >
+              NYU Stern&apos;s Premier Entrepreneurship Club
+            </motion.p>
+
+            <div className="mb-12">
+              {['Where NYU\'s', 'Founders & Investors', 'Are Made'].map((line, lineIndex) => (
+                <motion.h1 
+                  key={lineIndex}
+                  className="text-[clamp(2.5rem,8vw,6rem)] font-medium leading-[1] tracking-[-0.03em] text-[#041540]"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.8, 
+                    delay: 0.1 + lineIndex * 0.08,
+                    ease: [0.22, 1, 0.36, 1] 
+                  }}
+                >
+                  {line}
+                </motion.h1>
+              ))}
+            </div>
+
+            <motion.p 
+              className="text-lg text-[#041540]/50 leading-relaxed max-w-lg mx-auto mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            >
+              Building the next generation of founders and investors through hands-on programs and direct access to industry leaders.
+            </motion.p>
+
             <motion.div
-              className="absolute inset-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
             >
-              <Suspense fallback={
-                <div className="w-full h-full flex items-center justify-center">
-                  <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin" />
-                </div>
-              }>
-                <HeroScene scrollProgress={scrollProgress} />
-              </Suspense>
-            </motion.div>
-
-            {/* Overlay Content - Appears UNDER the Mac, comes from bottom */}
-            <motion.div 
-              className="absolute inset-0 flex items-end justify-center pb-8 md:pb-12 pointer-events-none"
-              style={{ opacity: textOpacity, y: textY }}
-            >
-              <div className="text-center max-w-xl">
-                {/* Hero Headline */}
-                <div className="mb-4">
-                  {['Where NYU\'s', 'Founders & Investors', 'Are Made'].map((line, lineIndex) => (
-                    <h1 
-                      key={lineIndex}
-                      className="text-[clamp(1.5rem,4vw,3rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540]"
-                    >
-                      {line}
-                    </h1>
-                  ))}
-                </div>
-
-                {/* Description */}
-                <p className="text-sm md:text-base text-[#041540]/60 leading-relaxed max-w-md mx-auto">
-                  NYU Stern&apos;s premier entrepreneurship club since 2003
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Scroll indicator - visible at start, fades as you scroll */}
-            <motion.div 
-              className="absolute bottom-8 left-1/2 -translate-x-1/2"
-              style={{ opacity: useTransform(heroScrollProgress, [0, 0.15], [1, 0]) }}
-            >
-              <motion.div
-                animate={{ y: [0, 6, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                className="w-5 h-8 border-2 border-[#041540]/30 rounded-full flex items-start justify-center p-1"
-              >
-                <motion.div 
-                  className="w-1 h-1.5 bg-[#041540]/50 rounded-full"
-                  animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-              </motion.div>
+              <Link href="/programs/startup">
+                <motion.button
+                  className="px-8 py-4 bg-[#041540] text-white text-sm font-medium tracking-wide hover:bg-[#041540]/90 transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Explore Programs
+                </motion.button>
+              </Link>
             </motion.div>
           </div>
+
+          {/* Scroll indicator */}
+          <motion.div 
+            className="absolute bottom-10 left-1/2 -translate-x-1/2"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1 }}
+          >
+            <motion.div
+              animate={{ y: [0, 6, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+              className="w-5 h-8 border-2 border-[#041540]/20 rounded-full flex items-start justify-center p-1"
+            >
+              <motion.div 
+                className="w-1 h-1.5 bg-[#041540]/30 rounded-full"
+                animate={{ opacity: [0.3, 0.8, 0.3] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              />
+            </motion.div>
+          </motion.div>
         </section>
 
         {/* Secondary Hero - Full info section */}
