@@ -286,7 +286,7 @@ export default function Home() {
               <FadeIn delay={0.8} className="absolute w-[450px] top-[0] right-[5%] hover:z-50">
                 <Polaroid src="/zfellows.jpeg" alt="Zfellows" caption="eeg/zfellows" rotation={0}/>
               </FadeIn>
-              <FadeIn delay={0.4} className="absolute w-[450px] bottom-[20%] left-[35%] hover:z-50">
+              <FadeIn delay={0.4} className="absolute w-[450px] bottom-[20%] left-[35%] z-30 hover:z-50">
                 <Polaroid src="/beli.png" alt="Beli" caption="eeg/beli" rotation={6} />
               </FadeIn>
               <FadeIn delay={0.6} className="absolute w-[450px] bottom-0 left-[10%] hover:z-50">
