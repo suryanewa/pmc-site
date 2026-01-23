@@ -6,6 +6,7 @@ import { Newsletter } from './components/Newsletter';
 import { FadeUp, FadeLeft, FadeIn, StaggerContainer, StaggerItem } from './components/ScrollAnimations';
 import { Polaroid } from './components/Polaroid';
 import { ProgramCard } from './components/ProgramCard';
+import LogoLoop from '../components/LogoLoop';
 import Link from "next/link";
 
 function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
@@ -247,34 +248,51 @@ export default function Home() {
                 </p>
               </div>
 
-              {/* Company Logos - natural aspect ratios with max-width constraint */}
-              <div className="grid grid-cols-4 gap-x-12 gap-y-10 mt-6 place-items-center">
-                {[
-                  { src: "/companies/lux_capital_logo.jpeg", alt: "Lux Capital" },
-                  { src: "/companies/a16z.jpg", alt: "A16Z" },
-                  { src: "/companies/figma.png", alt: "Figma" },
-                  { src: "/companies/venmo.png", alt: "Venmo" },
-                  { src: "/companies/anthropic.png", alt: "Anthropic" },
-                  { src: "/companies/usv.jpg", alt: "USV" },
-                  { src: "/companies/bessemer.png", alt: "Bessemer" },
-                  { src: "/companies/meta.png", alt: "Meta" },
-                ].map((logo) => (
-                  <div
-                    key={logo.alt}
-                    className="flex items-center justify-center
-                              w-[120] h-[75px]
-                              rounded-xl
-                              bg-white/50
-                              backdrop-blur-sm"
-                  >
-                    <img
-                      src={logo.src}
-                      alt={logo.alt}
-                      className="max-h-[52px] max-w-[100px] object-contain
-                                opacity-80 transition hover:opacity-100"
-                    />
-                  </div>
-                ))}
+              {/* Company Logos - animated loop */}
+              <div className="mt-6 h-[75px]">
+                <LogoLoop
+                  logos={[
+                    { src: "/companies/lux_capital_logo.jpeg", alt: "Lux Capital", title: "Lux Capital" },
+                    { src: "/companies/a16z.jpg", alt: "A16Z", title: "A16Z" },
+                    { src: "/companies/figma.png", alt: "Figma", title: "Figma" },
+                    { src: "/companies/venmo.png", alt: "Venmo", title: "Venmo" },
+                    { src: "/companies/anthropic.png", alt: "Anthropic", title: "Anthropic" },
+                    { src: "/companies/usv.jpg", alt: "USV", title: "USV" },
+                    { src: "/companies/bessemer.png", alt: "Bessemer", title: "Bessemer" },
+                    { src: "/companies/meta.png", alt: "Meta", title: "Meta" },
+                  ]}
+                  speed={50}
+                  direction="left"
+                  logoHeight={52}
+                  gap={48}
+                  pauseOnHover={true}
+                  scaleOnHover={true}
+                  fadeOut={true}
+                  fadeOutColor="#d9d9d9"
+                  ariaLabel="Company partners and sponsors"
+                  renderItem={(item, key) => {
+                    if ('src' in item) {
+                      return (
+                        <div
+                          className="flex items-center justify-center
+                                    w-[120px] h-[75px]
+                                    rounded-xl
+                                    bg-white/50
+                                    backdrop-blur-sm
+                                    px-4"
+                        >
+                          <img
+                            src={item.src}
+                            alt={item.alt || ''}
+                            className="max-h-[52px] max-w-[100px] object-contain
+                                      opacity-80 transition hover:opacity-100"
+                          />
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
+                />
               </div>
             </FadeLeft>
 
