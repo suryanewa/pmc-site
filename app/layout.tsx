@@ -9,20 +9,6 @@ import { Preloader } from "./components/Preloader";
 import { SmoothScroll } from "./components/SmoothScroll";
 import { ScrollBackground } from "./components/ScrollBackground";
 
-// Logo component for navbar
-function Logo() {
-  return (
-    <div className="flex items-baseline">
-      <span className="text-xl font-medium tracking-tight text-[#041540]" style={{ fontFamily: 'var(--font-gotham-medium)' }}>
-        eeg
-      </span>
-      <span className="text-xl font-medium tracking-tight text-[#0115DF]" style={{ fontFamily: 'var(--font-gotham-medium)' }}>
-        /
-      </span>
-    </div>
-  );
-}
-
 const gothamMedium = localFont({
   src: "../public/fonts/Gotham Medium.otf",
   variable: "--font-gotham-medium",
@@ -51,7 +37,7 @@ export default function RootLayout({
         <Preloader />
         <SmoothScroll>
           <ScrollBackground />
-          <Navbar logo={<Logo />} />
+          <Navbar />
           {children}
           <Footer />
         </SmoothScroll>
