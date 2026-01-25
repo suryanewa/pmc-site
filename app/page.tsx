@@ -105,14 +105,13 @@ export default function Home() {
 
             {/* Main Headline */}
             <motion.h1
-              className="text-[clamp(2.5rem,8vw,5.5rem)] font-medium leading-[1.05] tracking-[-0.03em] text-[#041540] mb-8"
+              className="text-[clamp(2rem,6vw,4.5rem)] font-medium leading-[1.05] tracking-[-0.03em] text-[#041540] mb-8"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
             >
-              Where NYU&apos;s<br />
-              Founders & Investors<br />
-              Are Made
+              The Home of NYU<br />
+              Founders & Investors
             </motion.h1>
 
             {/* Description */}
@@ -122,7 +121,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
-              Building the next generation of founders and investors through hands-on programs and direct access to industry leaders.
+              Guiding the next generation of founders and investors through hands-on programs to build startups, develop venture fundamentals, and accelerate proven teams with direct access to industry leaders.
             </motion.p>
 
             {/* CTA Button */}
