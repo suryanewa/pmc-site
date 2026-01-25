@@ -89,18 +89,25 @@ export default function Home() {
     <div className="min-h-screen relative">
       <main>
         {/* Hero Section - Clean text-based */}
-        <section className="min-h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 bg-[#F7F3EE] pt-20 relative overflow-hidden">
+        <section className="min-h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 bg-[#F7F3EE] py-24 relative overflow-hidden">
           <HeroWarpCanvas />
           <div className="w-full max-w-[1400px] mx-auto relative z-10">
             <div className="max-w-[1000px] text-left">
             {/* Subtitle */}
             <motion.p
-              className="text-xs tracking-[0.2em] uppercase text-[#041540]/50 font-medium mb-8"
+              className="mb-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              NYU Stern&apos;s Premier Entrepreneurship Club
+              <span className="inline-flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center rounded-full border border-[#041540]/20 bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/60">
+                  NYU Stern&apos;s Premier Entrepreneurship Club
+                </span>
+                <span className="inline-flex items-center rounded-full border border-[#041540]/20 bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/60">
+                  EST 2003
+                </span>
+              </span>
             </motion.p>
 
             {/* Main Headline */}
@@ -138,25 +145,6 @@ export default function Home() {
               </Link>
             </motion.div>
 
-            {/* Scroll indicator */}
-            <motion.div
-              className="mt-16"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              <motion.div
-                animate={{ y: [0, 6, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                className="w-5 h-8 border-2 border-[#041540]/30 rounded-full flex items-start justify-center p-1"
-              >
-                <motion.div
-                  className="w-1 h-1.5 bg-[#041540]/50 rounded-full"
-                  animate={{ opacity: [0.4, 1, 0.4] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-              </motion.div>
-            </motion.div>
             </div>
           </div>
         </section>
