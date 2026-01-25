@@ -164,7 +164,11 @@ export default function Home() {
             </motion.div>
 
             </div>
-            <div className="relative w-full h-[360px] md:h-[460px] lg:h-[600px] pointer-events-none">
+            <div
+              className="relative w-full h-[360px] md:h-[460px] lg:h-[600px] pointer-events-none"
+              data-gsap="parallax"
+              data-speed="0.12"
+            >
               <Suspense fallback={<div className="w-full h-full" />}>
                 <HeroScene />
               </Suspense>
@@ -305,16 +309,36 @@ export default function Home() {
 
               {/* Right - Polaroids with stagger */}
               <div className="relative min-h-[500px] lg:min-h-[600px]">
-                <FadeIn delay={0.2} className="absolute w-[240px] md:w-[280px] left-[0%] top-[0%] hover:z-50">
+                <FadeIn
+                  delay={0.2}
+                  className="absolute w-[240px] md:w-[280px] left-[0%] top-[0%] hover:z-50"
+                  data-gsap="parallax"
+                  data-speed="0.08"
+                >
                   <Polaroid src="/lux.jpeg" alt="Lux Capital" caption="eeg/lux-capital" rotation={-3} />
                 </FadeIn>
-                <FadeIn delay={0.35} className="absolute w-[240px] md:w-[280px] right-[5%] top-[8%] hover:z-50">
+                <FadeIn
+                  delay={0.35}
+                  className="absolute w-[240px] md:w-[280px] right-[5%] top-[8%] hover:z-50"
+                  data-gsap="parallax"
+                  data-speed="0.14"
+                >
                   <Polaroid src="/zfellows.jpeg" alt="Zfellows" caption="eeg/zfellows" rotation={2}/>
                 </FadeIn>
-                <FadeIn delay={0.5} className="absolute w-[240px] md:w-[280px] left-[15%] top-[40%] hover:z-50">
+                <FadeIn
+                  delay={0.5}
+                  className="absolute w-[240px] md:w-[280px] left-[15%] top-[40%] hover:z-50"
+                  data-gsap="parallax"
+                  data-speed="0.1"
+                >
                   <Polaroid src="/beli.png" alt="Beli" caption="eeg/beli" rotation={4} />
                 </FadeIn>
-                <FadeIn delay={0.65} className="absolute w-[240px] md:w-[280px] right-[0%] bottom-[5%] hover:z-50">
+                <FadeIn
+                  delay={0.65}
+                  className="absolute w-[240px] md:w-[280px] right-[0%] bottom-[5%] hover:z-50"
+                  data-gsap="parallax"
+                  data-speed="0.06"
+                >
                   <Polaroid src="/varun-rana.png" alt="Varun Rana" caption="eeg/varun-rana" rotation={-2}/>
                 </FadeIn>
               </div>

@@ -1,3 +1,6 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Button } from './Button';
 
@@ -17,7 +20,11 @@ export function ProgramCard({
   applyHref,
 }: ProgramCardProps) {
   return (
-    <div className="bg-white rounded-[20px] overflow-hidden flex flex-col">
+    <motion.div
+      className="bg-white rounded-[20px] overflow-hidden flex flex-col"
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+    >
       {/* Colored Header */}
       <div
         className="h-[112px] flex items-center justify-center"
@@ -66,6 +73,6 @@ export function ProgramCard({
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

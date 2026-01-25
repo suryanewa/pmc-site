@@ -41,6 +41,8 @@ export function Timeline({
     <div
       className={`relative ${className}`}
       style={{ minHeight }}
+      data-gsap="parallax"
+      data-speed="0.05"
     >
       {/* Three-column grid: left cards | timeline | right cards */}
       <div className="grid grid-cols-[1fr_2px_1fr] h-full" style={{ minHeight }}>

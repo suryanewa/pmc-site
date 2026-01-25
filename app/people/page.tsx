@@ -120,7 +120,7 @@ export default function PeoplePage() {
             </h1>
           </FadeUp>
 
-          <FadeIn delay={0.3}>
+          <FadeIn delay={0.3} data-gsap="parallax" data-speed="0.06">
             <img
               src="/heart.png"
               alt="Heart"
@@ -146,7 +146,7 @@ export default function PeoplePage() {
         </FadeUp>
 
         {/* Scattered Polaroids Container */}
-        <div className="relative h-[1000px] w-full">
+        <div className="relative h-[1000px] w-full" data-gsap="parallax" data-speed="0.08">
           {/* Row 1 - Top polaroids */}
           <FadeIn delay={0.2}>
             <Polaroid

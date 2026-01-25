@@ -1,16 +1,16 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, HTMLMotionProps } from 'framer-motion';
 import { ReactNode } from 'react';
 
-interface AnimationProps {
+interface AnimationProps extends HTMLMotionProps<'div'> {
   children: ReactNode;
   className?: string;
   delay?: number;
 }
 
 // Fade in from below
-export function FadeUp({ children, className = '', delay = 0 }: AnimationProps) {
+export function FadeUp({ children, className = '', delay = 0, ...props }: AnimationProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -18,6 +18,7 @@ export function FadeUp({ children, className = '', delay = 0 }: AnimationProps) 
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: 0.7, delay, ease: [0.25, 0.1, 0.25, 1] }}
       className={className}
+      {...props}
     >
       {children}
     </motion.div>
@@ -25,7 +26,7 @@ export function FadeUp({ children, className = '', delay = 0 }: AnimationProps) 
 }
 
 // Fade in from left
-export function FadeLeft({ children, className = '', delay = 0 }: AnimationProps) {
+export function FadeLeft({ children, className = '', delay = 0, ...props }: AnimationProps) {
   return (
     <motion.div
       initial={{ opacity: 0, x: -60 }}
@@ -33,6 +34,7 @@ export function FadeLeft({ children, className = '', delay = 0 }: AnimationProps
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: 0.7, delay, ease: [0.25, 0.1, 0.25, 1] }}
       className={className}
+      {...props}
     >
       {children}
     </motion.div>
@@ -40,7 +42,7 @@ export function FadeLeft({ children, className = '', delay = 0 }: AnimationProps
 }
 
 // Fade in from right
-export function FadeRight({ children, className = '', delay = 0 }: AnimationProps) {
+export function FadeRight({ children, className = '', delay = 0, ...props }: AnimationProps) {
   return (
     <motion.div
       initial={{ opacity: 0, x: 60 }}
@@ -48,6 +50,7 @@ export function FadeRight({ children, className = '', delay = 0 }: AnimationProp
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: 0.7, delay, ease: [0.25, 0.1, 0.25, 1] }}
       className={className}
+      {...props}
     >
       {children}
     </motion.div>
@@ -55,7 +58,7 @@ export function FadeRight({ children, className = '', delay = 0 }: AnimationProp
 }
 
 // Simple fade in
-export function FadeIn({ children, className = '', delay = 0 }: AnimationProps) {
+export function FadeIn({ children, className = '', delay = 0, ...props }: AnimationProps) {
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -63,6 +66,7 @@ export function FadeIn({ children, className = '', delay = 0 }: AnimationProps) 
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: 0.7, delay, ease: [0.25, 0.1, 0.25, 1] }}
       className={className}
+      {...props}
     >
       {children}
     </motion.div>
@@ -70,7 +74,7 @@ export function FadeIn({ children, className = '', delay = 0 }: AnimationProps) 
 }
 
 // Scale up fade in
-export function ScaleUp({ children, className = '', delay = 0 }: AnimationProps) {
+export function ScaleUp({ children, className = '', delay = 0, ...props }: AnimationProps) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -78,6 +82,7 @@ export function ScaleUp({ children, className = '', delay = 0 }: AnimationProps)
       viewport={{ once: true, margin: '-100px' }}
       transition={{ duration: 0.7, delay, ease: [0.25, 0.1, 0.25, 1] }}
       className={className}
+      {...props}
     >
       {children}
     </motion.div>
@@ -85,13 +90,13 @@ export function ScaleUp({ children, className = '', delay = 0 }: AnimationProps)
 }
 
 // Staggered children animation container
-interface StaggerProps {
+interface StaggerProps extends HTMLMotionProps<'div'> {
   children: ReactNode;
   className?: string;
   staggerDelay?: number;
 }
 
-export function StaggerContainer({ children, className = '', staggerDelay = 0.1 }: StaggerProps) {
+export function StaggerContainer({ children, className = '', staggerDelay = 0.1, ...props }: StaggerProps) {
   return (
     <motion.div
       initial="hidden"
@@ -106,6 +111,7 @@ export function StaggerContainer({ children, className = '', staggerDelay = 0.1 
         },
       }}
       className={className}
+      {...props}
     >
       {children}
     </motion.div>
@@ -113,7 +119,7 @@ export function StaggerContainer({ children, className = '', staggerDelay = 0.1 
 }
 
 // Child item for stagger container
-export function StaggerItem({ children, className = '' }: Omit<AnimationProps, 'delay'>) {
+export function StaggerItem({ children, className = '', ...props }: Omit<AnimationProps, 'delay'>) {
   return (
     <motion.div
       variants={{
@@ -125,6 +131,7 @@ export function StaggerItem({ children, className = '' }: Omit<AnimationProps, '
         },
       }}
       className={className}
+      {...props}
     >
       {children}
     </motion.div>

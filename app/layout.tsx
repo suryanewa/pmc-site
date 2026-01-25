@@ -8,6 +8,7 @@ import { Navbar } from "./components/Navbar";
 import { Preloader } from "./components/Preloader";
 import { SmoothScroll } from "./components/SmoothScroll";
 import { ScrollBackground } from "./components/ScrollBackground";
+import { GsapScrollEffects } from "./components/GsapScrollEffects";
 
 const gothamMedium = localFont({
   src: "../public/fonts/Gotham Medium.otf",
@@ -37,6 +38,7 @@ export default function RootLayout({
         <Preloader />
         <SmoothScroll>
           <ScrollBackground />
+          <GsapScrollEffects />
           <Navbar />
           {children}
           <Footer />

@@ -2,11 +2,15 @@
 
 import { useEffect, useRef } from "react";
 import Lenis from "lenis";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
 
   useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
     // Initialize Lenis
     const lenis = new Lenis({
       duration: 1.2,
@@ -23,6 +27,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     // RAF loop
     function raf(time: number) {
       lenis.raf(time);
+      ScrollTrigger.update();
       requestAnimationFrame(raf);
     }
 
