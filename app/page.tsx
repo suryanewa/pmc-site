@@ -101,10 +101,10 @@ export default function Home() {
               transition={{ duration: 0.6 }}
             >
               <span className="inline-flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center rounded-full border border-[#041540]/20 bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/60">
+                <span className="inline-flex items-center rounded-full border border-[#041540]/20 bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/60 opacity-60 hover:opacity-100 transition-opacity duration-300">
                   NYU Stern&apos;s Premier Entrepreneurship Club
                 </span>
-                <span className="inline-flex items-center rounded-full border border-[#041540]/20 bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/60">
+                <span className="inline-flex items-center rounded-full border border-[#041540]/20 bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/60 opacity-60 hover:opacity-100 transition-opacity duration-300">
                   EST 2003
                 </span>
               </span>
