@@ -89,9 +89,10 @@ export default function Home() {
     <div className="min-h-screen relative">
       <main>
         {/* Hero Section - Clean text-based */}
-        <section className="min-h-screen flex flex-col items-center justify-center px-6 md:px-16 lg:px-24 bg-[#F7F3EE] pt-20 relative overflow-hidden">
+        <section className="min-h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 bg-[#F7F3EE] pt-20 relative overflow-hidden">
           <HeroWarpCanvas />
-          <div className="max-w-[1000px] mx-auto text-center relative z-10">
+          <div className="w-full max-w-[1400px] mx-auto relative z-10">
+            <div className="max-w-[1000px] text-left">
             {/* Subtitle */}
             <motion.p
               className="text-xs tracking-[0.2em] uppercase text-[#041540]/50 font-medium mb-8"
@@ -116,7 +117,7 @@ export default function Home() {
 
             {/* Description */}
             <motion.p
-              className="text-lg md:text-xl text-[#041540]/60 leading-relaxed max-w-2xl mx-auto mb-10"
+              className="text-lg md:text-xl text-[#041540]/60 leading-relaxed max-w-2xl mb-10"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
@@ -148,7 +149,7 @@ export default function Home() {
               <motion.div
                 animate={{ y: [0, 6, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                className="w-5 h-8 border-2 border-[#041540]/30 rounded-full flex items-start justify-center p-1 mx-auto"
+                className="w-5 h-8 border-2 border-[#041540]/30 rounded-full flex items-start justify-center p-1"
               >
                 <motion.div
                   className="w-1 h-1.5 bg-[#041540]/50 rounded-full"
@@ -157,6 +158,7 @@ export default function Home() {
                 />
               </motion.div>
             </motion.div>
+            </div>
           </div>
         </section>
 
