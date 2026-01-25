@@ -12,7 +12,8 @@ export function HeroWarpCanvas() {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let center: { x: number; y: number };
+    let currentCenter: { x: number; y: number };
+    let targetCenter: { x: number; y: number };
     let cols = 0;
     let rows = 0;
     let dither: ImageData[] = [];
@@ -57,15 +58,19 @@ export function HeroWarpCanvas() {
     const warp = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      const ease = 0.1;
+      currentCenter.x += (targetCenter.x - currentCenter.x) * ease;
+      currentCenter.y += (targetCenter.y - currentCenter.y) * ease;
+
       for (let i = cols * rows; i >= 0; i--) {
         const pattern =
           dither[
             Math.abs(
               step +
-                center.y *
+                currentCenter.y *
                   Math.hypot(
-                    (i % cols - center.x) / center.y,
-                    (((i / cols) | 0) - center.y) / center.y
+                    (i % cols - currentCenter.x) / currentCenter.y,
+                    (((i / cols) | 0) - currentCenter.y) / currentCenter.y
                   ) |
                 0
             ) % length
@@ -105,10 +110,11 @@ export function HeroWarpCanvas() {
       cols = Math.ceil(canvas.width / size);
       rows = Math.ceil(canvas.height / size);
 
-      center = {
+      currentCenter = {
         x: cols / 2,
         y: rows / 2,
       };
+      targetCenter = { ...currentCenter };
 
       createDither();
       warp();
@@ -118,13 +124,39 @@ export function HeroWarpCanvas() {
       expands = !expands;
     };
 
-    const mousemove = (event: MouseEvent) => {
-      mx = event.clientX + 1;
+    const hero = canvas.closest("section");
+    if (!hero) return;
+
+    const updateTarget = (clientX: number, clientY: number) => {
+      const heroRect = hero.getBoundingClientRect();
+      const canvasRect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / canvasRect.width;
+      const scaleY = canvas.height / canvasRect.height;
+
+      const x = (clientX - canvasRect.left) * scaleX;
+      const y = (clientY - canvasRect.top) * scaleY;
+
+      const clampedX = Math.max(heroRect.left, Math.min(clientX, heroRect.right));
+      const clampedY = Math.max(heroRect.top, Math.min(clientY, heroRect.bottom));
+
+      if (clientX !== clampedX || clientY !== clampedY) {
+        targetCenter.x = cols / 2;
+        targetCenter.y = rows / 2;
+        return;
+      }
+
+      targetCenter.x = x / size;
+      targetCenter.y = y / size;
     };
 
-    const touchmove = (event: TouchEvent) => {
-      if (!event.targetTouches.length) return;
-      mx = event.targetTouches[0].clientX + 1;
+    const handlePointerMove = (event: PointerEvent) => {
+      mx = event.clientX + 1;
+      updateTarget(event.clientX, event.clientY);
+    };
+
+    const handlePointerLeave = () => {
+      targetCenter.x = cols / 2;
+      targetCenter.y = rows / 2;
     };
 
     const handleResize = () => {
@@ -135,22 +167,20 @@ export function HeroWarpCanvas() {
     init();
 
     window.addEventListener("resize", handleResize);
-    window.addEventListener("mousedown", invert);
-    window.addEventListener("mouseup", invert);
-    window.addEventListener("touchstart", invert, { passive: true });
-    window.addEventListener("touchend", invert, { passive: true });
-    window.addEventListener("mousemove", mousemove);
-    window.addEventListener("touchmove", touchmove, { passive: true });
+    hero.addEventListener("pointerdown", invert, { passive: true });
+    hero.addEventListener("pointerup", invert, { passive: true });
+    hero.addEventListener("pointerenter", handlePointerMove, { passive: true });
+    hero.addEventListener("pointermove", handlePointerMove, { passive: true });
+    hero.addEventListener("pointerleave", handlePointerLeave);
 
     return () => {
       if (timeout) clearTimeout(timeout);
       window.removeEventListener("resize", handleResize);
-      window.removeEventListener("mousedown", invert);
-      window.removeEventListener("mouseup", invert);
-      window.removeEventListener("touchstart", invert);
-      window.removeEventListener("touchend", invert);
-      window.removeEventListener("mousemove", mousemove);
-      window.removeEventListener("touchmove", touchmove);
+      hero.removeEventListener("pointerdown", invert);
+      hero.removeEventListener("pointerup", invert);
+      hero.removeEventListener("pointerenter", handlePointerMove);
+      hero.removeEventListener("pointermove", handlePointerMove);
+      hero.removeEventListener("pointerleave", handlePointerLeave);
     };
   }, []);
 
