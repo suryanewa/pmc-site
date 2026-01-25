@@ -17,6 +17,9 @@ function MacModel({
   const { scene } = useGLTF("/mac_edited.glb");
   const hasCalledOnLoaded = useRef(false);
   const modelScale = 0.3;
+  const videoCanvasRef = useRef<HTMLCanvasElement | null>(null);
+  const videoCanvasTextureRef = useRef<THREE.CanvasTexture | null>(null);
+  const videoRafRef = useRef<number | null>(null);
 
   // Create video texture - just rotate 90 degrees CCW (no mirror)
   const videoTexture = useMemo(() => {
@@ -26,9 +29,14 @@ function MacModel({
       t.minFilter = THREE.LinearFilter;
       t.magFilter = THREE.LinearFilter;
       t.generateMipmaps = false;
-      // Rotate 90 degrees counter-clockwise only
+      
       t.center.set(0.5, 0.5);
       t.rotation = Math.PI / 2;
+      t.wrapS = THREE.ClampToEdgeWrapping;
+      t.wrapT = THREE.ClampToEdgeWrapping;
+      t.repeat.set(1, 1);
+      t.offset.set(0, 0);
+      
       return t;
     }
     
@@ -51,9 +59,13 @@ function MacModel({
 
   useEffect(() => {
     // Apply video texture to screen mesh
+    let bestMesh: THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null = null;
+    let bestArea = 0;
+    let bestPriority = -1;
+
     scene.traverse((obj) => {
       if ((obj as THREE.Mesh).isMesh) {
-        const mesh = obj as THREE.Mesh;
+        const mesh = obj as THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>;
         const name = mesh.name.toLowerCase();
         
         // Try to find screen by common names
@@ -63,19 +75,157 @@ function MacModel({
           name.includes("monitor") ||
           name.includes("glass")
         ) {
-          mesh.material = new THREE.MeshBasicMaterial({
-            map: videoTexture,
+          const geometry = mesh.geometry;
+          geometry.computeBoundingBox();
+          const bounds = geometry.boundingBox;
+          const size = new THREE.Vector3();
+
+          if (bounds) {
+            bounds.getSize(size);
+            const dims = [size.x, size.y, size.z].sort((a, b) => b - a);
+            const area = dims[0] * dims[1];
+            const isGlass = name.includes("glass");
+            const priority = isGlass ? 0 : 1;
+
+            if (priority > bestPriority || (priority === bestPriority && area > bestArea)) {
+              bestPriority = priority;
+              bestArea = area;
+              bestMesh = mesh;
+            }
+          }
+        }
+      }
+    });
+
+    if (bestMesh) {
+      const geometry = (bestMesh as THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>).geometry;
+      geometry.computeBoundingBox();
+      const bounds = geometry.boundingBox;
+      const size = new THREE.Vector3();
+
+      if (bounds) {
+        bounds.getSize(size);
+      }
+
+      const videoWidth = videoEl?.videoWidth ?? 0;
+      const videoHeight = videoEl?.videoHeight ?? 0;
+      const uv = geometry.attributes.uv;
+
+      if (videoWidth > 0 && videoHeight > 0 && uv && uv.count > 0) {
+        let uMin = Infinity;
+        let uMax = -Infinity;
+        let vMin = Infinity;
+        let vMax = -Infinity;
+
+        for (let i = 0; i < uv.count; i += 1) {
+          const u = uv.getX(i);
+          const v = uv.getY(i);
+          if (u < uMin) uMin = u;
+          if (u > uMax) uMax = u;
+          if (v < vMin) vMin = v;
+          if (v > vMax) vMax = v;
+        }
+
+        const uRange = uMax - uMin;
+        const vRange = vMax - vMin;
+        if (uRange > 0 && vRange > 0) {
+          const centerU = uMin + uRange / 2;
+          const centerV = vMin + vRange / 2;
+          const screenAspect = uRange / vRange;
+
+          const canvas = videoCanvasRef.current ?? document.createElement("canvas");
+          videoCanvasRef.current = canvas;
+          const canvasWidth = 1408;
+          const canvasHeight = Math.max(2, Math.round(canvasWidth / screenAspect));
+          canvas.width = canvasWidth;
+          canvas.height = canvasHeight;
+
+          let canvasTexture = videoCanvasTextureRef.current;
+          if (!canvasTexture) {
+            canvasTexture = new THREE.CanvasTexture(canvas);
+            canvasTexture.colorSpace = THREE.SRGBColorSpace;
+            canvasTexture.wrapS = THREE.ClampToEdgeWrapping;
+            canvasTexture.wrapT = THREE.ClampToEdgeWrapping;
+            canvasTexture.minFilter = THREE.LinearFilter;
+            canvasTexture.magFilter = THREE.LinearFilter;
+            videoCanvasTextureRef.current = canvasTexture;
+          }
+
+          canvasTexture.center.set(centerU, centerV);
+          canvasTexture.rotation = videoTexture.rotation;
+          const offsetU = -uMin / uRange - 0.09;
+          const offsetV = -vMin / vRange;
+          canvasTexture.repeat.set(1 / uRange, 1 / vRange);
+          canvasTexture.offset.set(offsetU, offsetV);
+
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            const activeVideo = videoEl;
+            if (!activeVideo) {
+              return;
+            }
+
+            const renderFrame = () => {
+              ctx.setTransform(1, 0, 0, 1, 0, 0);
+              ctx.clearRect(0, 0, canvas.width, canvas.height);
+              ctx.fillStyle = "#000";
+              ctx.fillRect(0, 0, canvas.width, canvas.height);
+              ctx.imageSmoothingEnabled = true;
+
+              const videoAspect = videoWidth / videoHeight;
+              const padX = canvas.width * 0.18;
+              const innerW = Math.max(2, canvas.width - padX * 2);
+              const innerH = canvas.height;
+              let drawW = innerW;
+              let drawH = innerH;
+              if (videoAspect > screenAspect) {
+                drawW = innerW;
+                drawH = innerW / videoAspect;
+              } else {
+                drawH = innerH;
+                drawW = innerH * videoAspect;
+              }
+
+              const shiftX = canvas.width * 0.15;
+              const dx = padX - shiftX + (innerW - drawW) / 2;
+              const dy = (innerH - drawH) / 2;
+              ctx.drawImage(activeVideo, dx, dy, drawW, drawH);
+              canvasTexture.needsUpdate = true;
+              videoRafRef.current = requestAnimationFrame(renderFrame);
+            };
+
+            if (videoRafRef.current === null) {
+              videoRafRef.current = requestAnimationFrame(renderFrame);
+            }
+          }
+
+          (bestMesh as THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>).material = new THREE.MeshBasicMaterial({
+            map: canvasTexture,
             toneMapped: false,
           });
         }
       }
-    });
+
+      if (!videoCanvasTextureRef.current) {
+        (bestMesh as THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>).material = new THREE.MeshBasicMaterial({
+          map: videoTexture,
+          toneMapped: false,
+        });
+      }
+    }
 
     if (!hasCalledOnLoaded.current) {
       hasCalledOnLoaded.current = true;
       setTimeout(() => onLoaded(), 100);
     }
   }, [scene, videoTexture, onLoaded]);
+
+  useEffect(() => () => {
+    if (videoRafRef.current !== null) {
+      cancelAnimationFrame(videoRafRef.current);
+      videoRafRef.current = null;
+    }
+  }, []);
 
   // Center the model based on its bounding box
   const centerOffset = useMemo(() => {
@@ -109,7 +259,7 @@ export function HeroScene() {
   // Load video and start playing immediately
   useEffect(() => {
     const v = document.createElement("video");
-    v.src = "/140912-776415326_small.mp4";
+    v.src = "/eeg-crt.mp4";
     v.muted = true;
     v.loop = true;
     v.playsInline = true;
