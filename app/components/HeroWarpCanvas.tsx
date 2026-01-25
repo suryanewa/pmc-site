@@ -24,7 +24,8 @@ export function HeroWarpCanvas() {
     let scale = 0;
     let size = 0;
     let step = 0;
-    let timeout: ReturnType<typeof setTimeout> | null = null;
+    let rafId: number | null = null;
+    let lastTime = 0;
 
     const colour = "rgba(4, 21, 64, 0.25)";
 
@@ -55,8 +56,18 @@ export function HeroWarpCanvas() {
       length = dither.length;
     };
 
-    const warp = () => {
+    const stepRate = 10;
+    const pointerEase = 0.08;
+    let smoothedMx = 0;
+
+    const warp = (time: number) => {
+      if (!lastTime) lastTime = time;
+      const delta = Math.min(0.05, (time - lastTime) / 1000);
+      lastTime = time;
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      smoothedMx += (mx - smoothedMx) * pointerEase;
 
       const ease = 0.1;
       currentCenter.x += (targetCenter.x - currentCenter.x) * ease;
@@ -80,14 +91,10 @@ export function HeroWarpCanvas() {
         draw(pattern, col * size, row * size);
       }
 
-      if (expands) {
-        step--;
-      } else {
-        step++;
-      }
+      const direction = expands ? -1 : 1;
+      step += direction * stepRate * delta;
 
-      const speed = Math.round((mx / canvas.width) * 28) + 2;
-      timeout = setTimeout(warp, 1000 / speed);
+      rafId = requestAnimationFrame(warp);
     };
 
     const init = () => {
@@ -116,8 +123,9 @@ export function HeroWarpCanvas() {
       };
       targetCenter = { ...currentCenter };
 
+      smoothedMx = mx;
       createDither();
-      warp();
+      rafId = requestAnimationFrame(warp);
     };
 
     const invert = () => {
@@ -160,7 +168,7 @@ export function HeroWarpCanvas() {
     };
 
     const handleResize = () => {
-      if (timeout) clearTimeout(timeout);
+      if (rafId) cancelAnimationFrame(rafId);
       init();
     };
 
@@ -174,7 +182,7 @@ export function HeroWarpCanvas() {
     hero.addEventListener("pointerleave", handlePointerLeave);
 
     return () => {
-      if (timeout) clearTimeout(timeout);
+      if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("resize", handleResize);
       hero.removeEventListener("pointerdown", invert);
       hero.removeEventListener("pointerup", invert);
