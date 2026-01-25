@@ -1,21 +1,22 @@
 "use client";
 
 import * as THREE from "three";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useGLTF, Environment, ContactShadows } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber";
+import { useGLTF, Environment, ContactShadows, Bounds } from "@react-three/drei";
 import { useEffect, useMemo, useState, useRef } from "react";
 
 
 // Mac model with video texture - always shows video
 function MacModel({ 
   videoEl, 
-  onLoaded
+  onLoaded,
 }: { 
   videoEl: HTMLVideoElement | null; 
   onLoaded: () => void;
 }) {
   const { scene } = useGLTF("/mac_edited.glb");
   const hasCalledOnLoaded = useRef(false);
+  const modelScale = 0.3;
 
   // Create video texture - just rotate 90 degrees CCW (no mirror)
   const videoTexture = useMemo(() => {
@@ -77,34 +78,26 @@ function MacModel({
   }, [scene, videoTexture, onLoaded]);
 
   // Center the model based on its bounding box
-  useEffect(() => {
+  const centerOffset = useMemo(() => {
     const box = new THREE.Box3().setFromObject(scene);
     const center = new THREE.Vector3();
+    const size = new THREE.Vector3();
     box.getCenter(center);
-    scene.position.sub(center);
-  }, [scene]);
+    box.getSize(size);
+
+    const yOffset = size.y * modelScale * 0.04;
+    return [
+      -center.x * modelScale,
+      -center.y * modelScale - yOffset,
+      -center.z * modelScale,
+    ] as [number, number, number];
+  }, [scene, modelScale]);
 
   return (
-    <primitive 
-      object={scene} 
-      scale={0.05} 
-      position={[0, -0.5, 0]} 
-      rotation={[0.1, 0, 0]} 
-    />
+    <group position={centerOffset} scale={modelScale} rotation={[0.1, 0, 0]}>
+      <primitive object={scene} />
+    </group>
   );
-}
-
-// Static camera - Mac positioned on right side of screen
-function CameraController() {
-  const { camera } = useThree();
-
-  useFrame(() => {
-    // Camera positioned to put Mac on far right, slight angle
-    camera.position.set(3.5, 0.3, 5);
-    camera.lookAt(1, -0.2, 0);
-  });
-
-  return null;
 }
 
 useGLTF.preload("/mac_edited.glb");
@@ -144,7 +137,7 @@ export function HeroScene() {
     <div className="w-full h-full relative overflow-hidden">
       {/* Loading state */}
       {!modelReady && (
-        <div className="absolute inset-0 flex items-center justify-center bg-[#F7F3EE] z-40">
+        <div className="absolute inset-0 flex items-center justify-center bg-transparent z-40">
           <div className="flex flex-col items-center gap-4">
             <div className="w-8 h-8 border-2 border-[#041540]/20 border-t-[#041540]/60 rounded-full animate-spin" />
           </div>
@@ -155,14 +148,8 @@ export function HeroScene() {
       <Canvas
         camera={{ position: [0, 0.2, 4], fov: 45 }}
         dpr={[1, 2]}
-        gl={{ antialias: true, alpha: false, powerPreference: "high-performance" }}
-        onCreated={({ gl }) => {
-          gl.setClearColor('#F7F3EE', 1);
-        }}
-        style={{ background: "#F7F3EE" }}
+        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       >
-        <CameraController />
-        
         {/* Lighting */}
         <ambientLight intensity={0.4} />
         <directionalLight position={[5, 5, 5]} intensity={1} />
@@ -170,10 +157,12 @@ export function HeroScene() {
         <pointLight position={[-3, 2, 2]} intensity={0.3} color="#0115DF" />
         
         {/* Mac Model */}
-        <MacModel 
-          videoEl={videoEl} 
-          onLoaded={() => setModelReady(true)} 
-        />
+        <Bounds fit clip observe margin={1.08}>
+          <MacModel 
+            videoEl={videoEl} 
+            onLoaded={() => setModelReady(true)} 
+          />
+        </Bounds>
         
         {/* Soft blob shadow underneath Mac */}
         <ContactShadows 

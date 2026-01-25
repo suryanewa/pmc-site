@@ -1,12 +1,22 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { Suspense } from 'react';
+import dynamic from 'next/dynamic';
 import { Newsletter } from './components/Newsletter';
 import { FadeUp, FadeIn } from './components/ScrollAnimations';
 import { Polaroid } from './components/Polaroid';
 import { HeroWarpCanvas } from './components/HeroWarpCanvas';
 import Link from "next/link";
 import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards';
+
+const HeroScene = dynamic(
+  () => import('./components/HeroScene').then((mod) => ({ default: mod.HeroScene })),
+  {
+    ssr: false,
+    loading: () => <div className="w-full h-full" />,
+  }
+);
 
 function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
@@ -91,7 +101,7 @@ export default function Home() {
         {/* Hero Section - Clean text-based */}
         <section className="min-h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 bg-[#F7F3EE] py-24 relative overflow-hidden">
           <HeroWarpCanvas />
-          <div className="w-full max-w-[1400px] mx-auto relative z-10">
+          <div className="w-full max-w-[1400px] mx-auto relative z-10 grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:gap-16">
             <div className="max-w-[1000px] text-left">
             {/* Subtitle */}
             <motion.p
@@ -101,10 +111,10 @@ export default function Home() {
               transition={{ duration: 0.6 }}
             >
               <span className="inline-flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center rounded-full border border-[#041540]/20 bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/60 opacity-60 hover:opacity-100 transition-opacity duration-300">
+                <span className="inline-flex items-center rounded-full border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 opacity-70 hover:opacity-100 hover:bg-[#041540] hover:text-white transition-all duration-300">
                   NYU Stern&apos;s Premier Entrepreneurship Club
                 </span>
-                <span className="inline-flex items-center rounded-full border border-[#041540]/20 bg-white px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/60 opacity-60 hover:opacity-100 transition-opacity duration-300">
+                <span className="inline-flex items-center rounded-full border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 opacity-70 hover:opacity-100 hover:bg-[#041540] hover:text-white transition-all duration-300">
                   EST 2003
                 </span>
               </span>
@@ -137,14 +147,27 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.3 }}
             >
-              <Link
-                href="#programs"
-                className="inline-block px-8 py-4 bg-[#041540] text-white font-medium hover:bg-[#0a2a6e] transition-colors duration-300"
-              >
-                Explore Programs
-              </Link>
+              <div className="flex flex-wrap items-center gap-4">
+                <Link
+                  href="#programs"
+                  className="inline-block px-8 py-4 bg-[#041540] text-white font-medium hover:bg-[#0a2a6e] transition-colors duration-300"
+                >
+                  Explore Our Programs
+                </Link>
+                <Link
+                  href="#"
+                  className="inline-block px-8 py-4 border border-[#041540] text-[#041540] font-medium hover:bg-[#041540] hover:text-white transition-all duration-300"
+                >
+                  Coffee Chat Leadership
+                </Link>
+              </div>
             </motion.div>
 
+            </div>
+            <div className="relative w-full h-[360px] md:h-[460px] lg:h-[600px] pointer-events-none">
+              <Suspense fallback={<div className="w-full h-full" />}>
+                <HeroScene />
+              </Suspense>
             </div>
           </div>
         </section>
