@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Newsletter } from './components/Newsletter';
 import { FadeUp, FadeIn } from './components/ScrollAnimations';
 import { Polaroid } from './components/Polaroid';
+import { HeroWarpCanvas } from './components/HeroWarpCanvas';
 import Link from "next/link";
 import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards';
 
@@ -88,8 +89,9 @@ export default function Home() {
     <div className="min-h-screen relative">
       <main>
         {/* Hero Section - Clean text-based */}
-        <section className="min-h-screen flex flex-col items-center justify-center px-6 md:px-16 lg:px-24 bg-[#F7F3EE] pt-20">
-          <div className="max-w-[1000px] mx-auto text-center">
+        <section className="min-h-screen flex flex-col items-center justify-center px-6 md:px-16 lg:px-24 bg-[#F7F3EE] pt-20 relative overflow-hidden">
+          <HeroWarpCanvas />
+          <div className="max-w-[1000px] mx-auto text-center relative z-10">
             {/* Subtitle */}
             <motion.p
               className="text-xs tracking-[0.2em] uppercase text-[#041540]/50 font-medium mb-8"
