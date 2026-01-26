@@ -112,10 +112,10 @@ export default function Home() {
             >
               <span className="inline-flex flex-wrap items-center gap-2">
                 <span className="inline-flex items-center rounded-full border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 opacity-70 hover:opacity-100 hover:bg-[#041540] hover:text-white transition-all duration-300">
-                  NYU Stern&apos;s Premier Entrepreneurship Club
+                  NYU&apos;s Premier Entrepreneurship Club
                 </span>
                 <span className="inline-flex items-center rounded-full border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 opacity-70 hover:opacity-100 hover:bg-[#041540] hover:text-white transition-all duration-300">
-                  EST 2003
+                  Est. 2003
                 </span>
               </span>
             </motion.p>
