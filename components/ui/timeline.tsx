@@ -18,6 +18,7 @@ interface TimelineProps {
   description?: string;
   showHeader?: boolean;
   className?: string;
+  lineColor?: string;
 }
 
 export const Timeline = ({
@@ -25,7 +26,8 @@ export const Timeline = ({
   title,
   description,
   showHeader = true,
-  className = ""
+  className = "",
+  lineColor
 }: TimelineProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -48,7 +50,7 @@ export const Timeline = ({
 
   return (
     <div
-      className={`w-full font-sans md:px-10 ${className}`}
+      className={`w-full md:px-10 ${className}`}
       ref={containerRef}
     >
       {showHeader && (title || description) && (
@@ -76,13 +78,13 @@ export const Timeline = ({
               <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-white dark:bg-black flex items-center justify-center">
                 <div className="h-4 w-4 rounded-full bg-neutral-200 dark:bg-neutral-800 border border-neutral-300 dark:border-neutral-700 p-2" />
               </div>
-              <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-[family-name:var(--font-gotham-bold)] text-neutral-500 dark:text-neutral-500 ">
+              <h3 className="hidden md:block text-xl md:pl-20 md:text-5xl font-medium text-neutral-500 dark:text-neutral-500" style={{ fontFamily: 'var(--font-gotham-medium)' }}>
                 {item.title}
               </h3>
             </div>
 
-            <div className="relative pl-20 pr-4 md:pl-4 w-full font-[family-name:var(--font-gotham-medium)]">
-              <h3 className="md:hidden block text-2xl mb-4 text-left font-[family-name:var(--font-gotham-bold)] text-neutral-500 dark:text-neutral-500">
+            <div className="relative pl-20 pr-4 md:pl-4 w-full">
+              <h3 className="md:hidden block text-2xl mb-4 text-left font-medium text-neutral-500 dark:text-neutral-500" style={{ fontFamily: 'var(--font-gotham-medium)' }}>
                 {item.title}
               </h3>
               {item.content}{" "}
@@ -99,8 +101,11 @@ export const Timeline = ({
             style={{
               height: heightTransform,
               opacity: opacityTransform,
+              ...(lineColor && {
+                background: `linear-gradient(to top, ${lineColor} 0%, ${lineColor}80 10%, transparent 100%)`
+              })
             }}
-            className="absolute inset-x-0 top-0  w-[2px] bg-gradient-to-t from-purple-500 via-blue-500 to-transparent from-[0%] via-[10%] rounded-full"
+            className={`absolute inset-x-0 top-0 w-[2px] rounded-full ${!lineColor ? 'bg-gradient-to-t from-purple-500 via-blue-500 to-transparent from-[0%] via-[10%]' : ''}`}
           />
         </div>
       </div>

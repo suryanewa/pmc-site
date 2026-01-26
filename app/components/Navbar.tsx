@@ -219,45 +219,44 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className={`md:hidden ${mobileMenuBg} border-t ${scrolledBorder} overflow-hidden`}
           >
-            <div className="px-6 py-6 space-y-4">
-              {/* Programs Section */}
+            <div className="px-6 py-6 space-y-2">
+              {/* Programs with sub-items */}
               <div className="space-y-2">
-                <p className={`text-xs uppercase tracking-wider ${textColor} opacity-50`}>Programs</p>
-                {programsDropdownItems.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 py-2 ${textColor} text-base`}
-                  >
-                    <span
-                      className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: item.color }}
-                    />
-                    <span style={{ fontFamily: 'var(--font-gotham-medium)' }}>{item.label}</span>
-                  </Link>
-                ))}
+                <p className={`block py-2 ${textColor} text-base font-medium`}>Programs</p>
+                <div className="pl-4 space-y-2">
+                  {programsDropdownItems.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={`flex items-center gap-3 py-1 ${textColor} text-base font-medium`}
+                    >
+                      <span
+                        className="w-2 h-2 rounded-full"
+                        style={{ backgroundColor: item.color }}
+                      />
+                      <span>{item.label}</span>
+                    </Link>
+                  ))}
+                </div>
               </div>
 
-              {/* Other Links */}
-              <div className="pt-4 border-t border-current/10 space-y-2">
-                <Link
-                  href="/people"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`block py-2 ${textColor} text-base font-medium`}
-                >
-                  People
-                </Link>
-                <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className={`inline-block mt-4 px-6 py-3 border ${buttonBorder} ${textColor} text-sm font-medium`}
-                >
-                  Get Coffee
-                </a>
-              </div>
+              <Link
+                href="/people"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`block py-2 ${textColor} text-base font-medium`}
+              >
+                People
+              </Link>
+              <a
+                href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={`block py-2 ${textColor} text-base font-medium`}
+              >
+                Get Coffee
+              </a>
             </div>
           </motion.div>
         )}

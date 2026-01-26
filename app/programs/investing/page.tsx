@@ -8,64 +8,88 @@ import { FadeUp, FadeIn, StaggerContainer, StaggerItem } from '../../components/
 
 const curriculumData = [
   {
-    title: "Weeks 1-3",
+    title: "Weeks 1–2",
     content: (
       <div>
-        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 1: Validation</h4>
-        <p className="text-neutral-300 text-base md:text-lg mb-6">
-        Before writing a single line of code, you’ll learn how to identify real pain points and validate demand in the wild. This phase is about developing sharp product instincts and avoiding the #1 startup failure: building something nobody wants.
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 1: Foundations</h4>
+        <p className="text-neutral-300 text-base md:text-lg mb-6">You'll learn how to think about markets, incentives, power laws, and product–market fit, so you can evaluate companies with clear, repeatable frameworks. The goal is alignment around how value is created and why it compounds.
+          In weeks 1 and 2, you'll build the mental models investors actually use. 
         </p>
         <div className="flex flex-wrap gap-3">
           <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
-            User Interviews
+            Mental Models
           </span>
           <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
-            Problem Discovery
+            Market Analysis
           </span>
           <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
-            Market Research
+            Value Creation
           </span>
         </div>
       </div>
     ),
   },
   {
-    title: "Weeks 4-6",
+    title: "Weeks 3–5",
     content: (
       <div>
-        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 2: Build</h4>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 2: First-Principles Thinking</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
-          Now you move fast. Using the newest AI tools and rapid iteration techniques, you’ll design, build, and ship a working product that solves the problem you validated.        </p>
+          Now you go deeper. Through company deep dives, debates, and applied exercises, you'll learn how to break businesses down from first principles and defend clear positions under uncertainty. The focus is on original thinking—pushing past summaries and developing conviction you can stand behind.
+        </p>
         <div className="flex flex-wrap gap-3">
-        <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
-        AI-Powered Development
+          <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
+            Deep Dives
           </span>
           <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
-            Product Design
+            Debates
           </span>
           <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
-            Ship Fast
+            Conviction Building
           </span>
         </div>
       </div>
     ),
   },
   {
-    title: "Weeks 7-9",
+    title: "Weeks 6–7",
     content: (
       <div>
-        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 3: Go-To-Market</h4>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 3: Investing Mechanics</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
-          Building is only half the battle. In this final phase, you’ll focus on distribution, growth, and monetization—figuring out how to get users, keep them, and generate revenue.        </p>
+          Here, you build real investing fluency. You'll learn how fund math, dilution, term sheets, and valuation actually work—and how these mechanics shape incentives and outcomes. This phase equips you to analyze real deals through a practical lens.
+        </p>
         <div className="flex flex-wrap gap-3">
           <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
-        Launch Strategy
+            Fund Math
           </span>
           <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
-            Growth Tactics
+            Term Sheets
           </span>
           <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
-            Revenue
+            Valuation
+          </span>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: "Weeks 8–9",
+    content: (
+      <div>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 4: Sourcing & Judgment</h4>
+        <p className="text-neutral-300 text-base md:text-lg mb-6">
+          In the final phase, you operate like an investor. You'll source companies, pitch ideas, and compare opportunities in fast-paced, competitive settings. By the end, you're forming independent judgments and articulating why a company will win.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
+            Deal Sourcing
+          </span>
+          <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
+            Pitch Practice
+          </span>
+          <span className="px-4 py-2 bg-[#2DB67D]/30 border border-[#2DB67D]/30 rounded-full text-[#2DB67D] text-sm">
+            Investment Thesis
           </span>
         </div>
       </div>
@@ -100,14 +124,14 @@ export default function InvestingPage() {
             </FadeUp>
 
             {/* Decoration Icons Row */}
-            <StaggerContainer className="flex items-center gap-6 md:gap-10 lg:gap-14 ">
-              <StaggerItem><img src="/Group.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
-              <StaggerItem><img src="/Group-1.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
-              <StaggerItem><img src="/Group-2.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
-              <StaggerItem><img src="/Group-3.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
-              <StaggerItem><img src="/Group-4.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
-              <StaggerItem><img src="/Group-5.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
-              <StaggerItem><img src="/Group-6.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
+            <StaggerContainer className="flex items-center gap-4 md:gap-10 lg:gap-14 no-wrap">
+              <StaggerItem><img src="/Group.svg" alt="" className="size-10 md:size-16" /></StaggerItem>
+              <StaggerItem><img src="/Group-1.svg" alt="" className="size-10 md:size-16" /></StaggerItem>
+              <StaggerItem><img src="/Group-2.svg" alt="" className="size-10 md:size-16" /></StaggerItem>
+              <StaggerItem><img src="/Group-3.svg" alt="" className="size-10 md:size-16" /></StaggerItem>
+              <StaggerItem><img src="/Group-4.svg" alt="" className="size-10 md:size-16 hidden sm:block" /></StaggerItem>
+              <StaggerItem><img src="/Group-5.svg" alt="" className="size-10 md:size-16 hidden sm:block" /></StaggerItem>
+              <StaggerItem><img src="/Group-6.svg" alt="" className="size-10 md:size-16 hidden md:block" /></StaggerItem>
             </StaggerContainer>
 
             {/* Description */}
@@ -144,15 +168,15 @@ export default function InvestingPage() {
           {/* Timeline with Phase Cards */}
           <FadeIn delay={0.2}>
             <div className="dark">
-              <Timeline data={curriculumData} showHeader={false} />
+              <Timeline data={curriculumData} showHeader={false} lineColor="#2DB67D" />
             </div>
           </FadeIn>
         </div>
       </section>
-      <section className="py-32 px-6 md:px-16 lg:px-24 bg-[#041540] relative z-10 overflow-hidden">
+      <section className="py-32 px-6 md:px-16 lg:px-24 bg-[#1e1e1e] relative z-10 overflow-hidden">
           {/* Subtle animated gradient */}
           <motion.div
-            className="absolute inset-0 opacity-30"
+            className="absolute inset-0 opacity-0"
             animate={{
               background: [
                 "radial-gradient(circle at 0% 0%, #0115DF20 0%, transparent 50%)",

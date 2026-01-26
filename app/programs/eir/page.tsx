@@ -11,7 +11,7 @@ const curriculumData = [
     title: "Weeks 1-3",
     content: (
       <div>
-        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 1: Validation</h4>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 1: Validation</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
         Before writing a single line of code, you’ll learn how to identify real pain points and validate demand in the wild. This phase is about developing sharp product instincts and avoiding the #1 startup failure: building something nobody wants.
         </p>
@@ -33,7 +33,7 @@ const curriculumData = [
     title: "Weeks 4-6",
     content: (
       <div>
-        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 2: Build</h4>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 2: Build</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
           Now you move fast. Using the newest AI tools and rapid iteration techniques, you’ll design, build, and ship a working product that solves the problem you validated.        </p>
         <div className="flex flex-wrap gap-3">
@@ -54,7 +54,7 @@ const curriculumData = [
     title: "Weeks 7-9",
     content: (
       <div>
-        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 3: Go-To-Market</h4>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 3: Go-To-Market</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
           Building is only half the battle. In this final phase, you’ll focus on distribution, growth, and monetization—figuring out how to get users, keep them, and generate revenue.        </p>
         <div className="flex flex-wrap gap-3">
@@ -100,14 +100,13 @@ export default function EirPage() {
             </FadeUp>
 
             {/* Decoration Icons Row */}
-            <StaggerContainer className="flex items-center gap-6 md:gap-10 lg:gap-14">
-              <StaggerItem><img src="/design-color-palette-sample.svg" alt="" className="size-12 md:size-16" /></StaggerItem>
-              <StaggerItem><img src="/design-ruler.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
-              <StaggerItem><img src="/design-layer.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
-              <StaggerItem><img src="/design-block.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
-              <StaggerItem><img src="/design-ruler.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
-              <StaggerItem><img src="/design-website.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
-              <StaggerItem><img src="/design-coding.svg" alt="" className="size-12 md:size-16 shrink-0" /></StaggerItem>
+            <StaggerContainer className="flex items-center gap-4 md:gap-10 lg:gap-14 no-wrap">
+              <StaggerItem><img src="/design-color-palette-sample.svg" alt="" className="size-10 md:size-16" /></StaggerItem>
+              <StaggerItem><img src="/design-ruler.svg" alt="" className="size-10 md:size-16" /></StaggerItem>
+              <StaggerItem><img src="/design-layer.svg" alt="" className="size-10 md:size-16" /></StaggerItem>
+              <StaggerItem><img src="/design-block.svg" alt="" className="size-10 md:size-16" /></StaggerItem>
+              <StaggerItem><img src="/design-website.svg" alt="" className="size-10 md:size-16 hidden sm:block" /></StaggerItem>
+              <StaggerItem><img src="/design-coding.svg" alt="" className="size-10 md:size-16 hidden sm:block" /></StaggerItem>
             </StaggerContainer>
 
             {/* Description */}
@@ -144,15 +143,15 @@ export default function EirPage() {
           {/* Timeline with Phase Cards */}
           <FadeIn delay={0.2}>
             <div className="dark">
-              <Timeline data={curriculumData} showHeader={false} />
+              <Timeline data={curriculumData} showHeader={false} lineColor="#ECB22F" />
             </div>
           </FadeIn>
         </div>
       </section>
-      <section className="py-32 px-6 md:px-16 lg:px-24 bg-[#041540] relative z-10 overflow-hidden">
+      <section className="py-32 px-6 md:px-16 lg:px-24 bg-[#1e1e1e] relative z-10 overflow-hidden">
           {/* Subtle animated gradient */}
           <motion.div
-            className="absolute inset-0 opacity-30"
+            className="absolute inset-0 opacity-0"
             animate={{
               background: [
                 "radial-gradient(circle at 0% 0%, #0115DF20 0%, transparent 50%)",

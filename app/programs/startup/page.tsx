@@ -12,10 +12,9 @@ const curriculumData = [
     title: "Weeks 1-3",
     content: (
       <div>
-        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 1: Validation</h4>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 1: Validation</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
-        Before writing a single line of code, you’ll learn how to identify real pain points and validate demand in the wild. This phase is about developing sharp product instincts and avoiding the #1 startup failure: building something nobody wants.
-        </p>
+        Before you build anything, you’ll learn how to identify real problems and test whether people actually care. This phase is about developing sharp founder instincts through user interviews, pattern recognition, and ruthless honesty. If the problem isn’t real, nothing else matters.        </p>
         <div className="flex flex-wrap gap-3">
         <span className="px-4 py-2 bg-[#AD1DE0]/20 border border-[#AD1DE0]/20 rounded-full text-[#AD1DE0] text-sm">
         User Interviews
@@ -34,10 +33,9 @@ const curriculumData = [
     title: "Weeks 4-6",
     content: (
       <div>
-        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 2: Build</h4>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 2: Build</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
-          Now you move fast. Using the newest AI tools and rapid iteration techniques, you’ll design, build, and ship a working product that solves the problem you validated.        </p>
-        <div className="flex flex-wrap gap-3">
+        Now you move from ideas to proof. Using modern AI tools and rapid iteration, you’ll design, prototype, and ship early versions of your product to validate direction fast. The focus is on progress over polish, proof over slides, and learning through real-world feedback.</p>      <div className="flex flex-wrap gap-3">
         <span className="px-4 py-2 bg-[#AD1DE0]/20 border border-[#AD1DE0]/20 rounded-full text-[#AD1DE0] text-sm">
             AI-Powered Development
           </span>
@@ -55,10 +53,10 @@ const curriculumData = [
     title: "Weeks 7-9",
     content: (
       <div>
-        <h4 className="text-2xl font-[family-name:var(--font-gotham-bold)] text-white mb-4">Phase 3: Go-To-Market</h4>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 3: Distribution & Growth</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
-          Building is only half the battle. In this final phase, you’ll focus on distribution, growth, and monetization—figuring out how to get users, keep them, and generate revenue.        </p>
-        <div className="flex flex-wrap gap-3">
+        Building is only half the battle. You’ll learn how startups actually grow—through distribution, positioning, and scrappy go-to-market execution. Whether B2B or B2C, this phase teaches you how to get users, test channels, and build momentum where incumbents move slowly. </p>
+                <div className="flex flex-wrap gap-3">
         <span className="px-4 py-2 bg-[#AD1DE0]/20 border border-[#AD1DE0]/20 rounded-full text-[#AD1DE0] text-sm">
             Launch Strategy
           </span>
@@ -100,7 +98,7 @@ export default function StartupPage() {
             </FadeUp>
 
             {/* Decoration Icons Row */}
-            <StaggerContainer className="flex items-center gap-4 md:gap-10 lg:gap-14 flex-wrap">
+            <StaggerContainer className="flex items-center gap-4 md:gap-10 lg:gap-14 no-wrap">
               <StaggerItem><img src="/dec-1.svg" alt="" className="size-10 md:size-16" /></StaggerItem>
               <StaggerItem><img src="/dec-2.svg" alt="" className="size-10 md:size-16" /></StaggerItem>
               <StaggerItem><img src="/dec-3.svg" alt="" className="size-10 md:size-16" /></StaggerItem>
@@ -144,15 +142,15 @@ export default function StartupPage() {
           {/* Timeline with Phase Cards */}
           <FadeIn delay={0.2}>
             <div className="dark">
-              <Timeline data={curriculumData} showHeader={false} />
+              <Timeline data={curriculumData} showHeader={false} lineColor="#AD1DE0" />
             </div>
           </FadeIn>
         </div>
       </section>
-      <section className="py-32 px-6 md:px-16 lg:px-24 bg-[#041540] relative z-10 overflow-hidden">
+      <section className="py-32 px-6 md:px-16 lg:px-24 bg-[#1e1e1e] relative z-10 overflow-hidden">
           {/* Subtle animated gradient */}
           <motion.div
-            className="absolute inset-0 opacity-30"
+            className="absolute inset-0 opacity-0"
             animate={{
               background: [
                 "radial-gradient(circle at 0% 0%, #0115DF20 0%, transparent 50%)",

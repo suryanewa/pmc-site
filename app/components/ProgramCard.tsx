@@ -42,8 +42,8 @@ export function ProgramCard({
         </p>
 
         {/* Buttons */}
-        <div className="flex flex-col gap-4 items-center">
-          <Link href={learnMoreHref} className="w-[254px]">
+        <div className="flex flex-col gap-4 items-center w-full">
+          <Link href={learnMoreHref} className="w-full max-w-[254px]">
             <Button
               size="lg"
               fillColor={accentColor}
@@ -53,7 +53,7 @@ export function ProgramCard({
             </Button>
           </Link>
           {applyHref ? (
-            <Link href={applyHref} className="w-[254px]">
+            <Link href={applyHref} className="w-full max-w-[254px]">
               <Button
                 size="lg"
                 borderColor={accentColor}
@@ -66,7 +66,7 @@ export function ProgramCard({
             <Button
               size="lg"
               borderColor={accentColor}
-              className="w-[254px]"
+              className="w-full max-w-[254px]"
             >
               Apply Now
             </Button>
