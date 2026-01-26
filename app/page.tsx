@@ -107,14 +107,16 @@ function AnimatedStat({
 
   useEffect(() => {
     if (active) {
-      const controls = animate(count, numericValue, {
+      animate(count, numericValue, {
         duration: 2.8,
         ease: [0.19, 1, 0.22, 1],
-        onComplete: () => {
-          setShowLabel(true);
-        }
       });
-      return controls.stop;
+
+      const timer = setTimeout(() => {
+        setShowLabel(true);
+      }, 1500);
+
+      return () => clearTimeout(timer);
     }
   }, [active, numericValue, count]);
 
