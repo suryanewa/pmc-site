@@ -3,7 +3,7 @@
 import { motion, useInView, animate, useMotionValue, useTransform, AnimatePresence, useSpring } from 'framer-motion';
 import { Suspense, useEffect, useRef, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
-import { Linkedin, Twitter, Instagram } from 'lucide-react';
+import { Linkedin, Instagram } from 'lucide-react';
 import { Button } from './components/Button';
 import { Newsletter } from './components/Newsletter';
 import { FadeUp, FadeIn } from './components/ScrollAnimations';
@@ -914,7 +914,9 @@ export default function Home() {
                           rippleColor="#0115DF"
                           className="!p-0 size-12 !border"
                         >
-                          <Twitter className="size-5" strokeWidth={1} />
+                          <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.134l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                          </svg>
                         </Button>
                         <Button
                           href="https://www.instagram.com/nyu.eeg/"
