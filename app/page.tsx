@@ -856,7 +856,7 @@ export default function Home() {
                 </FadeUp>
               </div>
 
-              <div className="hidden lg:block h-[600px] relative">
+              <div className="hidden lg:block h-[728px] relative -mt-32">
                 <Suspense fallback={null}>
                   <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
                 </Suspense>

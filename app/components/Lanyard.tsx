@@ -2,7 +2,7 @@
 'use client';
 import { useEffect, useRef, useState, useMemo } from 'react';
 import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
-import { useGLTF, useTexture, Environment, Lightformer, useCursor } from '@react-three/drei';
+import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import {
   BallCollider,
   CuboidCollider,
@@ -115,8 +115,6 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   const [dragged, drag] = useState<false | THREE.Vector3>(false);
   const [hovered, hover] = useState(false);
 
-  useCursor(hovered, dragged ? 'grabbing' : 'grab', 'auto');
-
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j2, j3, [[0, 0, 0], [0, 0, 0], 1]);
@@ -124,6 +122,15 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     [0, 0, 0],
     [0, 1.45, 0]
   ]);
+
+  useEffect(() => {
+    if (hovered) {
+      document.body.style.cursor = dragged ? 'grabbing' : 'grab';
+      return () => {
+        document.body.style.cursor = 'auto';
+      };
+    }
+  }, [hovered, dragged]);
 
   useFrame((state, delta) => {
     if (dragged && typeof dragged !== 'boolean') {
@@ -183,24 +190,12 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps} type="dynamic">
           <BallCollider args={[0.1]} />
-          <mesh onPointerOver={() => hover(true)} onPointerOut={() => hover(false)}>
-            <sphereGeometry args={[0.5]} />
-            <meshBasicMaterial transparent opacity={0} />
-          </mesh>
         </RigidBody>
         <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps} type="dynamic">
           <BallCollider args={[0.1]} />
-          <mesh onPointerOver={() => hover(true)} onPointerOut={() => hover(false)}>
-            <sphereGeometry args={[0.5]} />
-            <meshBasicMaterial transparent opacity={0} />
-          </mesh>
         </RigidBody>
         <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps} type="dynamic">
           <BallCollider args={[0.1]} />
-          <mesh onPointerOver={() => hover(true)} onPointerOut={() => hover(false)}>
-            <sphereGeometry args={[0.5]} />
-            <meshBasicMaterial transparent opacity={0} />
-          </mesh>
         </RigidBody>
         <RigidBody
           position={[2, 0, 0]}
@@ -238,11 +233,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
           </group>
         </RigidBody>
       </group>
-      <mesh 
-        ref={band} 
-        geometry={meshLineGeom} 
-        material={meshLineMat} 
-      />
+      <mesh ref={band} geometry={meshLineGeom} material={meshLineMat} />
     </>
   );
 }
