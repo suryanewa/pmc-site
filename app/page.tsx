@@ -197,6 +197,20 @@ function StatsGrid() {
   );
 }
 
+function PushPin({ color = "#0115DF" }: { color?: string }) {
+  return (
+    <div className="absolute top-[-16px] left-1/2 -translate-x-1/2 z-20 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="8" r="5" fill={color} />
+        <circle cx="10.5" cy="6.5" r="1.5" fill="white" fillOpacity="0.3" />
+        <path d="M12 13V18" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M10 13H14L13 15H11L10 13Z" fill={color} />
+        <ellipse cx="12" cy="20" rx="3" ry="1" fill="black" fillOpacity="0.2" />
+      </svg>
+    </div>
+  );
+}
+
 function SpeakerPolaroidItem({ p, topIndex, setTopIndex }: { p: any; topIndex: number | null; setTopIndex: (id: number) => void }) {
   const ref = useRef<HTMLDivElement>(null);
   const rotateX = useSpring(0, { damping: 30, stiffness: 100, mass: 2 });
@@ -273,7 +287,10 @@ function SpeakerPolaroidItem({ p, topIndex, setTopIndex }: { p: any; topIndex: n
         isDragging 
           ? "shadow-[0_30px_60px_rgba(0,0,0,0.15)]" 
           : "shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
-      } [transform-style:preserve-3d]`}>
+      } [transform-style:preserve-3d] relative`}>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 [transform:translateZ(40px)]">
+          <PushPin />
+        </div>
         <div 
           className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]"
           onMouseEnter={() => !isDragging && imgScale.set(1.08)}
