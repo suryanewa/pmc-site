@@ -3,6 +3,8 @@ import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import PixelFillCanvas from './PixelFillCanvas';
 
+const MotionLink = motion(Link);
+
 interface ButtonProps {
   children: React.ReactNode;
   size?: 'default' | 'lg';
@@ -104,14 +106,14 @@ export function Button({
 
   if (href) {
     return (
-      <Link href={href} onClick={onClick} passHref legacyBehavior>
-        <motion.a 
-          {...commonProps} 
-          ref={buttonRef as any}
-        >
-          {content}
-        </motion.a>
-      </Link>
+      <MotionLink 
+        href={href} 
+        onClick={onClick}
+        {...(commonProps as any)}
+        ref={buttonRef as any}
+      >
+        {content}
+      </MotionLink>
     );
   }
 
