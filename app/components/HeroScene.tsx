@@ -2,24 +2,45 @@
 
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
-import { useGLTF, Environment, ContactShadows, Bounds, OrbitControls } from "@react-three/drei";
-import { useEffect, useMemo, useState, useRef } from "react";
+import { useGLTF, Environment, ContactShadows, Bounds, OrbitControls, Center } from "@react-three/drei";
+import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 
 
 // Mac model with video texture - always shows video
 function MacModel({ 
-  videoEl, 
   onLoaded,
 }: { 
-  videoEl: HTMLVideoElement | null; 
   onLoaded: () => void;
 }) {
   const { scene } = useGLTF("/mac_edited.glb");
   const hasCalledOnLoaded = useRef(false);
-  const modelScale = 0.3;
+  const modelScale = 0.45;
   const videoCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const videoCanvasTextureRef = useRef<THREE.CanvasTexture | null>(null);
   const videoRafRef = useRef<number | null>(null);
+  const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
+
+  // Load video internally
+  useEffect(() => {
+    const v = document.createElement("video");
+    v.src = "/eeg-crt.mp4";
+    v.muted = true;
+    v.loop = true;
+    v.playsInline = true;
+    v.crossOrigin = "anonymous";
+    
+    v.addEventListener("canplaythrough", () => {
+      v.play().catch(console.error);
+      setVideoEl(v);
+    });
+
+    v.load();
+
+    return () => {
+      v.pause();
+      v.src = "";
+    };
+  }, []);
 
   // Create video texture - just rotate 90 degrees CCW (no mirror)
   const videoTexture = useMemo(() => {
@@ -238,24 +259,8 @@ function MacModel({
     }
   }, []);
 
-  // Center the model based on its bounding box
-  const centerOffset = useMemo(() => {
-    const box = new THREE.Box3().setFromObject(scene);
-    const center = new THREE.Vector3();
-    const size = new THREE.Vector3();
-    box.getCenter(center);
-    box.getSize(size);
-
-    const yOffset = size.y * modelScale * 0.04;
-    return [
-      -center.x * modelScale,
-      -center.y * modelScale - yOffset,
-      -center.z * modelScale,
-    ] as [number, number, number];
-  }, [scene, modelScale]);
-
   return (
-    <group position={centerOffset} scale={modelScale} rotation={[0.1, 0, 0]}>
+    <group scale={modelScale} rotation={[0.1, 0, 0]}>
       <primitive object={scene} />
     </group>
   );
@@ -264,35 +269,9 @@ function MacModel({
 useGLTF.preload("/mac_edited.glb");
 
 export function HeroScene() {
-  const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
   const [modelReady, setModelReady] = useState(false);
 
-  // Load video and start playing immediately
-  useEffect(() => {
-    const v = document.createElement("video");
-    v.src = "/eeg-crt.mp4";
-    v.muted = true;
-    v.loop = true;
-    v.playsInline = true;
-    v.crossOrigin = "anonymous";
-    
-    v.addEventListener("canplaythrough", () => {
-      v.play().catch(console.error);
-      setVideoEl(v);
-    });
-
-    v.addEventListener("error", () => {
-      console.log("Video error, continuing without");
-      setVideoEl(null);
-    });
-
-    v.load();
-
-    return () => {
-      v.pause();
-      v.src = "";
-    };
-  }, []);
+  const handleLoaded = useCallback(() => setModelReady(true), []);
 
   return (
     <div className="w-full h-full relative overflow-hidden">
@@ -327,10 +306,9 @@ export function HeroScene() {
         <pointLight position={[-3, 2, 2]} intensity={0.3} color="#0115DF" />
         
         {/* Mac Model */}
-        <Bounds fit observe={false} margin={1.2}>
+        <Bounds fit observe={false} margin={1.0}>
           <MacModel 
-            videoEl={videoEl} 
-            onLoaded={() => setModelReady(true)} 
+            onLoaded={handleLoaded} 
           />
         </Bounds>
         
