@@ -135,7 +135,7 @@ function MacModel({
 
           const canvas = videoCanvasRef.current ?? document.createElement("canvas");
           videoCanvasRef.current = canvas;
-          const canvasWidth = 1408;
+          const canvasWidth = 2048;
           const canvasHeight = Math.max(2, Math.round(canvasWidth / screenAspect));
           canvas.width = canvasWidth;
           canvas.height = canvasHeight;
@@ -153,7 +153,7 @@ function MacModel({
 
           canvasTexture.center.set(centerU, centerV);
           canvasTexture.rotation = videoTexture.rotation;
-          const offsetU = -uMin / uRange - 0.09;
+          const offsetU = -uMin / uRange + 0.05;
           const offsetV = -vMin / vRange;
           canvasTexture.repeat.set(1 / uRange, 1 / vRange);
           canvasTexture.offset.set(offsetU, offsetV);
@@ -186,10 +186,21 @@ function MacModel({
                 drawW = innerH * videoAspect;
               }
 
-              const shiftX = canvas.width * 0.15;
-              const dx = padX - shiftX + (innerW - drawW) / 2;
-              const dy = (innerH - drawH) / 2;
+              const maxScale = Math.min(2, canvas.width / drawW, canvas.height / drawH);
+              drawW *= maxScale;
+              drawH *= maxScale;
+
+              const shiftX = canvas.width * 0.30;
+              let dx = padX - shiftX + (innerW - drawW) / 2;
+              let dy = (innerH - drawH) / 2;
+              dx = Math.max(0, Math.min(dx, canvas.width - drawW));
+              dy = Math.max(0, Math.min(dy, canvas.height - drawH));
+              ctx.save();
+              ctx.beginPath();
+              ctx.rect(0, 0, canvas.width, canvas.height);
+              ctx.clip();
               ctx.drawImage(activeVideo, dx, dy, drawW, drawH);
+              ctx.restore();
               canvasTexture.needsUpdate = true;
               videoRafRef.current = requestAnimationFrame(renderFrame);
             };
