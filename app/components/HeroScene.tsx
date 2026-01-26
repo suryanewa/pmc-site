@@ -261,7 +261,9 @@ function MacModel({
 
   return (
     <group scale={modelScale} rotation={[0.1, 0, 0]}>
-      <primitive object={scene} />
+      <Center>
+        <primitive object={scene} />
+      </Center>
     </group>
   );
 }
