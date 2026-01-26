@@ -3,6 +3,7 @@
 import { motion, useInView, animate, useMotionValue, useTransform, AnimatePresence, useSpring } from 'framer-motion';
 import { Suspense, useEffect, useRef, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
+import { Linkedin, Twitter, Instagram } from 'lucide-react';
 import { Button } from './components/Button';
 import { Newsletter } from './components/Newsletter';
 import { FadeUp, FadeIn } from './components/ScrollAnimations';
@@ -875,6 +876,52 @@ export default function Home() {
                   </div>
                   <Newsletter variant="dark" />
                 </FadeUp>
+
+                <div className="mt-12">
+                  <FadeUp delay={0.3}>
+                    <div className="mb-6 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap">
+                      <span className="text-[#0115DF]">/</span>
+                      <TextType
+                        text="socials"
+                        typingSpeed={50}
+                        initialDelay={300}
+                        loop={false}
+                        showCursor={true}
+                        hideCursorOnComplete={true}
+                        cursorCharacter="|"
+                        className="inline"
+                        as="span"
+                        startOnVisible={true}
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-4">
+                      <Button
+                        href="https://www.linkedin.com/company/nyueeg/"
+                        borderColor="white"
+                        rippleColor="#0115DF"
+                        className="!p-0 size-12"
+                      >
+                        <Linkedin className="size-5" />
+                      </Button>
+                      <Button
+                        href="https://x.com/nyueeg"
+                        borderColor="white"
+                        rippleColor="#0115DF"
+                        className="!p-0 size-12"
+                      >
+                        <Twitter className="size-5" />
+                      </Button>
+                      <Button
+                        href="https://www.instagram.com/nyu.eeg/"
+                        borderColor="white"
+                        rippleColor="#0115DF"
+                        className="!p-0 size-12"
+                      >
+                        <Instagram className="size-5" />
+                      </Button>
+                    </div>
+                  </FadeUp>
+                </div>
               </div>
 
               <div className="hidden lg:block h-[728px] relative -mt-32">
