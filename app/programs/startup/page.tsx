@@ -89,7 +89,11 @@ export default function StartupPage() {
       {/* Hero Section */}
       <section className="relative z-10 px-6 md:px-16 lg:px-24 pt-32 md:pt-40 lg:pt-48 min-h-screen">
         <div className="max-w-[1400px] mx-auto">
+          <span className="inline-flex items-center rounded-full border border-[#1e1e1e]/40 bg-[#AD1DE0] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-gray opacity-70 hover:opacity-70 hover:bg-[#1e1e1e] hover:text-white transition-all duration-300">
+            Applications Open February 8th
+          </span>
           <div className="flex flex-col gap-8 max-w-3xl">
+          
             {/* Heading */}
             <FadeUp>
               <h1 className="text-[clamp(3rem,8vw,5.75rem)] font-medium leading-none tracking-[-0.03em] text-white">
