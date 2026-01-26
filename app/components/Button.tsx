@@ -61,7 +61,7 @@ export function Button({
 
   // Default styles when no custom colors
   const defaultStyles = !isCustom
-    ? 'bg-[#0115DF] text-white hover:bg-[#0010b8] focus:ring-[#0115DF]'
+    ? 'bg-[#041540] text-white hover:bg-[#0a2a6e] focus:ring-[#041540]'
     : '';
 
   return (

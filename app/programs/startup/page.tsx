@@ -203,8 +203,7 @@ export default function StartupPage() {
         </FadeIn>
       </section>
 
-      {/* Light mode footer for startup page */}
-      <Footer variant="light" />
+      <Footer />
     </div>
   );
 }

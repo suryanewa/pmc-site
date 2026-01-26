@@ -25,7 +25,7 @@ export function LeadershipMember({
       transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
     >
       {/* Image Container */}
-      <div className="bg-[#d9d9d9] w-full h-[440px] overflow-hidden flex items-center justify-center">
+      <div className="bg-[#F7F3EE] w-full aspect-[3/4] overflow-hidden flex items-center justify-center">
         {src ? (
           <img
             src={src}
@@ -33,14 +33,14 @@ export function LeadershipMember({
             className="w-full h-full object-cover"
           />
         ) : (
-          <div className="w-full h-full bg-[#d9d9d9]" />
+          <div className="w-full h-full bg-[#F7F3EE]" />
         )}
       </div>
 
       {/* Name and Role */}
-      <div className="text-[#041540] tracking-[-0.075em]">
-        <p className="text-[28px] font-bold leading-tight">/{name}</p>
-        <p className="text-[28px] font-medium leading-tight">/{role}</p>
+      <div className="text-[#041540] tracking-[-0.02em]">
+        <p className="text-lg md:text-xl font-medium leading-tight">/{name}</p>
+        <p className="text-lg md:text-xl text-[#041540]/60 leading-tight">/{role}</p>
       </div>
     </motion.div>
   );
