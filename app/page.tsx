@@ -903,27 +903,27 @@ export default function Home() {
                           borderColor="rgba(255, 255, 255, 0.6)"
                           textColor="rgba(255, 255, 255, 0.6)"
                           rippleColor="#0115DF"
-                          className="!p-0 size-12"
+                          className="!p-0 size-12 !border"
                         >
-                          <Linkedin className="size-5" />
+                          <Linkedin className="size-5" strokeWidth={1} />
                         </Button>
                         <Button
                           href="https://x.com/nyueeg"
                           borderColor="rgba(255, 255, 255, 0.6)"
                           textColor="rgba(255, 255, 255, 0.6)"
                           rippleColor="#0115DF"
-                          className="!p-0 size-12"
+                          className="!p-0 size-12 !border"
                         >
-                          <Twitter className="size-5" />
+                          <Twitter className="size-5" strokeWidth={1} />
                         </Button>
                         <Button
                           href="https://www.instagram.com/nyu.eeg/"
                           borderColor="rgba(255, 255, 255, 0.6)"
                           textColor="rgba(255, 255, 255, 0.6)"
                           rippleColor="#0115DF"
-                          className="!p-0 size-12"
+                          className="!p-0 size-12 !border"
                         >
-                          <Instagram className="size-5" />
+                          <Instagram className="size-5" strokeWidth={1} />
                         </Button>
                       </div>
                     </FadeUp>
