@@ -6,66 +6,74 @@ import { Timeline } from '@/components/ui/timeline';
 import Link from 'next/link';
 import { FadeUp, FadeIn, StaggerContainer, StaggerItem } from '../../components/ScrollAnimations';
 
+// EIR Companies - logos should be white on transparent background
+const eirCompanies = [
+  { name: 'Terra', logo: '/eir-logos/terra.png', url: 'https://useterra.com/' },
+  { name: 'Blockhouse', logo: '/eir-logos/blockhouse.png', url: 'https://blockhouse.app/' },
+  { name: 'Clique', logo: '/eir-logos/clique.avif', url: 'https://clique.so' },
+  { name: 'Flite', logo: '/eir-logos/flite.webp', url: 'https://flite.city' },
+  { name: 'IRL', logo: '/eir-logos/irl.avif', url: 'https://www.playslap.com/irl' },
+  { name: 'Synaptrix', logo: '/eir-logos/synaptrix.png', url: 'https://synaptrix-labs.com' },
+];
+
 const curriculumData = [
   {
-    title: "Weeks 1-3",
+    title: "Weeks 1-2",
     content: (
       <div>
-        <h4 className="text-2xl font-medium text-white mb-4">Phase 1: Validation</h4>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 1: Selection & Alignment</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
-        Before writing a single line of code, you’ll learn how to identify real pain points and validate demand in the wild. This phase is about developing sharp product instincts and avoiding the #1 startup failure: building something nobody wants.
-        </p>
+        You begin with a highly selective application and interview process designed to identify founders who are serious about building. Once admitted, you’ll meet your cohort over dinner and align on expectations, goals, and how to get the most out of the program.      </p>
         <div className="flex flex-wrap gap-3">
         <span className="px-4 py-2 bg-[#ECB22F]/30 border border-[#ECB22F]/30 rounded-full text-[#ECB22F] text-sm">
-            User Interviews
+            Alignment
           </span>
           <span className="px-4 py-2 bg-[#ECB22F]/30 border border-[#ECB22F]/30 rounded-full text-[#ECB22F] text-sm">
-          Problem Discovery
+           Kickoff
           </span>
           <span className="px-4 py-2 bg-[#ECB22F]/30 border border-[#ECB22F]/30 rounded-full text-[#ECB22F] text-sm">
-          Market Research
+          Community
           </span>
         </div>
       </div>
     ),
   },
   {
-    title: "Weeks 4-6",
+    title: "Weeks 3-7",
     content: (
       <div>
-        <h4 className="text-2xl font-medium text-white mb-4">Phase 2: Build</h4>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 2: Build, Learn, and Iterate</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
-          Now you move fast. Using the newest AI tools and rapid iteration techniques, you’ll design, build, and ship a working product that solves the problem you validated.        </p>
-        <div className="flex flex-wrap gap-3">
+        This is the core of the program. You’ll participate in founder dinners, need-based workshops, and office hours with VC partners, all tailored to the specific challenges your startup is facing. Whether you’re refining your idea, building an MVP, or pushing toward revenue.</p>
+               <div className="flex flex-wrap gap-3">
         <span className="px-4 py-2 bg-[#ECB22F]/30 border border-[#ECB22F]/30 rounded-full text-[#ECB22F] text-sm">
-            AI-Powered Development
+            Mentorship
           </span>
           <span className="px-4 py-2 bg-[#ECB22F]/30 border border-[#ECB22F]/30 rounded-full text-[#ECB22F] text-sm">
-          Product Design
+          Learning
           </span>
           <span className="px-4 py-2 bg-[#ECB22F]/30 border border-[#ECB22F]/30 rounded-full text-[#ECB22F] text-sm">
-          Ship Fast
+          Workshops
           </span>
         </div>
       </div>
     ),
   },
   {
-    title: "Weeks 7-9",
+    title: "Weeks 8-9",
     content: (
       <div>
-        <h4 className="text-2xl font-medium text-white mb-4">Phase 3: Go-To-Market</h4>
+        <h4 className="text-2xl font-medium text-white mb-4">Phase 3: Exposure & Outcomes</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
-          Building is only half the battle. In this final phase, you’ll focus on distribution, growth, and monetization—figuring out how to get users, keep them, and generate revenue.        </p>
-        <div className="flex flex-wrap gap-3">
+        The semester culminates in optional pitch opportunities and deeper VC exposure. You’ll reflect on your progress, sharpen your narrative, and present your company to investors, peers, and the broader startup community. You'll leave the program with momentum, clarity, and a stronger founder network.</p>        <div className="flex flex-wrap gap-3">
         <span className="px-4 py-2 bg-[#ECB22F]/30 border border-[#ECB22F]/30 rounded-full text-[#ECB22F] text-sm">
-            Launch Strategy
+          Pitch
           </span>
           <span className="px-4 py-2 bg-[#ECB22F]/30 border border-[#ECB22F]/30 rounded-full text-[#ECB22F] text-sm">
-          Growth Tactics
+          Network
           </span>
           <span className="px-4 py-2 bg-[#ECB22F]/30 border border-[#ECB22F]/30 rounded-full text-[#ECB22F] text-sm">
-          Revenue
+          Raise
           </span>
         </div>
       </div>
@@ -112,8 +120,8 @@ export default function EirPage() {
             {/* Description */}
             <FadeUp delay={0.2}>
               <p className="text-lg md:text-xl text-white/70 leading-relaxed max-w-2xl">
-                teaches students how real companies are built. We&apos;ll guide you through the same frameworks used by early-stage founders — from ideation and validation to product and growth. By the end of 9 weeks, you&apos;ll have made money on the internet.
-              </p>
+              EEG’s new unique accelerator program for NYU founders: tailored workshops, expert mentorship, and top-tier VC networking - focused on individual startup needs in a growth-centric community. 
+</p>
             </FadeUp>
 
             {/* Apply Button */}
@@ -148,6 +156,51 @@ export default function EirPage() {
           </FadeIn>
         </div>
       </section>
+
+      {/* EIR Companies Section */}
+      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24 bg-[#1e1e1e]">
+        <div className="max-w-[1400px] mx-auto">
+          <FadeUp>
+            <h2 className="text-[clamp(1.5rem,3vw,1.75rem)] font-medium text-white tracking-[-0.02em] mb-4">
+              /eir-companies
+            </h2>
+          </FadeUp>
+
+          <FadeUp delay={0.1}>
+            <p className="text-lg text-white/60 leading-relaxed mb-12 max-w-2xl">
+              Companies built by founders in our EIR program.
+            </p>
+          </FadeUp>
+
+          {/* Company Logos Grid */}
+          <FadeIn delay={0.2}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+              {eirCompanies.map((company, index) => (
+                <motion.a
+                  key={company.name}
+                  href={company.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center justify-center p-4 sm:p-6 md:p-8 border border-white/20 bg-transparent hover:border-[#ECB22F] hover:bg-[#ECB22F]/10 transition-all duration-300 aspect-[2/1]"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <img
+                    src={company.logo}
+                    alt={company.name}
+                    className="max-h-6 sm:max-h-8 md:max-h-10 w-auto object-contain brightness-0 invert transition-opacity duration-300"
+                  />
+                </motion.a>
+              ))}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       <section className="py-32 px-6 md:px-16 lg:px-24 bg-[#1e1e1e] relative z-10 overflow-hidden">
           {/* Subtle animated gradient */}
           <motion.div
