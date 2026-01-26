@@ -203,7 +203,7 @@ function PushPin({ color = "#0115DF", active = false, size = 14 }: { color?: str
   return (
     <div 
       className="absolute left-1/2 -translate-x-1/2 z-20 pointer-events-none"
-      style={{ top: size === 14 ? "2px" : "4px" }}
+      style={{ top: size === 14 ? "2px" : "0px" }}
     >
       <svg width={size} height={size} viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.4)]">
         <defs>
@@ -423,12 +423,9 @@ function SpeakerPolaroids() {
               animate={{ scale: 1, y: 0, rotate: 0 }}
               exit={{ scale: 0.8, y: 20, rotate: selectedPolaroid.rotate }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="bg-white p-4 md:p-6 shadow-2xl w-full max-w-[500px] flex flex-col relative"
+              className="bg-white p-4 md:p-8 shadow-2xl w-full max-w-[700px] flex flex-col relative"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <PushPin active={true} size={28} />
-              </div>
               <div className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]">
                 <img
                   src={selectedPolaroid.src}
@@ -439,13 +436,6 @@ function SpeakerPolaroids() {
               <p className="mt-4 text-center text-base md:text-lg tracking-widest text-[#041540]/70 font-mono">
                 {selectedPolaroid.caption}
               </p>
-              
-              <button 
-                onClick={() => setSelectedId(null)}
-                className="absolute top-4 right-4 size-10 flex items-center justify-center rounded-full bg-[#041540]/10 hover:bg-[#041540]/20 transition-colors text-[#041540] z-30"
-              >
-                ✕
-              </button>
             </motion.div>
           </motion.div>
         )}
