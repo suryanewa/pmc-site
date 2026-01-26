@@ -87,11 +87,15 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
   const j2 = useRef<any>(null);
   const j3 = useRef<any>(null);
   const card = useRef<any>(null);
+  const pointerDownTime = useRef(0);
+  const shouldFlip = useRef(false);
 
   const vec = new THREE.Vector3();
   const ang = new THREE.Vector3();
   const rot = new THREE.Vector3();
   const dir = new THREE.Vector3();
+  const q = new THREE.Quaternion();
+  const euler = new THREE.Euler();
 
   const segmentProps: any = {
     type: 'dynamic',
@@ -145,6 +149,12 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
       });
     }
 
+    if (shouldFlip.current && !dragged) {
+      shouldFlip.current = false;
+      card.current?.setAngvel({ x: 0, y: 10, z: 0 }, true);
+      card.current?.applyImpulse({ x: 0, y: 0.2, z: 0 }, true);
+    }
+
     if (fixed.current && j1.current && j2.current && j3.current && band.current) {
       [j1, j2, j3].forEach(ref => {
         if (!ref.current.lerped) ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
@@ -163,8 +173,11 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
       band.current.geometry.setPoints(curve.getPoints(32));
       
       ang.copy(card.current.angvel());
-      rot.copy(card.current.rotation());
-      card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
+      const curRot = card.current.rotation();
+      q.set(curRot.x, curRot.y, curRot.z, curRot.w);
+      euler.setFromQuaternion(q);
+      const targetY = Math.round(euler.y / Math.PI) * Math.PI;
+      card.current.setAngvel({ x: ang.x, y: ang.y - (euler.y - targetY) * 0.25, z: ang.z });
     }
   });
 
@@ -212,9 +225,13 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             onPointerUp={(e: any) => {
               e.target.releasePointerCapture(e.pointerId);
               drag(false);
+              if (Date.now() - pointerDownTime.current < 200) {
+                shouldFlip.current = true;
+              }
             }}
             onPointerDown={(e: any) => {
               e.target.setPointerCapture(e.pointerId);
+              pointerDownTime.current = Date.now();
               drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())));
             }}
           >
