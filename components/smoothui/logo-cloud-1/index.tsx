@@ -96,9 +96,15 @@ export function LogoCloudAnimated({
           transition={{ duration: 0.6 }}
         >
           <h2 className="mb-4 font-bold text-2xl text-current lg:text-3xl">
-            {title}
+            {title === "Our Network" ? (
+              <>
+                <span className="text-[#0115DF]">/</span>network
+              </>
+            ) : (
+              title
+            )}
           </h2>
-          <p className="text-foreground/70 text-lg">{description}</p>
+          {description && <p className="text-foreground/70 text-lg">{description}</p>}
         </motion.div>
         <div
           className="relative overflow-hidden"

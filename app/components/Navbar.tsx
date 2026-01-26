@@ -19,10 +19,10 @@ function Logo() {
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
     >
-      <span className="text-xl font-medium tracking-tight text-[#041540]" style={{ fontFamily: 'var(--font-gotham-medium)' }}>
+      <span className="text-[1.875rem] font-medium tracking-tight text-[#041540]" style={{ fontFamily: 'var(--font-gotham-medium)' }}>
         eeg
       </span>
-      <span className="text-xl font-medium tracking-tight text-[#0115DF]" style={{ fontFamily: 'var(--font-gotham-medium)' }}>
+      <span className="text-[1.875rem] font-medium tracking-tight text-[#0115DF]" style={{ fontFamily: 'var(--font-gotham-medium)' }}>
         /
       </span>
     </motion.div>
@@ -48,15 +48,15 @@ export function Navbar() {
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 px-6 md:px-16 lg:px-24 transition-all duration-500 ${
         isPastHero 
           ? 'bg-[#F7F3EE]/80 backdrop-blur-xl border-b border-[#041540]/5' 
           : 'bg-transparent'
       }`}
     >
-      <div className="max-w-[1400px] mx-auto px-6 md:px-16 lg:px-24">
+      <div className="max-w-[1400px] mx-auto w-full">
         <div className={`flex items-center justify-between transition-all duration-500 ${
-          isPastHero ? 'h-16' : 'h-20'
+          isPastHero ? 'h-20' : 'h-24'
         }`}>
           <Link href="/" className="hover:opacity-70 transition-opacity duration-300">
             <Logo />
@@ -73,7 +73,7 @@ export function Navbar() {
                 className="text-[#041540] text-sm font-medium px-4 py-2 hover:text-[#041540]/60 transition-colors duration-300"
                 whileTap={{ scale: 0.95 }}
               >
-                Programs
+                /programs
               </motion.button>
               
               {/* Dropdown menu */}
@@ -123,7 +123,7 @@ export function Navbar() {
                 className="text-[#041540] text-sm font-medium px-4 py-2 hover:text-[#041540]/60 transition-colors duration-300 inline-block"
                 whileTap={{ scale: 0.95 }}
               >
-                People
+                /people
               </motion.span>
             </Link>
 
@@ -133,7 +133,7 @@ export function Navbar() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              Get Coffee
+              Coffee Chat
             </motion.a>
           </div>
         </div>

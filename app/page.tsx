@@ -276,7 +276,8 @@ export default function Home() {
                     isProgramsDark ? "text-[#F7F3EE]" : "text-[#041540]"
                   }`}
                 >
-                  Programs
+                  <span className="text-[#0115DF]">/</span>
+                  programs
                 </h2>
               </FadeUp>
               <FadeUp delay={0.1}>
@@ -386,13 +387,16 @@ export default function Home() {
               {/* Left - Content */}
               <div>
                 <FadeUp>
-                  <p className="text-sm tracking-[0.2em] uppercase text-[#041540]/50 font-medium mb-6">
-                    Weekly Events
-                  </p>
                   <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540] mb-8">
-                    Speaker Series
+                    <span className="text-[#0115DF]">/</span>
+                    events
                   </h2>
+                  <p className="mb-4 font-bold text-2xl text-[#041540] lg:text-3xl text-center md:text-left">
+                    <span className="text-[#0115DF]">/</span>
+                    speakers
+                  </p>
                 </FadeUp>
+
                 
                 <FadeUp delay={0.1}>
                   <div className="space-y-6 mb-12">
@@ -471,7 +475,8 @@ export default function Home() {
             <div className="max-w-3xl">
               <FadeUp>
                 <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-white mb-8">
-                  Join the community
+                  <span className="text-[#0115DF]">/</span>
+                  join-us
                 </h2>
               </FadeUp>
               

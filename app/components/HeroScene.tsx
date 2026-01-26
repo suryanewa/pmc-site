@@ -279,7 +279,7 @@ function MacModel({
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
-      <Center>
+      <Center right>
         <primitive object={scene} />
       </Center>
     </group>
