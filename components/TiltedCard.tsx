@@ -1,6 +1,7 @@
 import type { SpringOptions } from 'motion/react';
 import { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'motion/react';
+import PixelHoverCanvas from '@/components/PixelHoverCanvas';
 
 interface TiltedCardProps {
   imageSrc?: React.ComponentProps<'img'>['src'];
@@ -16,6 +17,14 @@ interface TiltedCardProps {
   showTooltip?: boolean;
   overlayContent?: React.ReactNode;
   displayOverlayContent?: boolean;
+  backgroundColor?: string;
+  borderRadius?: number;
+  pixelEffect?: {
+    colors: string;
+    gap?: number;
+    speed?: number;
+    className?: string;
+  };
 }
 
 const springValues: SpringOptions = {
@@ -37,7 +46,10 @@ export default function TiltedCard({
   showMobileWarning = true,
   showTooltip = true,
   overlayContent = null,
-  displayOverlayContent = false
+  displayOverlayContent = false,
+  backgroundColor,
+  borderRadius = 22,
+  pixelEffect
 }: TiltedCardProps) {
   const ref = useRef<HTMLElement>(null);
   const x = useMotionValue(0);
@@ -53,6 +65,7 @@ export default function TiltedCard({
   });
 
   const [lastY, setLastY] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   function handleMouse(e: React.MouseEvent<HTMLElement>) {
     if (!ref.current) return;
@@ -78,6 +91,7 @@ export default function TiltedCard({
   function handleMouseEnter() {
     scale.set(scaleOnHover);
     opacity.set(1);
+    setIsHovered(true);
   }
 
   function handleMouseLeave() {
@@ -86,6 +100,7 @@ export default function TiltedCard({
     rotateX.set(0);
     rotateY.set(0);
     rotateFigcaption.set(0);
+    setIsHovered(false);
   }
 
   return (
@@ -107,29 +122,42 @@ export default function TiltedCard({
       )}
 
       <motion.div
-        className="relative overflow-hidden rounded-[22px] [transform-style:preserve-3d]"
+        className="relative overflow-hidden [transform-style:preserve-3d]"
         style={{
           width: imageWidth,
           height: imageHeight,
           rotateX,
           rotateY,
-          scale
+          scale,
+          backgroundColor,
+          borderRadius: `${borderRadius}px`
         }}
       >
-        {imageSrc ? (
+        {pixelEffect && (
+          <PixelHoverCanvas
+            active={isHovered}
+            colors={pixelEffect.colors}
+            gap={pixelEffect.gap}
+            speed={pixelEffect.speed}
+            className={pixelEffect.className}
+            radius={borderRadius}
+          />
+        )}
+        {imageSrc && (
           <motion.img
             src={imageSrc}
             alt={altText}
-            className="absolute left-0 top-0 h-full w-full rounded-[22px] object-cover will-change-transform [transform:translateZ(0)]"
+            className="absolute left-0 top-0 h-full w-full object-cover will-change-transform [transform:translateZ(0)]"
             style={{
               width: imageWidth,
-              height: imageHeight
+              height: imageHeight,
+              borderRadius: `${borderRadius}px`
             }}
           />
-        ) : null}
+        )}
 
         {displayOverlayContent && overlayContent && (
-          <motion.div className="absolute top-0 left-0 z-[2] will-change-transform [transform:translateZ(30px)]">
+          <motion.div className="absolute inset-0 z-[2] will-change-transform [transform:translateZ(30px)]">
             {overlayContent}
           </motion.div>
         )}

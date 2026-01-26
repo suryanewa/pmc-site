@@ -282,47 +282,52 @@ export default function Home() {
                       scaleOnHover={1.04}
                       showMobileWarning={false}
                       showTooltip={false}
+                      backgroundColor={`${program.color}20`}
+                      pixelEffect={{
+                        colors: isProgramsDark
+                          ? `${program.color},rgba(247,243,238,0.85),rgba(4,21,64,0.55)`
+                          : `${program.color},rgba(4,21,64,0.6),rgba(247,243,238,0.7)`,
+                        gap: 6,
+                        speed: 30,
+                        className: isProgramsDark
+                          ? "opacity-40 mix-blend-screen"
+                          : "opacity-35 mix-blend-multiply",
+                      }}
                       displayOverlayContent
                       overlayContent={
-                        <div className="flex h-full w-full items-end p-5">
-                          <div
-                            className={`w-full rounded-[20px] border p-4 ${themeTransition} ${
-                              isProgramsDark
-                                ? "border-[#F7F3EE]/20 text-[#F7F3EE]"
-                                : "border-[#041540]/10 text-[#041540]"
-                            }`}
-                            style={{ backgroundColor: `${program.color}2b` }}
+                        <div
+                          className={`flex flex-col justify-end h-full w-full p-6 ${themeTransition} ${
+                            isProgramsDark
+                              ? "text-[#F7F3EE]"
+                              : "text-[#041540]"
+                          }`}
+                        >
+                          <h3
+                            className="text-2xl font-medium tracking-[-0.02em]"
+                            style={{ fontFamily: 'var(--font-gotham-medium)' }}
                           >
-                            <h3
-                              className="text-xl font-medium tracking-[-0.02em]"
-                              style={{ fontFamily: 'var(--font-gotham-medium)' }}
-                            >
-                              <span
-                                className={`${themeTransition} ${
-                                  isProgramsDark ? "text-white" : "text-[#041540]"
-                                }`}
-                              >
-                                eeg
-                              </span>
-                              <span style={{ color: program.color }}>{program.title}</span>
-                            </h3>
-                            <p
-                              className={`mt-2 text-sm leading-relaxed ${themeTransition} ${
-                                isProgramsDark ? "text-[#F7F3EE]/70" : "text-[#041540]/60"
+                            <span
+                              className={`${themeTransition} ${
+                                isProgramsDark ? "text-white" : "text-[#041540]"
                               }`}
                             >
-                              {program.description}
-                            </p>
-                            <div
-                              className={`mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] ${themeTransition} ${
-                                isProgramsDark
-                                  ? "text-[#F7F3EE]/70"
-                                  : "text-[#041540]/60"
-                              }`}
-                            >
-                              Explore Program
-                              <span aria-hidden="true">↗</span>
-                            </div>
+                              eeg
+                            </span>
+                            <span style={{ color: program.color }}>{program.title}</span>
+                          </h3>
+                          <p
+                            className={`mt-3 text-sm leading-relaxed ${themeTransition} ${
+                              isProgramsDark ? "text-[#F7F3EE]/70" : "text-[#041540]/60"
+                            }`}
+                          >
+                            {program.description}
+                          </p>
+                          <div
+                            className={`mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] text-white w-fit ${themeTransition}`}
+                            style={{ backgroundColor: program.color }}
+                          >
+                            Explore Program
+                            <span aria-hidden="true">↗</span>
                           </div>
                         </div>
                       }
