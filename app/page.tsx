@@ -30,6 +30,14 @@ const RocketScene = dynamic(
   }
 );
 
+const Lanyard = dynamic(
+  () => import('./components/Lanyard'),
+  {
+    ssr: false,
+    loading: () => <div className="w-full h-full" />,
+  }
+);
+
 const PlantsScene = dynamic(
   () => import('@/components/PlantsScene'),
   {
@@ -818,33 +826,41 @@ export default function Home() {
           />
           
           <div className="max-w-[1400px] mx-auto relative z-10">
-            <div className="max-w-3xl">
-              <FadeUp>
-                <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-white mb-8">
-                  <span className="text-[#0115DF]">/</span>
-                  <TextType
-                    text="join-us"
-                    typingSpeed={50}
-                    initialDelay={100}
-                    loop={false}
-                    showCursor={true}
-                    hideCursorOnComplete={true}
-                    cursorCharacter="|"
-                    className="inline-block"
-                    startOnVisible={true}
-                  />
-                </div>
-              </FadeUp>
-              
-              <FadeUp delay={0.1}>
-                <p className="text-lg text-white/60 leading-relaxed mb-12 max-w-xl">
-                  Get access to exclusive events, mentorship, and a network of ambitious students and industry leaders.
-                </p>
-              </FadeUp>
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="max-w-3xl">
+                <FadeUp>
+                  <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-white mb-8">
+                    <span className="text-[#0115DF]">/</span>
+                    <TextType
+                      text="join-us"
+                      typingSpeed={50}
+                      initialDelay={100}
+                      loop={false}
+                      showCursor={true}
+                      hideCursorOnComplete={true}
+                      cursorCharacter="|"
+                      className="inline-block"
+                      startOnVisible={true}
+                    />
+                  </div>
+                </FadeUp>
+                
+                <FadeUp delay={0.1}>
+                  <p className="text-lg text-white/60 leading-relaxed mb-12 max-w-xl">
+                    Get access to exclusive events, mentorship, and a network of ambitious students and industry leaders.
+                  </p>
+                </FadeUp>
 
-              <FadeUp delay={0.2}>
-                <Newsletter variant="dark" />
-              </FadeUp>
+                <FadeUp delay={0.2}>
+                  <Newsletter variant="dark" />
+                </FadeUp>
+              </div>
+
+              <div className="hidden lg:block h-[600px] relative">
+                <Suspense fallback={null}>
+                  <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
+                </Suspense>
+              </div>
             </div>
           </div>
         </section>
