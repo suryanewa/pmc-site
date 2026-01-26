@@ -165,7 +165,7 @@ export default function Home() {
 
             </div>
             <div
-              className="relative w-full h-[360px] md:h-[460px] lg:h-[600px] pointer-events-none"
+              className="relative w-full h-[360px] md:h-[460px] lg:h-[600px]"
               data-gsap="parallax"
               data-speed="0.12"
             >

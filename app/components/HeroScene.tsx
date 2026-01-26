@@ -2,7 +2,7 @@
 
 import * as THREE from "three";
 import { Canvas } from "@react-three/fiber";
-import { useGLTF, Environment, ContactShadows, Bounds } from "@react-three/drei";
+import { useGLTF, Environment, ContactShadows, Bounds, OrbitControls } from "@react-three/drei";
 import { useEffect, useMemo, useState, useRef } from "react";
 
 
@@ -306,11 +306,20 @@ export function HeroScene() {
       )}
 
       {/* 3D Canvas with Mac */}
-      <Canvas
-        camera={{ position: [0, 0.2, 4], fov: 45 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      >
+        <Canvas
+          camera={{ position: [0, 0.2, 4], fov: 45 }}
+          dpr={[1, 2]}
+          gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        >
+          <OrbitControls
+            enablePan={false}
+            enableZoom={false}
+            enableDamping
+            dampingFactor={0.1}
+            rotateSpeed={0.5}
+            minPolarAngle={0.5}
+            maxPolarAngle={1.8}
+          />
         {/* Lighting */}
         <ambientLight intensity={0.4} />
         <directionalLight position={[5, 5, 5]} intensity={1} />
