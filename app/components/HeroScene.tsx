@@ -278,18 +278,9 @@ export function HeroScene() {
   ), [handleLoaded]);
 
   return (
-    <div className="w-full h-full relative overflow-hidden">
-      {/* Loading state */}
-      {!modelReady && (
-        <div className="absolute inset-0 flex items-center justify-center bg-transparent z-40">
-          <div className="flex flex-col items-center gap-4">
-            <div className="w-8 h-8 border-2 border-[#041540]/20 border-t-[#041540]/60 rounded-full animate-spin" />
-          </div>
-        </div>
-      )}
-
-        {/* 3D Canvas with Mac */}
-        <Canvas
+    <div className="w-full h-full relative">
+      {/* 3D Canvas with Mac */}
+      <Canvas
           camera={{ position: [0, 0.2, 4.5], fov: 45, near: 0.1, far: 100 }}
           dpr={[1, 2]}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
