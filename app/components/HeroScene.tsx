@@ -273,6 +273,10 @@ export function HeroScene() {
 
   const handleLoaded = useCallback(() => setModelReady(true), []);
 
+  const macModel = useMemo(() => (
+    <MacModel onLoaded={handleLoaded} />
+  ), [handleLoaded]);
+
   return (
     <div className="w-full h-full relative overflow-hidden">
       {/* Loading state */}
@@ -296,8 +300,6 @@ export function HeroScene() {
             enableZoom={false}
             enableDamping={false}
             rotateSpeed={0.5}
-            minPolarAngle={0.5}
-            maxPolarAngle={1.8}
           />
         {/* Lighting */}
         <ambientLight intensity={0.4} />
@@ -307,9 +309,7 @@ export function HeroScene() {
         
         {/* Mac Model */}
         <Bounds fit observe={false} margin={1.0}>
-          <MacModel 
-            onLoaded={handleLoaded} 
-          />
+          {macModel}
         </Bounds>
         
         {/* Soft blob shadow underneath Mac */}
