@@ -79,8 +79,8 @@ export default function Lanyard({
   );
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0 }) {
-  const { size, viewport } = useThree();
+function Band({ maxSpeed = 50, minSpeed = 10 }) {
+  const { size } = useThree();
   const band = useRef<any>(null);
   const fixed = useRef<any>(null);
   const j1 = useRef<any>(null);
@@ -93,41 +93,27 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
   const rot = new THREE.Vector3();
   const dir = new THREE.Vector3();
 
-  const anchorX = viewport.width / 2;
-  const anchorY = 2;
-
   const segmentProps: any = {
     type: 'dynamic',
     canSleep: true,
     colliders: false,
-    angularDamping: 4,
-    linearDamping: 4
+    angularDamping: 2,
+    linearDamping: 2
   };
 
   const { nodes, materials } = useGLTF(cardGLB) as any;
   const texture = useTexture(lanyardPng);
   const [curve] = useState(
     () =>
-      new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
+      new THREE.CatmullRomCurve3([
+        new THREE.Vector3(),
+        new THREE.Vector3(),
+        new THREE.Vector3(),
+        new THREE.Vector3()
+      ])
   );
   const [dragged, drag] = useState<false | THREE.Vector3>(false);
   const [hovered, hover] = useState(false);
-
-  const [isSmall, setIsSmall] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      return window.innerWidth < 1024;
-    }
-    return false;
-  });
-
-  useEffect(() => {
-    const handleResize = (): void => {
-      setIsSmall(window.innerWidth < 1024);
-    };
-
-    window.addEventListener('resize', handleResize);
-    return (): void => window.removeEventListener('resize', handleResize);
-  }, []);
 
   useRopeJoint(fixed, j1, [[0, 0, 0], [0, 0, 0], 1]);
   useRopeJoint(j1, j2, [[0, 0, 0], [0, 0, 0], 1]);
@@ -158,8 +144,9 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
         z: vec.z - dragged.z
       });
     }
-    if (fixed.current) {
-      [j1, j2].forEach(ref => {
+
+    if (fixed.current && j1.current && j2.current && j3.current && band.current) {
+      [j1, j2, j3].forEach(ref => {
         if (!ref.current.lerped) ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
         const clampedDistance = Math.max(0.1, Math.min(1, ref.current.lerped.distanceTo(ref.current.translation())));
         ref.current.lerped.lerp(
@@ -167,11 +154,14 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
           delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
         );
       });
-      curve.points[0].copy(j3.current.translation());
+
+      curve.points[0].copy(j3.current.lerped);
       curve.points[1].copy(j2.current.lerped);
       curve.points[2].copy(j1.current.lerped);
       curve.points[3].copy(fixed.current.translation());
+      
       band.current.geometry.setPoints(curve.getPoints(32));
+      
       ang.copy(card.current.angvel());
       rot.copy(card.current.rotation());
       card.current.setAngvel({ x: ang.x, y: ang.y - rot.y * 0.25, z: ang.z });
@@ -183,33 +173,32 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
 
   const meshLineGeom = useMemo(() => new MeshLineGeometry(), []);
   const meshLineMat = useMemo(() => {
-    const mat: any = new MeshLineMaterial({
+    return new MeshLineMaterial({
       color: 'white',
-      depthTest: false,
-      resolution: new THREE.Vector2(isSmall ? 1000 : 1000, isSmall ? 2000 : 1000),
+      depthTest: true,
+      resolution: new THREE.Vector2(size.width, size.height),
       useMap: true,
       map: texture,
       repeat: new THREE.Vector2(-4, 1),
       lineWidth: 1
     } as any);
-    return mat;
-  }, [texture, isSmall]);
+  }, [texture, size]);
 
   return (
     <>
-      <group position={[anchorX, anchorY, 0]}>
+      <group position={[0, 4, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
-        <RigidBody position={[-0.5, 0, 0]} ref={j1} {...segmentProps} type="dynamic">
+        <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps} type="dynamic">
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[-1, 0, 0]} ref={j2} {...segmentProps} type="dynamic">
+        <RigidBody position={[1, 0, 0]} ref={j2} {...segmentProps} type="dynamic">
           <BallCollider args={[0.1]} />
         </RigidBody>
-        <RigidBody position={[-1.5, 0, 0]} ref={j3} {...segmentProps} type="dynamic">
+        <RigidBody position={[1.5, 0, 0]} ref={j3} {...segmentProps} type="dynamic">
           <BallCollider args={[0.1]} />
         </RigidBody>
         <RigidBody
-          position={[-2, 0, 0]}
+          position={[2, 0, 0]}
           ref={card}
           {...segmentProps}
           type={dragged ? 'kinematicPosition' : 'dynamic'}
