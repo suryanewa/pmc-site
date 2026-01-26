@@ -121,9 +121,11 @@ function AnimatedStat({
   return (
     <div className="flex flex-col">
       <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: active ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
         className="text-4xl md:text-5xl font-medium text-[#041540] tracking-tight"
         whileHover={{ scale: 1.05 }}
-        transition={{ duration: 0.2 }}
       >
         <motion.span>{rounded}</motion.span>
         <span>{suffix}</span>
