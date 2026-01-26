@@ -248,3 +248,49 @@ body.loading {
     @apply bg-background text-foreground;
   }
 }
+
+/* Retro MacOS Cursors (1.5x Scaled) */
+html, body {
+  cursor: url('/cursors/default.png') 3 2, auto !important;
+}
+
+a, button, [role="button"], input[type="submit"], input[type="button"], label, select, summary, [type="checkbox"], [type="radio"], .cursor-pointer {
+  cursor: url('/cursors/pointer.png') 3 5, pointer !important;
+}
+
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea, .cursor-text {
+  cursor: url('/cursors/text.png') 9 12, text !important;
+}
+
+.cursor-move {
+  cursor: url('/cursors/move.png') 23 23, move !important;
+}
+
+.cursor-not-allowed, :disabled, [aria-disabled="true"] {
+  cursor: url('/cursors/not-allowed.png') 3 2, not-allowed !important;
+}
+
+.cursor-wait {
+  cursor: url('/cursors/wait.ani'), wait !important;
+}
+
+.cursor-ew-resize, .resize-x {
+  cursor: url('/cursors/ew-resize.png') 23 23, ew-resize !important;
+}
+
+.cursor-ns-resize, .resize-y {
+  cursor: url('/cursors/ns-resize.png') 23 23, ns-resize !important;
+}
+
+.cursor-nesw-resize {
+  cursor: url('/cursors/nesw-resize.png') 23 23, nesw-resize !important;
+}
+
+.cursor-nwse-resize {
+  cursor: url('/cursors/nwse-resize.png') 23 23, nwse-resize !important;
+}
+
+/* Force grab cursor when hovering the 3D Mac */
+body.mac-hovered {
+  cursor: url('/cursors/move.png') 23 23, move !important;
+}

@@ -20,6 +20,19 @@ function MacModel({
   const videoRafRef = useRef<number | null>(null);
   const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
 
+  // Hover state for cursor
+  const [hovered, setHovered] = useState(false);
+  useEffect(() => {
+    if (hovered) {
+      document.body.classList.add('mac-hovered');
+    } else {
+      document.body.classList.remove('mac-hovered');
+    }
+    return () => {
+      document.body.classList.remove('mac-hovered');
+    };
+  }, [hovered]);
+
   // Load video internally
   useEffect(() => {
     const v = document.createElement("video");
@@ -260,7 +273,12 @@ function MacModel({
   }, []);
 
   return (
-    <group scale={modelScale} rotation={[0.1, 0, 0]}>
+    <group 
+      scale={modelScale} 
+      rotation={[0.1, 0, 0]}
+      onPointerOver={() => setHovered(true)}
+      onPointerOut={() => setHovered(false)}
+    >
       <Center>
         <primitive object={scene} />
       </Center>

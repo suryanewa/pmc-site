@@ -18,8 +18,8 @@ function Rocket({ isHovered }: RocketProps) {
 
   useFrame((state) => {
     if (rocketRef.current) {
-      const targetSpeed = isHovered ? 0.1 : 0.001;
-      const targetBounce = isHovered ? 40 : 10;
+      const targetSpeed = isHovered ? 0.1 : 0.005;
+      const targetBounce = isHovered ? 40 : 0;
       
       currentSpeedRef.current = THREE.MathUtils.lerp(currentSpeedRef.current, targetSpeed, 0.05);
       currentBounceRef.current = THREE.MathUtils.lerp(currentBounceRef.current, targetBounce, 0.05);
@@ -70,7 +70,7 @@ function Rocket({ isHovered }: RocketProps) {
     <primitive
       ref={rocketRef}
       object={clonedScene}
-      scale={1}
+      scale={[1.2, 1.4, 1.2]}
       position={[0, 0, 0]}
     />
   );
@@ -132,7 +132,7 @@ interface RocketSceneProps {
 export default function RocketScene({ className = "", isHovered = false }: RocketSceneProps) {
   return (
     <div className={`absolute inset-0 overflow-hidden ${className}`}>
-      <div className="absolute inset-0" style={{ transform: 'translateY(27.5%)' }}>
+      <div className="absolute inset-0" style={{ transform: 'translateY(40%)' }}>
         <Canvas
           camera={{
             fov: 60,
