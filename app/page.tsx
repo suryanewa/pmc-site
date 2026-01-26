@@ -548,38 +548,113 @@ export default function Home() {
 
               {/* Right - Polaroids with stagger */}
               <div className="relative min-h-[500px] lg:min-h-[600px]">
-                <FadeIn
-                  delay={0.2}
-                  className="absolute w-[240px] md:w-[280px] left-[0%] top-[0%] hover:z-50"
-                  data-gsap="parallax"
-                  data-speed="0.08"
+                <motion.div
+                  drag
+                  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
+                  className="absolute w-[240px] md:w-[280px] left-[0%] top-[0%] hover:z-50 cursor-grab active:cursor-grabbing"
                 >
-                  <Polaroid src="/lux.jpeg" alt="Lux Capital" caption="eeg/lux-capital" rotation={-3} />
-                </FadeIn>
-                <FadeIn
-                  delay={0.35}
-                  className="absolute w-[240px] md:w-[280px] right-[5%] top-[8%] hover:z-50"
-                  data-gsap="parallax"
-                  data-speed="0.14"
+                  <FadeIn
+                    delay={0.2}
+                    data-gsap="parallax"
+                    data-speed="0.08"
+                  >
+                    <TiltedCard
+                      imageSrc="/lux.jpeg"
+                      altText="Lux Capital"
+                      captionText="eeg/lux-capital"
+                      rotateAmplitude={12}
+                      showTooltip={true}
+                      containerHeight="auto"
+                      containerWidth="100%"
+                      imageHeight="100%"
+                      imageWidth="100%"
+                      borderRadius={0}
+                      scaleOnHover={1.05}
+                      showMobileWarning={false}
+                    />
+                  </FadeIn>
+                </motion.div>
+
+                <motion.div
+                  drag
+                  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
+                  className="absolute w-[240px] md:w-[280px] right-[5%] top-[8%] hover:z-50 cursor-grab active:cursor-grabbing"
                 >
-                  <Polaroid src="/zfellows.jpeg" alt="Zfellows" caption="eeg/zfellows" rotation={2}/>
-                </FadeIn>
-                <FadeIn
-                  delay={0.5}
-                  className="absolute w-[240px] md:w-[280px] left-[15%] top-[40%] hover:z-50"
-                  data-gsap="parallax"
-                  data-speed="0.1"
+                  <FadeIn
+                    delay={0.35}
+                    data-gsap="parallax"
+                    data-speed="0.14"
+                  >
+                    <TiltedCard
+                      imageSrc="/zfellows.jpeg"
+                      altText="Zfellows"
+                      captionText="eeg/zfellows"
+                      rotateAmplitude={12}
+                      showTooltip={true}
+                      containerHeight="auto"
+                      containerWidth="100%"
+                      imageHeight="100%"
+                      imageWidth="100%"
+                      borderRadius={0}
+                      scaleOnHover={1.05}
+                      showMobileWarning={false}
+                    />
+                  </FadeIn>
+                </motion.div>
+
+                <motion.div
+                  drag
+                  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
+                  className="absolute w-[240px] md:w-[280px] left-[15%] top-[40%] hover:z-50 cursor-grab active:cursor-grabbing"
                 >
-                  <Polaroid src="/beli.png" alt="Beli" caption="eeg/beli" rotation={4} />
-                </FadeIn>
-                <FadeIn
-                  delay={0.65}
-                  className="absolute w-[240px] md:w-[280px] right-[0%] bottom-[5%] hover:z-50"
-                  data-gsap="parallax"
-                  data-speed="0.06"
+                  <FadeIn
+                    delay={0.5}
+                    data-gsap="parallax"
+                    data-speed="0.1"
+                  >
+                    <TiltedCard
+                      imageSrc="/beli.png"
+                      altText="Beli"
+                      captionText="eeg/beli"
+                      rotateAmplitude={12}
+                      showTooltip={true}
+                      containerHeight="auto"
+                      containerWidth="100%"
+                      imageHeight="100%"
+                      imageWidth="100%"
+                      borderRadius={0}
+                      scaleOnHover={1.05}
+                      showMobileWarning={false}
+                    />
+                  </FadeIn>
+                </motion.div>
+
+                <motion.div
+                  drag
+                  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
+                  className="absolute w-[240px] md:w-[280px] right-[0%] bottom-[5%] hover:z-50 cursor-grab active:cursor-grabbing"
                 >
-                  <Polaroid src="/varun-rana.png" alt="Varun Rana" caption="eeg/varun-rana" rotation={-2}/>
-                </FadeIn>
+                  <FadeIn
+                    delay={0.65}
+                    data-gsap="parallax"
+                    data-speed="0.06"
+                  >
+                    <TiltedCard
+                      imageSrc="/varun-rana.png"
+                      altText="Varun Rana"
+                      captionText="eeg/varun-rana"
+                      rotateAmplitude={12}
+                      showTooltip={true}
+                      containerHeight="auto"
+                      containerWidth="100%"
+                      imageHeight="100%"
+                      imageWidth="100%"
+                      borderRadius={0}
+                      scaleOnHover={1.05}
+                      showMobileWarning={false}
+                    />
+                  </FadeIn>
+                </motion.div>
               </div>
             </div>
           </div>
