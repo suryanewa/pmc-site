@@ -858,69 +858,73 @@ export default function Home() {
                   </FadeUp>
                 </div>
 
-                <FadeUp delay={0.2}>
-                  <div className="mb-6 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap">
-                    <span className="text-[#0115DF]">/</span>
-                    <TextType
-                      text="newsletter"
-                      typingSpeed={50}
-                      initialDelay={300}
-                      loop={false}
-                      showCursor={true}
-                      hideCursorOnComplete={true}
-                      cursorCharacter="|"
-                      className="inline"
-                      as="span"
-                      startOnVisible={true}
-                    />
+                <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
+                  <div className="flex-1 w-full max-w-xl">
+                    <FadeUp delay={0.2}>
+                      <div className="mb-6 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap">
+                        <span className="text-[#0115DF]">/</span>
+                        <TextType
+                          text="newsletter"
+                          typingSpeed={50}
+                          initialDelay={300}
+                          loop={false}
+                          showCursor={true}
+                          hideCursorOnComplete={true}
+                          cursorCharacter="|"
+                          className="inline"
+                          as="span"
+                          startOnVisible={true}
+                        />
+                      </div>
+                      <Newsletter variant="dark" />
+                    </FadeUp>
                   </div>
-                  <Newsletter variant="dark" />
-                </FadeUp>
 
-                <div className="mt-12">
-                  <FadeUp delay={0.3}>
-                    <div className="mb-6 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap">
-                      <span className="text-[#0115DF]">/</span>
-                      <TextType
-                        text="socials"
-                        typingSpeed={50}
-                        initialDelay={300}
-                        loop={false}
-                        showCursor={true}
-                        hideCursorOnComplete={true}
-                        cursorCharacter="|"
-                        className="inline"
-                        as="span"
-                        startOnVisible={true}
-                      />
-                    </div>
-                    <div className="flex flex-wrap gap-4">
-                      <Button
-                        href="https://www.linkedin.com/company/nyueeg/"
-                        borderColor="white"
-                        rippleColor="#0115DF"
-                        className="!p-0 size-12"
-                      >
-                        <Linkedin className="size-5" />
-                      </Button>
-                      <Button
-                        href="https://x.com/nyueeg"
-                        borderColor="white"
-                        rippleColor="#0115DF"
-                        className="!p-0 size-12"
-                      >
-                        <Twitter className="size-5" />
-                      </Button>
-                      <Button
-                        href="https://www.instagram.com/nyu.eeg/"
-                        borderColor="white"
-                        rippleColor="#0115DF"
-                        className="!p-0 size-12"
-                      >
-                        <Instagram className="size-5" />
-                      </Button>
-                    </div>
-                  </FadeUp>
+                  <div className="w-full lg:w-auto">
+                    <FadeUp delay={0.3}>
+                      <div className="mb-6 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap">
+                        <span className="text-[#0115DF]">/</span>
+                        <TextType
+                          text="socials"
+                          typingSpeed={50}
+                          initialDelay={300}
+                          loop={false}
+                          showCursor={true}
+                          hideCursorOnComplete={true}
+                          cursorCharacter="|"
+                          className="inline"
+                          as="span"
+                          startOnVisible={true}
+                        />
+                      </div>
+                      <div className="flex flex-wrap gap-4">
+                        <Button
+                          href="https://www.linkedin.com/company/nyueeg/"
+                          borderColor="white"
+                          rippleColor="#0115DF"
+                          className="!p-0 size-12"
+                        >
+                          <Linkedin className="size-5" />
+                        </Button>
+                        <Button
+                          href="https://x.com/nyueeg"
+                          borderColor="white"
+                          rippleColor="#0115DF"
+                          className="!p-0 size-12"
+                        >
+                          <Twitter className="size-5" />
+                        </Button>
+                        <Button
+                          href="https://www.instagram.com/nyu.eeg/"
+                          borderColor="white"
+                          rippleColor="#0115DF"
+                          className="!p-0 size-12"
+                        >
+                          <Instagram className="size-5" />
+                        </Button>
+                      </div>
+                    </FadeUp>
+                  </div>
                 </div>
               </div>
 
