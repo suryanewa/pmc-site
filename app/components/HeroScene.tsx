@@ -2,7 +2,7 @@
 
 import * as THREE from "three";
 import gsap from "gsap";
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, Environment, ContactShadows, Bounds, OrbitControls, Center } from "@react-three/drei";
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
 
@@ -274,8 +274,17 @@ function MacModel({
   }, []);
 
   const groupRef = useRef<THREE.Group>(null);
+  const globalMouse = useRef({ x: 0, y: 0 });
+  const baseRotation = useRef({ x: 0.1, y: -0.7 });
 
   useEffect(() => {
+    const handlePointerMove = (e: PointerEvent) => {
+      globalMouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      globalMouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    
     if (groupRef.current) {
       groupRef.current.rotation.x = 0.1;
       groupRef.current.rotation.y = 0.5;
@@ -295,7 +304,19 @@ function MacModel({
         ease: "sine.inOut"
       });
     }
+
+    return () => window.removeEventListener("pointermove", handlePointerMove);
   }, []);
+
+  useFrame((state) => {
+    if (!groupRef.current) return;
+    
+    const targetX = baseRotation.current.x - (globalMouse.current.y * 0.15);
+    const targetY = baseRotation.current.y + (globalMouse.current.x * 0.2);
+    
+    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetX, 0.05);
+    groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetY, 0.05);
+  });
 
   return (
     <group 
