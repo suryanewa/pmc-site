@@ -27,6 +27,14 @@ const RocketScene = dynamic(
   }
 );
 
+const PlantsScene = dynamic(
+  () => import('@/components/PlantsScene'),
+  {
+    ssr: false,
+    loading: () => <div className="w-full h-full" />,
+  }
+);
+
 function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
     <motion.a
@@ -291,7 +299,13 @@ export default function Home() {
                       showMobileWarning={false}
                       showTooltip={false}
                       backgroundColor={`${program.color}20`}
-                      backgroundContent={program.id === 'eir' ? (isHovered: boolean) => <RocketScene isHovered={isHovered} /> : undefined}
+                      backgroundContent={
+                        program.id === 'eir' 
+                          ? (isHovered: boolean) => <RocketScene isHovered={isHovered} /> 
+                          : program.id === 'startup'
+                            ? (isHovered: boolean) => <PlantsScene isHovered={isHovered} />
+                            : undefined
+                      }
                       pixelEffect={{
                         colors: isProgramsDark
                           ? `${program.color},rgba(247,243,238,0.85),rgba(4,21,64,0.55)`
