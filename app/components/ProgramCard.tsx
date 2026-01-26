@@ -47,6 +47,7 @@ export function ProgramCard({
             href={learnMoreHref}
             size="lg"
             fillColor={accentColor}
+            rippleColor={accentColor}
             className="w-[254px]"
           >
             Learn More
@@ -55,6 +56,7 @@ export function ProgramCard({
             href={applyHref || '#'}
             size="lg"
             borderColor={accentColor}
+            rippleColor={accentColor}
             className="w-[254px]"
           >
             Apply Now

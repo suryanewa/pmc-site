@@ -383,6 +383,7 @@ export default function Home() {
                           <Button
                             className="mt-5 !px-4 !py-2 text-xs uppercase tracking-[0.2em] !h-auto"
                             borderColor={program.color}
+                            rippleColor={program.color}
                             fillColor="transparent"
                             textColor={isProgramsDark ? "white" : "#041540"}
                           >

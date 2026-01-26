@@ -16,6 +16,7 @@ interface ButtonProps {
   borderColor?: string;
   textColor?: string;
   href?: string;
+  rippleColor?: string;
 }
 
 export function Button({
@@ -29,6 +30,7 @@ export function Button({
   borderColor,
   textColor,
   href,
+  rippleColor,
 }: ButtonProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
@@ -84,7 +86,7 @@ export function Button({
       <PixelFillCanvas
         active={isHovered}
         origin={mousePos}
-        color="#0115DF"
+        color={rippleColor || "#0115DF"}
         gap={12}
         speed={0.4}
         className="z-0"
