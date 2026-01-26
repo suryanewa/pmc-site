@@ -631,7 +631,7 @@ export default function Home() {
             <div className="grid lg:grid-cols-2 gap-8 mb-20">
               <FadeUp>
                 <div
-                  className={`text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] ${themeTransition} ${
+                  className={`text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] whitespace-nowrap ${themeTransition} ${
                     isProgramsDark ? "text-[#F7F3EE]" : "text-[#041540]"
                   }`}
                 >
@@ -644,7 +644,8 @@ export default function Home() {
                     showCursor={true}
                     hideCursorOnComplete={true}
                     cursorCharacter="|"
-                    className="inline-block"
+                    className="inline"
+                    as="span"
                     startOnVisible={true}
                   />
                 </div>
@@ -759,7 +760,7 @@ export default function Home() {
               {/* Left - Content */}
               <div>
                 <FadeUp>
-                  <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540] mb-8">
+                  <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540] mb-8 whitespace-nowrap">
                     <span className="text-[#0115DF]">/</span>
                     <TextType
                       text="events"
@@ -769,11 +770,12 @@ export default function Home() {
                       showCursor={true}
                       hideCursorOnComplete={true}
                       cursorCharacter="|"
-                      className="inline-block"
+                      className="inline"
+                      as="span"
                       startOnVisible={true}
                     />
                   </div>
-                  <div className="mb-4 font-bold text-2xl text-[#041540] lg:text-3xl text-center md:text-left">
+                  <div className="mb-4 font-bold text-2xl text-[#041540] lg:text-3xl text-center md:text-left whitespace-nowrap">
                     <span className="text-[#0115DF]">/</span>
                     <TextType
                       text="speakers"
@@ -783,7 +785,8 @@ export default function Home() {
                       showCursor={true}
                       hideCursorOnComplete={true}
                       cursorCharacter="|"
-                      className="inline-block"
+                      className="inline"
+                      as="span"
                       startOnVisible={true}
                     />
                   </div>
@@ -830,7 +833,7 @@ export default function Home() {
               <div className="max-w-4xl">
                 <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-12 mb-12">
                   <FadeUp>
-                    <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-white">
+                    <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-white whitespace-nowrap">
                       <span className="text-[#0115DF]">/</span>
                       <TextType
                         text="join-us"
@@ -840,7 +843,8 @@ export default function Home() {
                         showCursor={true}
                         hideCursorOnComplete={true}
                         cursorCharacter="|"
-                        className="inline-block"
+                        className="inline"
+                        as="span"
                         startOnVisible={true}
                       />
                     </div>
