@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import { Button } from './Button';
 
 interface NewsletterProps {
   variant?: 'light' | 'dark';
@@ -10,7 +11,6 @@ interface NewsletterProps {
 export function Newsletter({ variant = 'light' }: NewsletterProps) {
   const isLight = variant === 'light';
   const [isFocused, setIsFocused] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   
   return (
     <form className="flex flex-col sm:flex-row gap-3">
@@ -39,27 +39,12 @@ export function Newsletter({ variant = 'light' }: NewsletterProps) {
         />
       </motion.div>
       
-      <motion.button
+      <Button
         type="submit"
-        className={`h-12 px-8 text-sm font-medium transition-all duration-300 relative overflow-hidden ${
-          isLight
-            ? 'bg-[#041540] text-white'
-            : 'bg-white text-[#041540]'
-        }`}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+        className={`h-12 text-sm !px-8 ${!isLight ? '!bg-white !text-[#041540]' : ''}`}
       >
-        {/* Hover background animation */}
-        <motion.div
-          className={`absolute inset-0 ${isLight ? 'bg-[#0115DF]' : 'bg-white/90'}`}
-          initial={{ x: '-100%' }}
-          animate={{ x: isHovered ? 0 : '-100%' }}
-          transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-        />
-        <span className="relative z-10">Subscribe</span>
-      </motion.button>
+        Subscribe
+      </Button>
     </form>
   );
 }

@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
+import { Button } from './Button';
+
 const programsDropdownItems = [
   { label: '/startup', href: '/programs/startup', color: '#AD1DE0' },
   { label: '/investing', href: '/programs/investing', color: '#2DB67D' },
@@ -127,14 +129,14 @@ export function Navbar() {
               </motion.span>
             </Link>
 
-            <motion.a
+            <Button
               href="#"
-              className="text-[#041540] text-sm font-medium ml-4 px-5 py-2.5 border border-[#041540] hover:bg-[#041540] hover:text-white transition-all duration-300"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              borderColor="#041540"
+              textColor="#041540"
+              className="ml-4 px-5 py-2 !h-auto !text-sm"
             >
               Coffee Chat
-            </motion.a>
+            </Button>
           </div>
         </div>
       </div>

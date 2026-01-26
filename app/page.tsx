@@ -3,6 +3,7 @@
 import { motion } from 'framer-motion';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
+import { Button } from './components/Button';
 import { Newsletter } from './components/Newsletter';
 import { FadeUp, FadeIn } from './components/ScrollAnimations';
 import { Polaroid } from './components/Polaroid';
@@ -233,18 +234,20 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.3 }}
             >
               <div className="flex flex-wrap items-center gap-4">
-                <Link
+                <Button
                   href="#programs"
-                  className="inline-block px-8 py-4 bg-[#041540] text-white font-medium hover:bg-[#0a2a6e] transition-colors duration-300"
+                  className="px-8 py-4"
                 >
                   Explore Our Programs
-                </Link>
-                <Link
+                </Button>
+                <Button
                   href="#"
-                  className="inline-block px-8 py-4 border border-[#041540] text-[#041540] font-medium hover:bg-[#041540] hover:text-white transition-all duration-300"
+                  borderColor="#041540"
+                  textColor="#041540"
+                  className="px-8 py-4"
                 >
                   Coffee Chat Leadership
-                </Link>
+                </Button>
               </div>
             </motion.div>
 
