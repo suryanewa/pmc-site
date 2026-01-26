@@ -1,7 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Suspense, useEffect, useRef, useState } from 'react';
+import { motion, useInView, animate, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
+import { Suspense, useEffect, useRef, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { Button } from './components/Button';
 import { Newsletter } from './components/Newsletter';
@@ -87,25 +87,98 @@ const programs = [
 ];
 
 // Animated counter component
-function AnimatedStat({ number, label, delay = 0 }: { number: string; label: string; delay?: number }) {
+function AnimatedStat({ 
+  number, 
+  label, 
+  active, 
+  onComplete 
+}: { 
+  number: string; 
+  label: string; 
+  active: boolean; 
+  onComplete: () => void 
+}) {
+  const [showLabel, setShowLabel] = useState(false);
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, latest => Math.round(latest));
+  
+  const numericValue = parseInt(number.replace(/\D/g, ''));
+  const suffix = number.replace(/\d/g, '');
+
+  useEffect(() => {
+    if (active) {
+      const controls = animate(count, numericValue, {
+        duration: 1.2,
+        ease: [0.22, 1, 0.36, 1],
+        onComplete: () => {
+          setShowLabel(true);
+        }
+      });
+      return controls.stop;
+    }
+  }, [active, numericValue, count]);
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
+    <div className="flex flex-col">
       <motion.div 
         className="text-4xl md:text-5xl font-medium text-[#041540] tracking-tight"
         whileHover={{ scale: 1.05 }}
         transition={{ duration: 0.2 }}
       >
-        {number}
+        <motion.span>{rounded}</motion.span>
+        <span>{suffix}</span>
       </motion.div>
-      <div className="text-sm text-[#041540]/50 mt-1">
-        {label}
+      <div className="min-h-[1.5rem]">
+        <AnimatePresence>
+          {showLabel && (
+            <motion.div
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              onAnimationComplete={onComplete}
+              className="text-sm text-[#041540]/50 mt-1"
+            >
+              {label}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </motion.div>
+    </div>
+  );
+}
+
+function StatsGrid() {
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.5, margin: "-100px" });
+
+  useEffect(() => {
+    if (isInView && activeIndex === -1) {
+      setActiveIndex(0);
+    }
+  }, [isInView, activeIndex]);
+
+  return (
+    <div ref={containerRef} className="grid grid-cols-3 gap-8 pt-8 border-t border-[#041540]/10">
+      <AnimatedStat 
+        number="20+" 
+        label="Years Active" 
+        active={activeIndex >= 0} 
+        onComplete={() => setActiveIndex(prev => prev === 0 ? 1 : prev)} 
+      />
+      <AnimatedStat 
+        number="100+" 
+        label="Alumni Network" 
+        active={activeIndex >= 1} 
+        onComplete={() => setActiveIndex(prev => prev === 1 ? 2 : prev)} 
+      />
+      <AnimatedStat 
+        number="250+" 
+        label="Speaker Events" 
+        active={activeIndex >= 2} 
+        onComplete={() => {}} 
+      />
+    </div>
   );
 }
 
@@ -455,11 +528,7 @@ export default function Home() {
                 </FadeUp>
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-8 pt-8 border-t border-[#041540]/10">
-                  <AnimatedStat number="250+" label="Speaker Events" delay={0} />
-                  <AnimatedStat number="20+" label="Years Active" delay={0.1} />
-                  <AnimatedStat number="100+" label="Alumni Network" delay={0.2} />
-                </div>
+                <StatsGrid />
               </div>
 
               {/* Right - Polaroids with stagger */}
