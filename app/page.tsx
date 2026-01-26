@@ -900,7 +900,8 @@ export default function Home() {
                       <div className="flex flex-wrap gap-4">
                         <Button
                           href="https://www.linkedin.com/company/nyueeg/"
-                          borderColor="white"
+                          borderColor="rgba(255, 255, 255, 0.6)"
+                          textColor="rgba(255, 255, 255, 0.6)"
                           rippleColor="#0115DF"
                           className="!p-0 size-12"
                         >
@@ -908,7 +909,8 @@ export default function Home() {
                         </Button>
                         <Button
                           href="https://x.com/nyueeg"
-                          borderColor="white"
+                          borderColor="rgba(255, 255, 255, 0.6)"
+                          textColor="rgba(255, 255, 255, 0.6)"
                           rippleColor="#0115DF"
                           className="!p-0 size-12"
                         >
@@ -916,7 +918,8 @@ export default function Home() {
                         </Button>
                         <Button
                           href="https://www.instagram.com/nyu.eeg/"
-                          borderColor="white"
+                          borderColor="rgba(255, 255, 255, 0.6)"
+                          textColor="rgba(255, 255, 255, 0.6)"
                           rippleColor="#0115DF"
                           className="!p-0 size-12"
                         >
