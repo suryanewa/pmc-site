@@ -30,14 +30,15 @@ const leadershipMembers = [
   { id: 11, src: '/profiles/pranav.jpg', name: 'pranav-sarma', role: 'treasurer' },
   { id: 12, src: '/profiles/lia.jpg', name: 'lia-kostas', role: 'growth' },
   { id: 13, src: '/profiles/xander.png', name: 'xander-wanagel', role: 'growth' },
-  { id: 14, src: '/profiles/surya.jpg', name: 'surya-newa', role: 'startup' },
-  { id: 15, src: '/profiles/neel.jpg', name: 'neel-khurana', role: 'investing' },
-  { id: 16, src: '/profiles/shray.jpg', name: 'shray-patel', role: 'investing' },
-  { id: 17, src: '/profiles/jessie.jpg', name: 'jessie-lee', role: 'marketing' },
-  { id: 18, src: '/profiles/priscilla.jpg', name: 'priscilla-tu', role: 'marketing' },
-  { id: 19, src: '/profiles/marco.jpg', name: 'marco-kosasih', role: 'marketing' },
-  { id: 20, src: '/profiles/katherine.jpg', name: 'katherine-graci', role: 'community' },
-  { id: 21, src: '/profiles/dustin.jpg', name: 'dustin-he', role: 'community' },
+  { id: 14, src: '/profiles/zach.jpg', name: 'zach-semple', role: 'growth' },
+  { id: 15, src: '/profiles/surya.jpg', name: 'surya-newa', role: 'startup' },
+  { id: 16, src: '/profiles/neel.jpg', name: 'neel-khurana', role: 'investing' },
+  { id: 17, src: '/profiles/shray.jpg', name: 'shray-patel', role: 'investing' },
+  { id: 18, src: '/profiles/jessie.jpg', name: 'jessie-lee', role: 'marketing' },
+  { id: 19, src: '/profiles/priscilla.jpg', name: 'priscilla-tu', role: 'marketing' },
+  { id: 20, src: '/profiles/marco.jpg', name: 'marco-kosasih', role: 'marketing' },
+  { id: 21, src: '/profiles/katherine.jpg', name: 'katherine-graci', role: 'community' },
+  { id: 22, src: '/profiles/dustin.jpg', name: 'dustin-he', role: 'community' },
 
 ];
 
