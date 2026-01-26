@@ -1,42 +1,21 @@
 "use client";
 
-import { useScroll, useTransform, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 export function ScrollBackground() {
-  const { scrollYProgress } = useScroll();
   
-  // Background color transitions based on scroll position
-  const backgroundColor = useTransform(
-    scrollYProgress,
-    [0, 0.25, 0.5, 0.75, 1],
-    [
-      "#F7F3EE", // Hero - warm cream
-      "#F7F3EE", // Programs - same
-      "#FFFFFF", // Events - pure white
-      "#F7F3EE", // Back to cream
-      "#F7F3EE", // Footer area
-    ]
-  );
-
-  // Subtle overlay opacity that changes with scroll
-  const overlayOpacity = useTransform(
-    scrollYProgress,
-    [0, 0.3, 0.6, 1],
-    [0, 0.02, 0.01, 0]
-  );
-
   return (
     <>
       {/* Main animated background */}
       <motion.div
-        className="fixed inset-0 -z-20 transition-colors duration-700"
-        style={{ backgroundColor }}
+        className="fixed inset-0 -z-20 transition-colors duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
+        style={{ backgroundColor: "var(--scroll-background, #F7F3EE)" }}
       />
       
       {/* Subtle noise texture overlay */}
       <motion.div
         className="fixed inset-0 -z-10 pointer-events-none"
-        style={{ opacity: overlayOpacity }}
+        style={{ opacity: 0.02 }}
       >
         <div 
           className="absolute inset-0"

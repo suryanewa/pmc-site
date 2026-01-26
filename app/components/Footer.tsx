@@ -17,7 +17,7 @@ function Logo() {
   );
 }
 
-export function Footer() {
+export function Footer({ variant = 'default' }: { variant?: 'default' | 'light' }) {
   const currentYear = new Date().getFullYear();
 
   return (

@@ -1,14 +1,14 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { Newsletter } from './components/Newsletter';
 import { FadeUp, FadeIn } from './components/ScrollAnimations';
 import { Polaroid } from './components/Polaroid';
 import { HeroWarpCanvas } from './components/HeroWarpCanvas';
 import Link from "next/link";
-import { InfiniteMovingCards } from '@/components/ui/infinite-moving-cards';
+import { LogoCloudAnimated } from "@/components/smoothui/logo-cloud-1";
 
 const HeroScene = dynamic(
   () => import('./components/HeroScene').then((mod) => ({ default: mod.HeroScene })),
@@ -33,18 +33,6 @@ function SocialIcon({ href, label, children }: { href: string; label: string; ch
     </motion.a>
   );
 }
-
-// Company logos for the marquee
-const companyLogos = [
-  { image: "/companies/lux_capital_logo.jpeg", name: "Lux Capital" },
-  { image: "/companies/a16z.jpg", name: "a16z" },
-  { image: "/companies/figma.png", name: "Figma" },
-  { image: "/companies/venmo.png", name: "Venmo" },
-  { image: "/companies/anthropic.png", name: "Anthropic" },
-  { image: "/companies/usv.jpg", name: "USV" },
-  { image: "/companies/bessemer.png", name: "Bessemer" },
-  { image: "/companies/meta.png", name: "Meta" },
-];
 
 // Programs data
 const programs = [
@@ -95,6 +83,69 @@ function AnimatedStat({ number, label, delay = 0 }: { number: string; label: str
 }
 
 export default function Home() {
+  const programsTopRef = useRef<HTMLDivElement | null>(null);
+  const eventsTopRef = useRef<HTMLDivElement | null>(null);
+  const [isProgramsDark, setIsProgramsDark] = useState(false);
+  const isProgramsDarkRef = useRef(false);
+  const themeTransition = "transition-colors duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)]";
+
+  useEffect(() => {
+    isProgramsDarkRef.current = isProgramsDark;
+  }, [isProgramsDark]);
+
+  useEffect(() => {
+    const navbar = document.querySelector<HTMLElement>("[data-navbar]");
+    let ticking = false;
+    let lastValue = isProgramsDarkRef.current;
+
+    const update = () => {
+      ticking = false;
+      const programsTop = programsTopRef.current;
+      const eventsTop = eventsTopRef.current;
+      if (navbar && programsTop && eventsTop) {
+        const navBottom = navbar.getBoundingClientRect().bottom;
+        const programsTopPos = programsTop.getBoundingClientRect().top;
+        const eventsTopPos = eventsTop.getBoundingClientRect().top;
+        const nextValue = programsTopPos <= navBottom && eventsTopPos > navBottom;
+
+        if (nextValue !== lastValue) {
+          lastValue = nextValue;
+          isProgramsDarkRef.current = nextValue;
+          setIsProgramsDark(nextValue);
+        }
+      }
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+
+    const resizeObserver = navbar ? new ResizeObserver(onScroll) : null;
+    resizeObserver?.observe(navbar as Element);
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      resizeObserver?.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty(
+      "--scroll-background",
+      isProgramsDark ? "#041540" : "#F7F3EE"
+    );
+
+    return () => {
+      root.style.setProperty("--scroll-background", "#F7F3EE");
+    };
+  }, [isProgramsDark]);
+
   return (
     <div className="min-h-screen relative">
       <main>
@@ -176,33 +227,39 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Logo Marquee - Minimal */}
-        <section className="py-12 border-y border-[#041540]/10 bg-white/50">
-          <div className="flex items-center justify-center gap-8 opacity-60">
-            <span className="text-xs tracking-[0.15em] uppercase text-[#041540]/50 shrink-0">
-              Speakers from
-            </span>
-            <InfiniteMovingCards
-              items={companyLogos}
-              direction="left"
-              speed="slow"
-              pauseOnHover={false}
-            />
-          </div>
+        <section className="bg-[#F7F3EE] text-[#041540]">
+          <LogoCloudAnimated title="Our Network" description="" />
         </section>
 
         {/* Programs Section */}
-        <section className="py-32 px-6 md:px-16 lg:px-24">
+        <section
+          className={`relative py-32 px-6 md:px-16 lg:px-24 ${themeTransition} ${
+            isProgramsDark ? "text-[#F7F3EE]" : "text-[#041540]"
+          }`}
+        >
+          <div
+            ref={programsTopRef}
+            className="absolute inset-x-0 top-0 h-px pointer-events-none"
+            aria-hidden="true"
+          />
           <div className="max-w-[1400px] mx-auto">
             {/* Section Header */}
             <div className="grid lg:grid-cols-2 gap-8 mb-20">
               <FadeUp>
-                <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540]">
+                <h2
+                  className={`text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] ${themeTransition} ${
+                    isProgramsDark ? "text-[#F7F3EE]" : "text-[#041540]"
+                  }`}
+                >
                   Programs
                 </h2>
               </FadeUp>
               <FadeUp delay={0.1}>
-                <p className="text-lg text-[#041540]/60 leading-relaxed lg:pt-4">
+                <p
+                  className={`text-lg leading-relaxed lg:pt-4 ${themeTransition} ${
+                    isProgramsDark ? "text-[#F7F3EE]/70" : "text-[#041540]/60"
+                  }`}
+                >
                   Whether you&apos;re interested in startups, investing, or are already building, our semester-long programs bring students into NYU&apos;s startup, tech, and venture capital ecosystem.
                 </p>
               </FadeUp>
@@ -214,7 +271,9 @@ export default function Home() {
                 <FadeUp key={program.id} delay={0.1 * index}>
                   <Link href={program.href}>
                     <motion.div
-                      className="group relative py-10 border-t border-[#041540]/10 cursor-pointer overflow-hidden"
+                      className={`group relative py-10 border-t cursor-pointer overflow-hidden ${themeTransition} ${
+                        isProgramsDark ? "border-[#F7F3EE]/15" : "border-[#041540]/10"
+                      }`}
                       whileHover={{ x: 12 }}
                       transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     >
@@ -236,23 +295,39 @@ export default function Home() {
                               transition={{ duration: 0.2 }}
                             />
                             <h3 
-                              className="text-2xl md:text-3xl font-medium text-[#041540] group-hover:text-[#0115DF] transition-colors duration-300"
+                              className={`text-2xl md:text-3xl font-medium ${themeTransition} ${
+                                isProgramsDark
+                                  ? "text-[#F7F3EE] group-hover:text-[#F7F3EE]"
+                                  : "text-[#041540] group-hover:text-[#0115DF]"
+                              }`}
                               style={{ fontFamily: 'var(--font-gotham-medium)' }}
                             >
                               {program.title}
                             </h3>
                           </div>
-                          <p className="text-[#041540]/50 max-w-2xl leading-relaxed pl-6">
+                          <p
+                            className={`max-w-2xl leading-relaxed pl-6 ${themeTransition} ${
+                              isProgramsDark ? "text-[#F7F3EE]/70" : "text-[#041540]/50"
+                            }`}
+                          >
                             {program.description}
                           </p>
                         </div>
                         <div className="shrink-0 mt-2">
                           <motion.div
-                            className="w-10 h-10 rounded-full border border-[#041540]/20 flex items-center justify-center group-hover:border-[#0115DF] group-hover:bg-[#0115DF] transition-all duration-300"
+                            className={`w-10 h-10 rounded-full border flex items-center justify-center ${themeTransition} ${
+                              isProgramsDark
+                                ? "border-[#F7F3EE]/30 group-hover:border-[#F7F3EE]/60 group-hover:bg-[#F7F3EE]/10"
+                                : "border-[#041540]/20 group-hover:border-[#0115DF] group-hover:bg-[#0115DF]"
+                            }`}
                             whileHover={{ scale: 1.1, rotate: 45 }}
                           >
                             <svg
-                              className="w-4 h-4 text-[#041540]/40 group-hover:text-white transition-colors duration-300"
+                              className={`w-4 h-4 ${themeTransition} ${
+                                isProgramsDark
+                                  ? "text-[#F7F3EE]/60 group-hover:text-[#F7F3EE]"
+                                  : "text-[#041540]/40 group-hover:text-white"
+                              }`}
                               viewBox="0 0 24 24"
                               fill="none"
                               stroke="currentColor"
@@ -268,13 +343,22 @@ export default function Home() {
                 </FadeUp>
               ))}
               {/* Bottom border */}
-              <div className="border-t border-[#041540]/10" />
+              <div
+                className={`border-t ${themeTransition} ${
+                  isProgramsDark ? "border-[#F7F3EE]/15" : "border-[#041540]/10"
+                }`}
+              />
             </div>
           </div>
         </section>
 
         {/* Events Section */}
         <section className="py-32 px-6 md:px-16 lg:px-24 bg-white relative z-10">
+          <div
+            ref={eventsTopRef}
+            className="absolute inset-x-0 top-0 h-px pointer-events-none"
+            aria-hidden="true"
+          />
           <div className="max-w-[1400px] mx-auto">
             <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
               {/* Left - Content */}
