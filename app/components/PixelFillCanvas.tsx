@@ -14,6 +14,7 @@ class Pixel {
   isIdle: boolean;
   speed: number;
   randomFactor: number;
+  popScale: number;
 
   constructor(
     context: CanvasRenderingContext2D,
@@ -34,22 +35,25 @@ class Pixel {
     this.counter = 0;
     this.isIdle = false;
     this.speed = speed;
-    this.randomFactor = 0.5 + Math.random() * 1.5;
+    this.randomFactor = 0.8 + Math.random() * 0.4;
+    this.popScale = 0;
   }
 
   draw() {
     this.ctx.fillStyle = this.color;
-    this.ctx.fillRect(this.x, this.y, this.size, this.size);
+    const currentSize = this.size;
+    const offset = (this.maxSize - currentSize) / 2;
+    this.ctx.fillRect(this.x + offset, this.y + offset, currentSize, currentSize);
   }
 
   appear() {
     this.isIdle = false;
     if (this.counter < this.delay) {
-      this.counter += this.speed * 5;
+      this.counter += this.speed * 15;
       return;
     }
     if (this.size < this.maxSize) {
-      this.size += this.speed * this.randomFactor;
+      this.size += this.speed * 2.5 * this.randomFactor;
       if (this.size > this.maxSize) this.size = this.maxSize;
     }
     this.draw();
@@ -62,7 +66,7 @@ class Pixel {
       this.counter = 0;
       return;
     }
-    this.size -= this.speed * this.randomFactor * 1.5;
+    this.size -= this.speed * 3;
     if (this.size < 0) this.size = 0;
     this.draw();
   }
@@ -80,8 +84,8 @@ interface PixelFillCanvasProps {
 
 export default function PixelFillCanvas({
   color,
-  gap = 8,
-  speed = 1.5,
+  gap = 12,
+  speed = 1.0,
   active = false,
   origin = { x: 0.5, y: 0.5 },
   className = "",

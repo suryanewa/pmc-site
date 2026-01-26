@@ -380,13 +380,15 @@ export default function Home() {
                           >
                             {program.description}
                           </p>
-                          <div
-                            className={`mt-5 inline-flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-[0.2em] w-fit ${themeTransition} border bg-transparent hover:bg-[#041540] hover:!border-[#041540] hover:text-white transition-colors duration-300 ${isProgramsDark ? "text-white" : "text-[#041540]"}`}
-                            style={{ borderColor: program.color }}
+                          <Button
+                            className="mt-5 !px-4 !py-2 text-xs uppercase tracking-[0.2em] !h-auto"
+                            borderColor={program.color}
+                            fillColor="transparent"
+                            textColor={isProgramsDark ? "white" : "#041540"}
                           >
                             Explore Program
-                            <span aria-hidden="true">↗</span>
-                          </div>
+                            <span aria-hidden="true" className="ml-2">↗</span>
+                          </Button>
                         </div>
                       }
                     />
