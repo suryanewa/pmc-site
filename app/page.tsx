@@ -858,6 +858,21 @@ export default function Home() {
                 </div>
 
                 <FadeUp delay={0.2}>
+                  <div className="mb-6 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap">
+                    <span className="text-[#0115DF]">/</span>
+                    <TextType
+                      text="newsletter"
+                      typingSpeed={50}
+                      initialDelay={300}
+                      loop={false}
+                      showCursor={true}
+                      hideCursorOnComplete={true}
+                      cursorCharacter="|"
+                      className="inline"
+                      as="span"
+                      startOnVisible={true}
+                    />
+                  </div>
                   <Newsletter variant="dark" />
                 </FadeUp>
               </div>
