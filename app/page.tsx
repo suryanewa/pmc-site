@@ -44,6 +44,18 @@ const companyLogos = [
   { image: "/companies/usv.jpg", name: "USV" },
   { image: "/companies/bessemer.png", name: "Bessemer" },
   { image: "/companies/meta.png", name: "Meta" },
+  { image: "/companies/8vc.png", name: "8VC" },
+  { image: "/companies/amazon.png", name: "Amazon" },
+  { image: "/companies/contrary.png", name: "Contrary" },
+  { image: "/companies/de-shaw.png", name: "D.E. Shaw" },
+  { image: "/companies/drf.png", name: "Dorm Room Fund" },
+  { image: "/companies/first-round.png", name: "First Round" },
+  { image: "/companies/insight.png", name: "Insight Partners" },
+  { image: "/companies/jpm.jpeg", name: "JPMorgan" },
+  { image: "/companies/modern-treasury.png", name: "Modern Treasury" },
+  { image: "/companies/resy.png", name: "Resy" },
+  { image: "/companies/ro.png", name: "Ro" },
+  { image: "/companies/vice.png", name: "Vice" },
 ];
 
 // Programs data
@@ -127,7 +139,7 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
             >
-              The Home of NYU<br />
+              The Home of NYU's<br />
               Founders & Investors
             </motion.h1>
 
@@ -155,7 +167,9 @@ export default function Home() {
                   Explore Our Programs
                 </Link>
                 <Link
-                  href="#"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="inline-block px-8 py-4 border border-[#041540] text-[#041540] font-medium hover:bg-[#041540] hover:text-white transition-all duration-300"
                 >
                   Coffee Chat Leadership
@@ -192,7 +206,7 @@ export default function Home() {
         </section>
 
         {/* Programs Section */}
-        <section className="py-32 px-6 md:px-16 lg:px-24">
+        <section id="programs" className="py-32 px-6 md:px-16 lg:px-24">
           <div className="max-w-[1400px] mx-auto">
             {/* Section Header */}
             <div className="grid lg:grid-cols-2 gap-8 mb-20">
@@ -300,7 +314,7 @@ export default function Home() {
                 </FadeUp>
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-8 pt-8 border-t border-[#041540]/10">
+                <div className="grid grid-cols-3 gap-4 md:gap-8 pt-8 border-t border-[#041540]/10">
                   <AnimatedStat number="250+" label="Speaker Events" delay={0} />
                   <AnimatedStat number="20+" label="Years Active" delay={0.1} />
                   <AnimatedStat number="100+" label="Alumni Network" delay={0.2} />
@@ -308,18 +322,27 @@ export default function Home() {
               </div>
 
               {/* Right - Polaroids with stagger */}
-              <div className="relative min-h-[500px] lg:min-h-[600px]">
-                <FadeIn
-                  delay={0.2}
-                  className="absolute w-[240px] md:w-[280px] left-[0%] top-[0%] hover:z-50"
-                  data-gsap="parallax"
-                  data-speed="0.08"
-                >
-                  <Polaroid src="/lux.jpeg" alt="Lux Capital" caption="eeg/lux-capital" rotation={-3} />
+              {/* Mobile: Simple grid layout */}
+              <div className="grid grid-cols-2 gap-4 lg:hidden">
+                <FadeIn delay={0.2}>
+                  <Polaroid src="/lux.jpeg" alt="Lux Capital" caption="eeg/lux-capital" rotation={-2} />
                 </FadeIn>
+                <FadeIn delay={0.3}>
+                  <Polaroid src="/zfellows.jpeg" alt="Zfellows" caption="eeg/zfellows" rotation={2}/>
+                </FadeIn>
+                <FadeIn delay={0.4}>
+                  <Polaroid src="/alumni-panel.png" alt="Alumni Panel" caption="eeg/alumni-panel" rotation={3} />
+                </FadeIn>
+                <FadeIn delay={0.5}>
+                  <Polaroid src="/varun-rana.png" alt="Varun Rana" caption="eeg/varun-rana" rotation={-1}/>
+                </FadeIn>
+              </div>
+
+              {/* Desktop: Scattered absolute positioning */}
+              <div className="hidden lg:block relative min-h-[600px]">
                 <FadeIn
                   delay={0.35}
-                  className="absolute w-[240px] md:w-[280px] right-[5%] top-[8%] hover:z-50"
+                  className="absolute w-[280px] right-[5%] top-[8%] hover:z-50"
                   data-gsap="parallax"
                   data-speed="0.14"
                 >
@@ -327,19 +350,35 @@ export default function Home() {
                 </FadeIn>
                 <FadeIn
                   delay={0.5}
-                  className="absolute w-[240px] md:w-[280px] left-[15%] top-[40%] hover:z-50"
+                  className="absolute w-[280px] left-[20%] top-[35%] hover:z-50"
                   data-gsap="parallax"
                   data-speed="0.1"
                 >
-                  <Polaroid src="/beli.png" alt="Beli" caption="eeg/beli" rotation={4} />
+                  <Polaroid src="/alumni-panel.png" alt="Alumni Panel" caption="eeg/alumni-panel" rotation={4} />
+                </FadeIn>
+                <FadeIn
+                  delay={0.2}
+                  className="absolute w-[280px] left-[0%] top-[0%] hover:z-50"
+                  data-gsap="parallax"
+                  data-speed="0.08"
+                >
+                  <Polaroid src="/lux.jpeg" alt="Lux Capital" caption="eeg/lux-capital" rotation={-3} />
                 </FadeIn>
                 <FadeIn
                   delay={0.65}
-                  className="absolute w-[240px] md:w-[280px] right-[0%] bottom-[5%] hover:z-50"
+                  className="absolute w-[280px] right-[0%] bottom-[5%] hover:z-50"
                   data-gsap="parallax"
                   data-speed="0.06"
                 >
                   <Polaroid src="/varun-rana.png" alt="Varun Rana" caption="eeg/varun-rana" rotation={-2}/>
+                </FadeIn>
+                <FadeIn
+                  delay={0.8}
+                  className="absolute w-[280px] left-[0%] bottom-[0%] hover:z-50"
+                  data-gsap="parallax"
+                  data-speed="0.06"
+                >
+                  <Polaroid src="/beli.png" alt="Beli" caption="eeg/beli" rotation={-2}/>
                 </FadeIn>
               </div>
             </div>

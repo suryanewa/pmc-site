@@ -26,7 +26,7 @@ const leadershipMembers = [
   { id: 7, src: '/profiles/vihaan.jpg', name: 'vihaan-agarwal', role: 'eir-lead' },
   { id: 8, src: '/profiles/zaara.jpg', name: 'zaara-israni', role: 'marketing-lead' },
   { id: 9, src: '/profiles/nicole.jpg', name: 'nicole-hwang', role: 'community-lead' },
-  { id: 10, src: '/profiles/sophia.jpg', name: 'sophia-chen', role: 'community-lead' },
+  { id: 10, src: '/profiles/sophia-new.jpg', name: 'sophia-chen', role: 'community-lead' },
   { id: 11, src: '/profiles/pranav.jpg', name: 'pranav-sarma', role: 'treasurer' },
   { id: 12, src: '/profiles/lia.jpg', name: 'lia-kostas', role: 'growth' },
   { id: 13, src: '/profiles/xander.png', name: 'xander-wanagel', role: 'growth' },
@@ -88,8 +88,24 @@ export default function PeoplePage() {
             </p>
           </FadeUp>
 
-        {/* Scattered Polaroids Container */}
-        <div className="relative h-[1000px] w-full" data-gsap="parallax" data-speed="0.08">
+        {/* Polaroids - Grid on mobile, scattered on desktop */}
+        {/* Mobile Grid Layout */}
+        <div className="grid grid-cols-2 gap-4 md:hidden">
+          {communityPolaroids.map((polaroid, index) => (
+            <FadeIn key={polaroid.id} delay={0.1 * index}>
+              <Polaroid
+                src={polaroid.src || '/placeholder.jpg'}
+                alt={polaroid.alt}
+                caption={polaroid.caption}
+                rotation={polaroid.rotation * 0.3}
+                className="w-full"
+              />
+            </FadeIn>
+          ))}
+        </div>
+
+        {/* Desktop Scattered Layout */}
+        <div className="hidden md:block relative h-[1000px] w-full" data-gsap="parallax" data-speed="0.08">
           {/* Row 1 - Top polaroids */}
           <FadeIn delay={0.2}>
             <Polaroid
@@ -97,7 +113,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[0].alt}
               caption={communityPolaroids[0].caption}
               rotation={communityPolaroids[0].rotation}
-              className="absolute w-[400px] left-[2%] top-[5%] z-10"
+              className="absolute w-[280px] lg:w-[400px] left-[2%] top-[5%] z-10"
             />
           </FadeIn>
 
@@ -107,7 +123,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[1].alt}
               caption={communityPolaroids[1].caption}
               rotation={communityPolaroids[1].rotation}
-              className="absolute w-[400px] left-[30%] top-[10%] z-20"
+              className="absolute w-[280px] lg:w-[400px] left-[30%] top-[10%] z-20"
             />
           </FadeIn>
 
@@ -117,7 +133,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[2].alt}
               caption={communityPolaroids[2].caption}
               rotation={communityPolaroids[2].rotation}
-              className="absolute w-[400px] right-[10%] top-[6%] z-10"
+              className="absolute w-[280px] lg:w-[400px] right-[10%] top-[6%] z-10"
             />
           </FadeIn>
 
@@ -128,7 +144,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[3].alt}
               caption={communityPolaroids[3].caption}
               rotation={communityPolaroids[3].rotation}
-              className="absolute w-[400px] left-[0%] top-[45%] z-30"
+              className="absolute w-[280px] lg:w-[400px] left-[0%] top-[45%] z-30"
             />
           </FadeIn>
 
@@ -138,7 +154,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[4].alt}
               caption={communityPolaroids[4].caption}
               rotation={communityPolaroids[4].rotation}
-              className="absolute w-[400px] left-[28%] top-[60%] z-20"
+              className="absolute w-[280px] lg:w-[400px] left-[28%] top-[60%] z-20"
             />
           </FadeIn>
 
@@ -148,7 +164,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[5].alt}
               caption={communityPolaroids[5].caption}
               rotation={communityPolaroids[5].rotation}
-              className="absolute w-[400px] left-[40%] top-[40%] z-30"
+              className="absolute w-[280px] lg:w-[400px] left-[40%] top-[40%] z-30"
             />
           </FadeIn>
 
@@ -158,7 +174,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[6].alt}
               caption={communityPolaroids[6].caption}
               rotation={communityPolaroids[6].rotation}
-              className="absolute w-[400px] right-[5%] top-[52%] z-10"
+              className="absolute w-[280px] lg:w-[400px] right-[5%] top-[52%] z-10"
             />
           </FadeIn>
         </div>

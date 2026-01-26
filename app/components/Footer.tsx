@@ -74,7 +74,7 @@ export function Footer() {
           <div>
             <h4 className="text-xs tracking-[0.15em] uppercase text-[#041540]/50 mb-4">Contact</h4>
             <div className="flex flex-col gap-3">
-              <a href="#" className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block">
+              <a href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform" target="_blank" rel="noopener noreferrer" className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block">
                 Get Coffee
               </a>
               <a href="mailto:eeg@stern.nyu.edu" className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block">
