@@ -108,8 +108,8 @@ function AnimatedStat({
   useEffect(() => {
     if (active) {
       const controls = animate(count, numericValue, {
-        duration: 1.2,
-        ease: [0.22, 1, 0.36, 1],
+        duration: 2.8,
+        ease: [0.19, 1, 0.22, 1],
         onComplete: () => {
           setShowLabel(true);
         }
