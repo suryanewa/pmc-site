@@ -307,7 +307,7 @@ export function HeroScene() {
 
       {/* 3D Canvas with Mac */}
         <Canvas
-          camera={{ position: [0, 0.2, 4], fov: 45 }}
+          camera={{ position: [0, 0.2, 4.5], fov: 45, near: 0.1, far: 100 }}
           dpr={[1, 2]}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
         >
@@ -327,7 +327,7 @@ export function HeroScene() {
         <pointLight position={[-3, 2, 2]} intensity={0.3} color="#0115DF" />
         
         {/* Mac Model */}
-        <Bounds fit clip observe margin={1.08}>
+        <Bounds fit observe margin={1.2}>
           <MacModel 
             videoEl={videoEl} 
             onLoaded={() => setModelReady(true)} 
