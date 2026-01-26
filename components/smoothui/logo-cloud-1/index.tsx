@@ -99,7 +99,7 @@ export function LogoCloudAnimated({
           <div className="mb-4 font-bold text-2xl text-current lg:text-3xl">
             {title === "Our Network" ? (
               <>
-                <span className="text-[#0115DF] mr-2">/</span>
+                <span className="text-[#0115DF]">/</span>
                 <TextType
                   text="network"
                   typingSpeed={50}

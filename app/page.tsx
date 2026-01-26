@@ -285,7 +285,7 @@ export default function Home() {
                     isProgramsDark ? "text-[#F7F3EE]" : "text-[#041540]"
                   }`}
                 >
-                  <span className="text-[#0115DF] mr-2">/</span>
+                  <span className="text-[#0115DF]">/</span>
                   <TextType
                     text="programs"
                     typingSpeed={50}
@@ -407,7 +407,7 @@ export default function Home() {
               <div>
                 <FadeUp>
                   <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540] mb-8">
-                    <span className="text-[#0115DF] mr-2">/</span>
+                    <span className="text-[#0115DF]">/</span>
                     <TextType
                       text="events"
                       typingSpeed={50}
@@ -421,7 +421,7 @@ export default function Home() {
                     />
                   </div>
                   <div className="mb-4 font-bold text-2xl text-[#041540] lg:text-3xl text-center md:text-left">
-                    <span className="text-[#0115DF] mr-2">/</span>
+                    <span className="text-[#0115DF]">/</span>
                     <TextType
                       text="speakers"
                       typingSpeed={50}
@@ -514,7 +514,7 @@ export default function Home() {
             <div className="max-w-3xl">
               <FadeUp>
                 <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-white mb-8">
-                  <span className="text-[#0115DF] mr-2">/</span>
+                  <span className="text-[#0115DF]">/</span>
                   <TextType
                     text="join-us"
                     typingSpeed={50}

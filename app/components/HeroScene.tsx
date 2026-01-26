@@ -1,6 +1,7 @@
 "use client";
 
 import * as THREE from "three";
+import gsap from "gsap";
 import { Canvas } from "@react-three/fiber";
 import { useGLTF, Environment, ContactShadows, Bounds, OrbitControls, Center } from "@react-three/drei";
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
@@ -272,14 +273,38 @@ function MacModel({
     }
   }, []);
 
+  const groupRef = useRef<THREE.Group>(null);
+
+  useEffect(() => {
+    if (groupRef.current) {
+      groupRef.current.rotation.x = 0.1;
+      groupRef.current.rotation.y = 0.5;
+      
+      gsap.to(groupRef.current.rotation, {
+        y: -0.7,
+        duration: 2.5,
+        ease: "power2.out",
+        delay: 0.2
+      });
+      
+      gsap.to(groupRef.current.position, {
+        y: 0.03,
+        duration: 3,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut"
+      });
+    }
+  }, []);
+
   return (
     <group 
+      ref={groupRef}
       scale={modelScale} 
-      rotation={[0.1, 0, 0]}
       onPointerOver={() => setHovered(true)}
       onPointerOut={() => setHovered(false)}
     >
-      <Center right>
+      <Center>
         <primitive object={scene} />
       </Center>
     </group>
@@ -309,8 +334,11 @@ export function HeroScene() {
             makeDefault
             enablePan={false}
             enableZoom={false}
-            enableDamping={false}
+            enableDamping={true}
+            dampingFactor={0.05}
             rotateSpeed={0.5}
+            minPolarAngle={Math.PI / 3}
+            maxPolarAngle={Math.PI / 1.5}
           />
         {/* Lighting */}
         <ambientLight intensity={0.4} />
@@ -319,7 +347,7 @@ export function HeroScene() {
         <pointLight position={[-3, 2, 2]} intensity={0.3} color="#0115DF" />
         
         {/* Mac Model */}
-        <Bounds fit observe={false} margin={1.1}>
+        <Bounds fit observe={false} margin={1.2}>
           {macModel}
         </Bounds>
         
