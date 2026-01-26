@@ -415,7 +415,7 @@ export default function Home() {
               </FadeUp>
 
               <FadeUp delay={0.2}>
-                <Newsletter variant="dark" />
+                <Newsletter variant="dark" source="landing-page" />
               </FadeUp>
             </div>
           </div>

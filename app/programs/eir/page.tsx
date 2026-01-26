@@ -177,7 +177,7 @@ export default function EirPage() {
               </FadeUp>
 
               <FadeUp delay={0.2}>
-                <Newsletter variant="dark" />
+                <Newsletter variant="dark" source="eir-program" />
               </FadeUp>
             </div>
           </div>

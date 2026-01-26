@@ -202,7 +202,7 @@ export default function InvestingPage() {
               </FadeUp>
 
               <FadeUp delay={0.2}>
-                <Newsletter variant="dark" />
+                <Newsletter variant="dark" source="investing-program" />
               </FadeUp>
             </div>
           </div>

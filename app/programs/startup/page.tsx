@@ -176,7 +176,7 @@ export default function StartupPage() {
               </FadeUp>
 
               <FadeUp delay={0.2}>
-                <Newsletter variant="dark" />
+                <Newsletter variant="dark" source="startup-program" />
               </FadeUp>
             </div>
           </div>
