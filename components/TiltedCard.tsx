@@ -154,7 +154,8 @@ export default function TiltedCard({
           <motion.img
             src={imageSrc}
             alt={altText}
-            className="absolute left-0 top-0 h-full w-full object-cover will-change-transform [transform:translateZ(0)]"
+            draggable={false}
+            className="absolute left-0 top-0 h-full w-full object-cover will-change-transform [transform:translateZ(0)] select-none"
             style={{
               width: imageWidth,
               height: imageHeight,

@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useInView, animate, useMotionValue, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useInView, animate, useMotionValue, useTransform, AnimatePresence, useSpring } from 'framer-motion';
 import { Suspense, useEffect, useRef, useState, useCallback } from 'react';
 import dynamic from 'next/dynamic';
 import { Button } from './components/Button';
@@ -194,6 +194,123 @@ function StatsGrid() {
         />
       </div>
     </>
+  );
+}
+
+function SpeakerPolaroidItem({ p, topIndex, setTopIndex }: { p: any; topIndex: number | null; setTopIndex: (id: number) => void }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const rotateX = useSpring(0, { damping: 30, stiffness: 100, mass: 2 });
+  const rotateY = useSpring(0, { damping: 30, stiffness: 100, mass: 2 });
+  const scale = useSpring(1, { damping: 30, stiffness: 100, mass: 2 });
+  const imgScale = useSpring(1, { damping: 30, stiffness: 100, mass: 2 });
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current || isDragging) return;
+    const rect = ref.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+    
+    rotateX.set((offsetY / (rect.height / 2)) * -25);
+    rotateY.set((offsetX / (rect.width / 2)) * 25);
+  };
+
+  const handleMouseEnter = () => {
+    if (!isDragging) scale.set(1.1);
+  };
+
+  const handleMouseLeave = () => {
+    if (!isDragging) {
+      scale.set(1);
+      imgScale.set(1);
+      rotateX.set(0);
+      rotateY.set(0);
+    }
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      drag
+      dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
+      dragTransition={{ power: 0.005, timeConstant: 50 }}
+      onDragStart={() => {
+        setTopIndex(p.id);
+        setIsDragging(true);
+        scale.set(1.2);
+        rotateX.set(0);
+        rotateY.set(0);
+      }}
+      onDragEnd={() => {
+        setIsDragging(false);
+        scale.set(1.1);
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      initial={{ opacity: 0, rotate: p.rotate }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ 
+        opacity: { duration: 0.8, delay: p.delay, ease: [0.25, 0.1, 0.25, 1] },
+        rotate: { duration: 0 } 
+      }}
+      className="absolute w-[240px] md:w-[280px] cursor-grab active:cursor-grabbing select-none [perspective:800px]"
+      style={{
+        left: p.left,
+        top: p.top,
+        right: p.right,
+        bottom: p.bottom,
+        zIndex: topIndex === p.id ? 100 : 10 + p.id,
+        rotateX,
+        rotateY,
+        scale
+      }}
+      data-gsap="parallax"
+      data-speed={p.speed}
+    >
+      <div className={`bg-white p-2.5 transition-shadow duration-300 ${
+        isDragging 
+          ? "shadow-[0_30px_60px_rgba(0,0,0,0.15)]" 
+          : "shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+      } [transform-style:preserve-3d]`}>
+        <div 
+          className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]"
+          onMouseEnter={() => !isDragging && imgScale.set(1.08)}
+          onMouseLeave={() => !isDragging && imgScale.set(1)}
+        >
+          <motion.img
+            src={p.src}
+            alt={p.alt}
+            draggable={false}
+            className="w-full h-full object-cover select-none"
+            style={{ scale: imgScale }}
+          />
+        </div>
+        <p className="mt-2 text-center text-xs tracking-wide text-[#041540]/50 font-mono pointer-events-none">
+          {p.caption}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
+function SpeakerPolaroids() {
+  const [topIndex, setTopIndex] = useState<number | null>(null);
+
+  const polaroids = [
+    { id: 0, src: "/lux.jpeg", alt: "Lux Capital", caption: "eeg/lux-capital", left: "0%", top: "0%", rotate: -3, speed: "0.08", delay: 0.2 },
+    { id: 1, src: "/zfellows.jpeg", alt: "Zfellows", caption: "eeg/zfellows", right: "5%", top: "8%", rotate: 2, speed: "0.14", delay: 0.35 },
+    { id: 2, src: "/beli.png", alt: "Beli", caption: "eeg/beli", left: "15%", top: "40%", rotate: 4, speed: "0.1", delay: 0.5 },
+    { id: 3, src: "/varun-rana.png", alt: "Varun Rana", caption: "eeg/varun-rana", right: "0%", bottom: "5%", rotate: -2, speed: "0.06", delay: 0.65 },
+  ];
+
+  return (
+    <div className="relative min-h-[500px] lg:min-h-[600px]">
+      {polaroids.map((p) => (
+        <SpeakerPolaroidItem key={p.id} p={p} topIndex={topIndex} setTopIndex={setTopIndex} />
+      ))}
+    </div>
   );
 }
 
@@ -546,116 +663,7 @@ export default function Home() {
                 <StatsGrid />
               </div>
 
-              {/* Right - Polaroids with stagger */}
-              <div className="relative min-h-[500px] lg:min-h-[600px]">
-                <motion.div
-                  drag
-                  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
-                  className="absolute w-[240px] md:w-[280px] left-[0%] top-[0%] hover:z-50 cursor-grab active:cursor-grabbing"
-                >
-                  <FadeIn
-                    delay={0.2}
-                    data-gsap="parallax"
-                    data-speed="0.08"
-                  >
-                    <TiltedCard
-                      imageSrc="/lux.jpeg"
-                      altText="Lux Capital"
-                      captionText="eeg/lux-capital"
-                      rotateAmplitude={12}
-                      showTooltip={true}
-                      containerHeight="auto"
-                      containerWidth="100%"
-                      imageHeight="100%"
-                      imageWidth="100%"
-                      borderRadius={0}
-                      scaleOnHover={1.05}
-                      showMobileWarning={false}
-                    />
-                  </FadeIn>
-                </motion.div>
-
-                <motion.div
-                  drag
-                  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
-                  className="absolute w-[240px] md:w-[280px] right-[5%] top-[8%] hover:z-50 cursor-grab active:cursor-grabbing"
-                >
-                  <FadeIn
-                    delay={0.35}
-                    data-gsap="parallax"
-                    data-speed="0.14"
-                  >
-                    <TiltedCard
-                      imageSrc="/zfellows.jpeg"
-                      altText="Zfellows"
-                      captionText="eeg/zfellows"
-                      rotateAmplitude={12}
-                      showTooltip={true}
-                      containerHeight="auto"
-                      containerWidth="100%"
-                      imageHeight="100%"
-                      imageWidth="100%"
-                      borderRadius={0}
-                      scaleOnHover={1.05}
-                      showMobileWarning={false}
-                    />
-                  </FadeIn>
-                </motion.div>
-
-                <motion.div
-                  drag
-                  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
-                  className="absolute w-[240px] md:w-[280px] left-[15%] top-[40%] hover:z-50 cursor-grab active:cursor-grabbing"
-                >
-                  <FadeIn
-                    delay={0.5}
-                    data-gsap="parallax"
-                    data-speed="0.1"
-                  >
-                    <TiltedCard
-                      imageSrc="/beli.png"
-                      altText="Beli"
-                      captionText="eeg/beli"
-                      rotateAmplitude={12}
-                      showTooltip={true}
-                      containerHeight="auto"
-                      containerWidth="100%"
-                      imageHeight="100%"
-                      imageWidth="100%"
-                      borderRadius={0}
-                      scaleOnHover={1.05}
-                      showMobileWarning={false}
-                    />
-                  </FadeIn>
-                </motion.div>
-
-                <motion.div
-                  drag
-                  dragConstraints={{ left: -100, right: 100, top: -100, bottom: 100 }}
-                  className="absolute w-[240px] md:w-[280px] right-[0%] bottom-[5%] hover:z-50 cursor-grab active:cursor-grabbing"
-                >
-                  <FadeIn
-                    delay={0.65}
-                    data-gsap="parallax"
-                    data-speed="0.06"
-                  >
-                    <TiltedCard
-                      imageSrc="/varun-rana.png"
-                      altText="Varun Rana"
-                      captionText="eeg/varun-rana"
-                      rotateAmplitude={12}
-                      showTooltip={true}
-                      containerHeight="auto"
-                      containerWidth="100%"
-                      imageHeight="100%"
-                      imageWidth="100%"
-                      borderRadius={0}
-                      scaleOnHover={1.05}
-                      showMobileWarning={false}
-                    />
-                  </FadeIn>
-                </motion.div>
-              </div>
+              <SpeakerPolaroids />
             </div>
           </div>
         </section>
