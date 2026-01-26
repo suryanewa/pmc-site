@@ -66,13 +66,15 @@ export function Button({
     ? 'bg-[#041540] text-white focus:ring-[#0115DF]'
     : '';
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!buttonRef.current) return;
-    const rect = buttonRef.current.getBoundingClientRect();
-    setMousePos({
-      x: (e.clientX - rect.left) / rect.width,
-      y: (e.clientY - rect.top) / rect.height,
-    });
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setMousePos({
+        x: (e.clientX - rect.left) / rect.width,
+        y: (e.clientY - rect.top) / rect.height,
+      });
+    }
+    setIsHovered(true);
   };
 
   const content = (
@@ -81,8 +83,8 @@ export function Button({
         active={isHovered}
         origin={mousePos}
         color="#0115DF"
-        gap={5}
-        speed={1.5}
+        gap={8}
+        speed={2}
         className="z-0"
       />
       <span className={`relative z-10 transition-colors duration-300 ${isHovered ? 'text-white' : ''}`}>
@@ -94,9 +96,8 @@ export function Button({
   const commonProps = {
     className: `${baseStyles} ${sizeStyles[size]} ${defaultStyles} ${className}`,
     style: isCustom ? inlineStyles : undefined,
-    onMouseEnter: () => setIsHovered(true),
+    onMouseEnter: handleMouseEnter,
     onMouseLeave: () => setIsHovered(false),
-    onMouseMove: handleMouseMove,
     whileHover: { scale: 1.02 },
     whileTap: { scale: 0.98 },
   };

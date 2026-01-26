@@ -80,8 +80,8 @@ interface PixelFillCanvasProps {
 
 export default function PixelFillCanvas({
   color,
-  gap = 4,
-  speed = 1,
+  gap = 8,
+  speed = 1.5,
   active = false,
   origin = { x: 0.5, y: 0.5 },
   className = "",
@@ -91,6 +91,7 @@ export default function PixelFillCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pixelsRef = useRef<Pixel[]>([]);
   const animationRef = useRef<number | null>(null);
+  const lastActiveRef = useRef(active);
 
   const initPixels = useCallback(() => {
     if (!containerRef.current || !canvasRef.current) return;
@@ -108,14 +109,13 @@ export default function PixelFillCanvas({
     ctx.imageSmoothingEnabled = false;
 
     const pxs: Pixel[] = [];
-    // Increase gap for higher speed if needed, but 4-6 is usually good
     for (let x = 0; x < width; x += gap) {
       for (let y = 0; y < height; y += gap) {
         const dx = x - width * origin.x;
         const dy = y - height * origin.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         
-        pxs.push(new Pixel(ctx, x, y, color, gap + 0.5, distance, speed));
+        pxs.push(new Pixel(ctx, x, y, color, gap + 1, distance, speed));
       }
     }
     pixelsRef.current = pxs;
@@ -126,7 +126,8 @@ export default function PixelFillCanvas({
     const canvas = canvasRef.current;
     if (!ctx || !canvas) return;
 
-    ctx.clearRect(0, 0, canvas.width / (window.devicePixelRatio || 1), canvas.height / (window.devicePixelRatio || 1));
+    const dpr = window.devicePixelRatio || 1;
+    ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
 
     let allIdle = true;
     const action = active ? "appear" : "disappear";
@@ -142,12 +143,19 @@ export default function PixelFillCanvas({
       }
     }
 
-    if (!allIdle || (active && pixelsRef.current.some(p => p.size < p.maxSize))) {
+    if (!allIdle) {
       animationRef.current = requestAnimationFrame(animate);
     } else {
       animationRef.current = null;
     }
   }, [active]);
+
+  useEffect(() => {
+    if (active && !lastActiveRef.current) {
+      initPixels();
+    }
+    lastActiveRef.current = active;
+  }, [active, initPixels]);
 
   useEffect(() => {
     initPixels();
