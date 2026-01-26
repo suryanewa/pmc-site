@@ -50,7 +50,7 @@ export default function TiltedCard({
   displayOverlayContent = false,
   backgroundColor,
   backgroundContent,
-  borderRadius = 22,
+  borderRadius = 0,
   pixelEffect
 }: TiltedCardProps) {
   const ref = useRef<HTMLElement>(null);

@@ -187,10 +187,10 @@ export default function Home() {
               transition={{ duration: 0.6 }}
             >
               <span className="inline-flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center rounded-full border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 opacity-70 hover:opacity-100 hover:bg-[#041540] hover:text-white transition-all duration-300">
+                <span className="inline-flex items-center border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 opacity-70 hover:opacity-100 hover:bg-[#041540] hover:text-white transition-all duration-300">
                   NYU&apos;s Premier Entrepreneurship Club
                 </span>
-                <span className="inline-flex items-center rounded-full border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 opacity-70 hover:opacity-100 hover:bg-[#041540] hover:text-white transition-all duration-300">
+                <span className="inline-flex items-center border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 opacity-70 hover:opacity-100 hover:bg-[#041540] hover:text-white transition-all duration-300">
                   Est. 2003
                 </span>
               </span>
@@ -306,6 +306,7 @@ export default function Home() {
                       scaleOnHover={1.04}
                       showMobileWarning={false}
                       showTooltip={false}
+                      borderRadius={0}
                       backgroundColor={`${program.color}20`}
                       backgroundContent={
                         program.id === 'eir' 
@@ -357,7 +358,7 @@ export default function Home() {
                             {program.description}
                           </p>
                           <div
-                            className={`mt-5 inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs uppercase tracking-[0.2em] text-white w-fit ${themeTransition}`}
+                            className={`mt-5 inline-flex items-center gap-2 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white w-fit ${themeTransition}`}
                             style={{ backgroundColor: program.color }}
                           >
                             Explore Program
