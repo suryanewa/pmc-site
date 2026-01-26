@@ -44,7 +44,7 @@ const curriculumData = [
       <div>
         <h4 className="text-2xl font-medium text-white mb-4">Phase 2: Build, Learn, and Iterate</h4>
         <p className="text-neutral-300 text-base md:text-lg mb-6">
-        This is the core of the program. You’ll participate in founder dinners, need-based workshops, and office hours with VC partners, all tailored to the specific challenges your startup is facing. Whether you’re refining your idea, building an MVP, or pushing toward revenue.</p>
+        This is the core of the program. You’ll participate in founder dinners, need-based workshops, and office hours with VC partners, all tailored to the specific challenges your startup is facing, whether you’re refining your idea, building an MVP, or pushing toward revenue.</p>
                <div className="flex flex-wrap gap-3">
         <span className="px-4 py-2 bg-[#ECB22F]/30 border border-[#ECB22F]/30 rounded-full text-[#ECB22F] text-sm">
             Mentorship
