@@ -9,6 +9,7 @@ import { Polaroid } from './components/Polaroid';
 import { HeroWarpCanvas } from './components/HeroWarpCanvas';
 import Link from "next/link";
 import { LogoCloudAnimated } from "@/components/smoothui/logo-cloud-1";
+import TiltedCard from "@/components/TiltedCard";
 
 const HeroScene = dynamic(
   () => import('./components/HeroScene').then((mod) => ({ default: mod.HeroScene })),
@@ -265,89 +266,70 @@ export default function Home() {
               </FadeUp>
             </div>
 
-            {/* Programs Grid */}
-            <div className="space-y-1">
+            {/* Programs Cards */}
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               {programs.map((program, index) => (
                 <FadeUp key={program.id} delay={0.1 * index}>
-                  <Link href={program.href}>
-                    <motion.div
-                      className={`group relative py-10 border-t cursor-pointer overflow-hidden ${themeTransition} ${
-                        isProgramsDark ? "border-[#F7F3EE]/15" : "border-[#041540]/10"
-                      }`}
-                      whileHover={{ x: 12 }}
-                      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      {/* Hover background effect */}
-                      <motion.div
-                        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                        style={{
-                          background: `linear-gradient(90deg, ${program.color}08 0%, transparent 50%)`
-                        }}
-                      />
-                      
-                      <div className="flex items-start justify-between gap-8 relative z-10">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-4 mb-3">
-                            <motion.span
-                              className="w-2 h-2 rounded-full"
-                              style={{ backgroundColor: program.color }}
-                              whileHover={{ scale: 1.5 }}
-                              transition={{ duration: 0.2 }}
-                            />
-                            <h3 
-                              className={`text-2xl md:text-3xl font-medium ${themeTransition} ${
-                                isProgramsDark
-                                  ? "text-[#F7F3EE] group-hover:text-[#F7F3EE]"
-                                  : "text-[#041540] group-hover:text-[#0115DF]"
-                              }`}
+                  <Link href={program.href} className="block">
+                    <TiltedCard
+                      altText={`EEG ${program.title} program`}
+                      captionText={program.title}
+                      containerHeight="360px"
+                      containerWidth="100%"
+                      imageHeight="360px"
+                      imageWidth="100%"
+                      rotateAmplitude={10}
+                      scaleOnHover={1.04}
+                      showMobileWarning={false}
+                      showTooltip={false}
+                      displayOverlayContent
+                      overlayContent={
+                        <div className="flex h-full w-full items-end p-5">
+                          <div
+                            className={`w-full rounded-[20px] border p-4 ${themeTransition} ${
+                              isProgramsDark
+                                ? "border-[#F7F3EE]/20 text-[#F7F3EE]"
+                                : "border-[#041540]/10 text-[#041540]"
+                            }`}
+                            style={{ backgroundColor: `${program.color}2b` }}
+                          >
+                            <h3
+                              className="text-xl font-medium tracking-[-0.02em]"
                               style={{ fontFamily: 'var(--font-gotham-medium)' }}
                             >
-                              {program.title}
+                              <span
+                                className={`${themeTransition} ${
+                                  isProgramsDark ? "text-white" : "text-[#041540]"
+                                }`}
+                              >
+                                eeg
+                              </span>
+                              <span style={{ color: program.color }}>{program.title}</span>
                             </h3>
-                          </div>
-                          <p
-                            className={`max-w-2xl leading-relaxed pl-6 ${themeTransition} ${
-                              isProgramsDark ? "text-[#F7F3EE]/70" : "text-[#041540]/50"
-                            }`}
-                          >
-                            {program.description}
-                          </p>
-                        </div>
-                        <div className="shrink-0 mt-2">
-                          <motion.div
-                            className={`w-10 h-10 rounded-full border flex items-center justify-center ${themeTransition} ${
-                              isProgramsDark
-                                ? "border-[#F7F3EE]/30 group-hover:border-[#F7F3EE]/60 group-hover:bg-[#F7F3EE]/10"
-                                : "border-[#041540]/20 group-hover:border-[#0115DF] group-hover:bg-[#0115DF]"
-                            }`}
-                            whileHover={{ scale: 1.1, rotate: 45 }}
-                          >
-                            <svg
-                              className={`w-4 h-4 ${themeTransition} ${
-                                isProgramsDark
-                                  ? "text-[#F7F3EE]/60 group-hover:text-[#F7F3EE]"
-                                  : "text-[#041540]/40 group-hover:text-white"
+                            <p
+                              className={`mt-2 text-sm leading-relaxed ${themeTransition} ${
+                                isProgramsDark ? "text-[#F7F3EE]/70" : "text-[#041540]/60"
                               }`}
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              stroke="currentColor"
-                              strokeWidth="2"
                             >
-                              <path d="M7 17L17 7M17 7H7M17 7V17" />
-                            </svg>
-                          </motion.div>
+                              {program.description}
+                            </p>
+                            <div
+                              className={`mt-4 inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] ${themeTransition} ${
+                                isProgramsDark
+                                  ? "text-[#F7F3EE]/70"
+                                  : "text-[#041540]/60"
+                              }`}
+                            >
+                              Explore Program
+                              <span aria-hidden="true">↗</span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </motion.div>
+                      }
+                    />
                   </Link>
                 </FadeUp>
               ))}
-              {/* Bottom border */}
-              <div
-                className={`border-t ${themeTransition} ${
-                  isProgramsDark ? "border-[#F7F3EE]/15" : "border-[#041540]/10"
-                }`}
-              />
             </div>
           </div>
         </section>
