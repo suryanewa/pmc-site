@@ -35,7 +35,7 @@ class Pixel {
     this.counter = 0;
     this.isIdle = false;
     this.speed = speed;
-    this.randomFactor = 0.8 + Math.random() * 0.4;
+    this.randomFactor = 0.4 + Math.random() * 1.6;
     this.popScale = 0;
   }
 
@@ -49,11 +49,11 @@ class Pixel {
   appear() {
     this.isIdle = false;
     if (this.counter < this.delay) {
-      this.counter += this.speed * 15;
+      this.counter += this.speed * 8 * (0.8 + Math.random() * 0.4);
       return;
     }
     if (this.size < this.maxSize) {
-      this.size += this.speed * 2.5 * this.randomFactor;
+      this.size += this.speed * 4 * this.randomFactor;
       if (this.size > this.maxSize) this.size = this.maxSize;
     }
     this.draw();
@@ -117,7 +117,8 @@ export default function PixelFillCanvas({
       for (let y = 0; y < height; y += gap) {
         const dx = x - width * origin.x;
         const dy = y - height * origin.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        const distance = Math.sqrt(dx * dx + dy * dy) + (Math.random() * gap * 4);
         
         pxs.push(new Pixel(ctx, x, y, color, gap + 1, distance, speed));
       }
