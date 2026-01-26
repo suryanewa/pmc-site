@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useState } from "react";
 
 class Pixel {
   ctx: CanvasRenderingContext2D;
@@ -10,11 +10,8 @@ class Pixel {
   size: number;
   maxSize: number;
   delay: number;
-  counter: number;
-  isIdle: boolean;
   speed: number;
   randomFactor: number;
-  popScale: number;
 
   constructor(
     context: CanvasRenderingContext2D,
@@ -32,11 +29,8 @@ class Pixel {
     this.size = 0;
     this.maxSize = maxSize;
     this.delay = delay;
-    this.counter = 0;
-    this.isIdle = false;
     this.speed = speed;
     this.randomFactor = 0.4 + Math.random() * 1.6;
-    this.popScale = 0;
   }
 
   draw() {
@@ -46,29 +40,24 @@ class Pixel {
     this.ctx.fillRect(this.x + offset, this.y + offset, currentSize, currentSize);
   }
 
-  appear() {
-    this.isIdle = false;
-    if (this.counter < this.delay) {
-      this.counter += this.speed * 8 * (0.8 + Math.random() * 0.4);
-      return;
+  update(clock: number) {
+    if (clock > this.delay) {
+      if (this.size < this.maxSize) {
+        this.size += this.speed * 4 * this.randomFactor;
+        if (this.size > this.maxSize) this.size = this.maxSize;
+      }
+    } else {
+      if (this.size > 0) {
+        this.size -= this.speed * 4 * this.randomFactor;
+        if (this.size < 0) this.size = 0;
+      }
     }
-    if (this.size < this.maxSize) {
-      this.size += this.speed * 4 * this.randomFactor;
-      if (this.size > this.maxSize) this.size = this.maxSize;
+    
+    if (this.size > 0) {
+      this.draw();
+      return false;
     }
-    this.draw();
-  }
-
-  disappear() {
-    if (this.size <= 0) {
-      this.isIdle = true;
-      this.size = 0;
-      this.counter = 0;
-      return;
-    }
-    this.size -= this.speed * 3;
-    if (this.size < 0) this.size = 0;
-    this.draw();
+    return true;
   }
 }
 
@@ -85,7 +74,7 @@ interface PixelFillCanvasProps {
 export default function PixelFillCanvas({
   color,
   gap = 12,
-  speed = 1.0,
+  speed = 0.45,
   active = false,
   origin = { x: 0.5, y: 0.5 },
   className = "",
@@ -96,6 +85,8 @@ export default function PixelFillCanvas({
   const pixelsRef = useRef<Pixel[]>([]);
   const animationRef = useRef<number | null>(null);
   const lastActiveRef = useRef(active);
+  const waveClock = useRef(0);
+  const [maxDistance, setMaxDistance] = useState(0);
 
   const initPixels = useCallback(() => {
     if (!containerRef.current || !canvasRef.current) return;
@@ -113,17 +104,20 @@ export default function PixelFillCanvas({
     ctx.imageSmoothingEnabled = false;
 
     const pxs: Pixel[] = [];
+    let maxDist = 0;
     for (let x = 0; x < width; x += gap) {
       for (let y = 0; y < height; y += gap) {
         const dx = x - width * origin.x;
         const dy = y - height * origin.y;
         
-        const distance = Math.sqrt(dx * dx + dy * dy) + (Math.random() * gap * 4);
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance > maxDist) maxDist = distance;
         
         pxs.push(new Pixel(ctx, x, y, color, gap + 1, distance, speed));
       }
     }
     pixelsRef.current = pxs;
+    setMaxDistance(maxDist);
   }, [color, gap, speed, origin.x, origin.y]);
 
   const animate = useCallback(() => {
@@ -134,26 +128,30 @@ export default function PixelFillCanvas({
     const dpr = window.devicePixelRatio || 1;
     ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
 
-    let allIdle = true;
-    const action = active ? "appear" : "disappear";
-    
-    for (let i = 0; i < pixelsRef.current.length; i++) {
-      const pixel = pixelsRef.current[i];
-      if (action === "appear") {
-        pixel.appear();
-        if (pixel.size < pixel.maxSize) allIdle = false;
-      } else {
-        pixel.disappear();
-        if (pixel.size > 0) allIdle = false;
+    if (active) {
+      waveClock.current += speed * 15;
+      if (waveClock.current > maxDistance + 100) {
+        waveClock.current = maxDistance + 100;
+      }
+    } else {
+      waveClock.current -= speed * 15;
+      if (waveClock.current < 0) {
+        waveClock.current = 0;
       }
     }
 
-    if (!allIdle) {
+    let allIdle = true;
+    for (let i = 0; i < pixelsRef.current.length; i++) {
+      const isIdle = pixelsRef.current[i].update(waveClock.current);
+      if (!isIdle) allIdle = false;
+    }
+
+    if (!allIdle || (active && waveClock.current < maxDistance + 100) || (!active && waveClock.current > 0)) {
       animationRef.current = requestAnimationFrame(animate);
     } else {
       animationRef.current = null;
     }
-  }, [active]);
+  }, [active, maxDistance, speed]);
 
   useEffect(() => {
     if (active && !lastActiveRef.current) {

@@ -86,7 +86,7 @@ export function Button({
         origin={mousePos}
         color="#0115DF"
         gap={12}
-        speed={0.45}
+        speed={0.4}
         className="z-0"
       />
       <span className={`relative z-10 transition-colors duration-300 ${isHovered ? 'text-white' : ''}`}>
