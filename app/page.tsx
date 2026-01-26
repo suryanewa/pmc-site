@@ -197,16 +197,23 @@ function StatsGrid() {
   );
 }
 
-function PushPin({ color = "#0115DF", active = false }: { color?: string; active?: boolean }) {
+function PushPin({ color = "#0115DF", active = false, size = 14 }: { color?: string; active?: boolean; size?: number }) {
   const displayColor = active ? color : "#A0A0A0";
   
   return (
-    <div className="absolute top-[2px] left-1/2 -translate-x-1/2 z-20 pointer-events-none">
-      <svg width="14" height="14" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.4)]">
+    <div 
+      className="absolute left-1/2 -translate-x-1/2 z-20 pointer-events-none"
+      style={{ top: size === 14 ? "2px" : "4px" }}
+    >
+      <svg width={size} height={size} viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.4)]">
         <defs>
-          <radialGradient id="pinGradient" cx="40%" cy="40%" r="50%" fx="30%" fy="30%">
+          <radialGradient id={`pinGradient-${size}`} cx="40%" cy="40%" r="50%" fx="30%" fy="30%">
             <stop offset="0%" stopColor="white" stopOpacity="0.4" />
             <stop offset="100%" stopColor="black" stopOpacity="0.2" />
+          </radialGradient>
+          <radialGradient id={`topSurface-${size}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={color} stopOpacity="0.9" />
+            <stop offset="100%" stopColor={color} />
           </radialGradient>
         </defs>
         
@@ -216,14 +223,14 @@ function PushPin({ color = "#0115DF", active = false }: { color?: string; active
           fillOpacity="0.8" 
           transition={{ duration: 0.3 }}
         />
-        <circle cx="14" cy="16" r="7" fill="url(#pinGradient)" />
+        <circle cx="14" cy="16" r="7" fill={`url(#pinGradient-${size})`} />
         
         <motion.circle 
           cx="14" cy="12" r="10" 
           animate={{ fill: displayColor }}
           transition={{ duration: 0.3 }}
         />
-        <circle cx="14" cy="12" r="10" fill="url(#pinGradient)" />
+        <circle cx="14" cy="12" r="10" fill={`url(#pinGradient-${size})`} />
         
         <circle cx="11" cy="9" r="2.5" fill="white" fillOpacity="0.35" />
       </svg>
@@ -231,7 +238,17 @@ function PushPin({ color = "#0115DF", active = false }: { color?: string; active
   );
 }
 
-function SpeakerPolaroidItem({ p, topIndex, setTopIndex }: { p: any; topIndex: number | null; setTopIndex: (id: number) => void }) {
+function SpeakerPolaroidItem({ 
+  p, 
+  topIndex, 
+  setTopIndex,
+  onSelect 
+}: { 
+  p: any; 
+  topIndex: number | null; 
+  setTopIndex: (id: number) => void;
+  onSelect: () => void;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const rotateX = useSpring(0, { damping: 30, stiffness: 100, mass: 2 });
   const rotateY = useSpring(0, { damping: 30, stiffness: 100, mass: 2 });
@@ -267,78 +284,109 @@ function SpeakerPolaroidItem({ p, topIndex, setTopIndex }: { p: any; topIndex: n
     }
   };
 
+  const entryVariants = {
+    hidden: { 
+      x: p.left ? "120%" : p.right ? "-120%" : 0, 
+      y: p.top ? "120%" : p.bottom ? "-120%" : 0,
+      rotate: 0,
+      opacity: 0,
+      scale: 0.5
+    },
+    visible: { 
+      x: 0, 
+      y: 0, 
+      rotate: p.rotate,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: "spring" as const,
+        damping: 20,
+        stiffness: 80,
+        delay: p.delay + 0.5,
+        duration: 1.2
+      }
+    }
+  };
+
   return (
-    <motion.div
-      ref={ref}
-      drag
-      dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
-      dragTransition={{ power: 0.005, timeConstant: 50 }}
-      onDragStart={() => {
-        setTopIndex(p.id);
-        setIsDragging(true);
-        scale.set(1.2);
-        rotateX.set(0);
-        rotateY.set(0);
-      }}
-      onDragEnd={() => {
-        setIsDragging(false);
-        scale.set(1.1);
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      initial={{ opacity: 0, rotate: p.rotate }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ 
-        opacity: { duration: 0.8, delay: p.delay, ease: [0.25, 0.1, 0.25, 1] },
-        rotate: { duration: 0 } 
-      }}
-      className="absolute w-[240px] md:w-[280px] cursor-grab active:cursor-grabbing select-none [perspective:800px]"
+    <div
+      data-gsap="parallax"
+      data-speed={p.speed}
+      className="absolute"
       style={{
         left: p.left,
         top: p.top,
         right: p.right,
         bottom: p.bottom,
         zIndex: topIndex === p.id ? 100 : 10 + p.id,
-        rotateX,
-        rotateY,
-        scale
       }}
-      data-gsap="parallax"
-      data-speed={p.speed}
     >
-      <div className={`bg-white p-2.5 transition-shadow duration-300 ${
-        isDragging 
-          ? "shadow-[0_30px_60px_rgba(0,0,0,0.15)]" 
-          : "shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
-      } [transform-style:preserve-3d] relative`}>
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 [transform:translateZ(40px)]">
-          <PushPin active={isHovered || isDragging} />
+      <motion.div
+        ref={ref}
+        drag
+        dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
+        dragTransition={{ power: 0.005, timeConstant: 50 }}
+        onDragStart={() => {
+          setTopIndex(p.id);
+          setIsDragging(true);
+          scale.set(1.2);
+          rotateX.set(0);
+          rotateY.set(0);
+        }}
+        onDragEnd={() => {
+          setIsDragging(false);
+          scale.set(1.1);
+        }}
+        onTap={() => {
+          if (!isDragging) onSelect();
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        variants={entryVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        className="w-[240px] md:w-[280px] cursor-pointer select-none [perspective:800px] will-change-transform"
+        style={{
+          rotateX,
+          rotateY,
+          scale
+        }}
+      >
+        <div className={`bg-white p-2.5 transition-shadow duration-300 ${
+          isDragging 
+            ? "shadow-[0_30px_60px_rgba(0,0,0,0.15)]" 
+            : "shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+        } [transform-style:preserve-3d] relative will-change-transform`}>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 [transform:translateZ(40px)]">
+            <PushPin active={isHovered || isDragging} />
+          </div>
+          <div 
+            className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]"
+            onMouseEnter={() => !isDragging && imgScale.set(1.08)}
+            onMouseLeave={() => !isDragging && imgScale.set(1)}
+          >
+            <motion.img
+              src={p.src}
+              alt={p.alt}
+              draggable={false}
+              className="w-full h-full object-cover select-none"
+              style={{ scale: imgScale }}
+            />
+          </div>
+          <p className="mt-2 text-center text-xs tracking-wide text-[#041540]/50 font-mono pointer-events-none">
+            {p.caption}
+          </p>
         </div>
-        <div 
-          className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]"
-          onMouseEnter={() => !isDragging && imgScale.set(1.08)}
-          onMouseLeave={() => !isDragging && imgScale.set(1)}
-        >
-          <motion.img
-            src={p.src}
-            alt={p.alt}
-            draggable={false}
-            className="w-full h-full object-cover select-none"
-            style={{ scale: imgScale }}
-          />
-        </div>
-        <p className="mt-2 text-center text-xs tracking-wide text-[#041540]/50 font-mono pointer-events-none">
-          {p.caption}
-        </p>
-      </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
 function SpeakerPolaroids() {
   const [topIndex, setTopIndex] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
 
   const polaroids = [
     { id: 0, src: "/lux.jpeg", alt: "Lux Capital", caption: "eeg/lux-capital", left: "0%", top: "0%", rotate: -3, speed: "0.08", delay: 0.2 },
@@ -347,11 +395,61 @@ function SpeakerPolaroids() {
     { id: 3, src: "/varun-rana.png", alt: "Varun Rana", caption: "eeg/varun-rana", right: "0%", bottom: "5%", rotate: -2, speed: "0.06", delay: 0.65 },
   ];
 
+  const selectedPolaroid = polaroids.find(p => p.id === selectedId);
+
   return (
     <div className="relative min-h-[500px] lg:min-h-[600px]">
       {polaroids.map((p) => (
-        <SpeakerPolaroidItem key={p.id} p={p} topIndex={topIndex} setTopIndex={setTopIndex} />
+        <SpeakerPolaroidItem 
+          key={p.id} 
+          p={p} 
+          topIndex={topIndex} 
+          setTopIndex={setTopIndex} 
+          onSelect={() => setSelectedId(p.id)}
+        />
       ))}
+
+      <AnimatePresence>
+        {selectedId !== null && selectedPolaroid && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedId(null)}
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-[#041540]/90 backdrop-blur-sm cursor-zoom-out p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.8, y: 20, rotate: selectedPolaroid.rotate }}
+              animate={{ scale: 1, y: 0, rotate: 0 }}
+              exit={{ scale: 0.8, y: 20, rotate: selectedPolaroid.rotate }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="bg-white p-4 md:p-6 shadow-2xl w-full max-w-[500px] flex flex-col relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                <PushPin active={true} size={28} />
+              </div>
+              <div className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]">
+                <img
+                  src={selectedPolaroid.src}
+                  alt={selectedPolaroid.alt}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="mt-4 text-center text-base md:text-lg tracking-widest text-[#041540]/70 font-mono">
+                {selectedPolaroid.caption}
+              </p>
+              
+              <button 
+                onClick={() => setSelectedId(null)}
+                className="absolute top-4 right-4 size-10 flex items-center justify-center rounded-full bg-[#041540]/10 hover:bg-[#041540]/20 transition-colors text-[#041540] z-30"
+              >
+                ✕
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
