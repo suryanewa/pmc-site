@@ -64,7 +64,7 @@ export function Newsletter({ variant = 'light' }: NewsletterProps) {
 
       <div className="flex flex-col sm:flex-row gap-3">
         <motion.div
-          className="relative flex-[2]"
+          className="relative flex-1"
           animate={{ scale: focusedField === 'email' ? 1.01 : 1 }}
           transition={{ duration: 0.2 }}
         >
@@ -83,12 +83,14 @@ export function Newsletter({ variant = 'light' }: NewsletterProps) {
           />
         </motion.div>
         
-        <Button
-          type="submit"
-          className={`h-12 text-sm !px-8 flex-1 ${!isLight ? '!bg-white !text-[#041540]' : ''}`}
-        >
-          Subscribe
-        </Button>
+        <div className="flex-1">
+          <Button
+            type="submit"
+            className={`h-12 text-sm !px-0 w-full ${!isLight ? '!bg-white !text-[#041540]' : ''}`}
+          >
+            Subscribe
+          </Button>
+        </div>
       </div>
     </form>
   );
