@@ -301,7 +301,7 @@ export function HeroScene() {
         <pointLight position={[-3, 2, 2]} intensity={0.3} color="#0115DF" />
         
         {/* Mac Model */}
-        <Bounds fit observe={false} margin={1.0}>
+        <Bounds fit observe={false} margin={1.1}>
           {macModel}
         </Bounds>
         
