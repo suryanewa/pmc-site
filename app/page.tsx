@@ -10,6 +10,7 @@ import { HeroWarpCanvas } from './components/HeroWarpCanvas';
 import Link from "next/link";
 import { LogoCloudAnimated } from "@/components/smoothui/logo-cloud-1";
 import TiltedCard from "@/components/TiltedCard";
+import TextType from '@/components/TextType';
 
 const HeroScene = dynamic(
   () => import('./components/HeroScene').then((mod) => ({ default: mod.HeroScene })),
@@ -197,15 +198,23 @@ export default function Home() {
             </motion.p>
 
             {/* Main Headline */}
-            <motion.h1
+            <motion.div
               className="text-[clamp(2rem,6vw,4.5rem)] font-medium leading-[1.05] tracking-[-0.03em] text-[#041540] mb-8"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
             >
-              The Home of NYU<br />
-              Founders & Investors
-            </motion.h1>
+              <TextType
+                text={['The Home of NYU\nFounders & Investors']}
+                typingSpeed={50}
+                initialDelay={500}
+                loop={false}
+                showCursor={true}
+                hideCursorOnComplete={true}
+                cursorCharacter="|"
+                className="block"
+              />
+            </motion.div>
 
             {/* Description */}
             <motion.p
@@ -271,14 +280,24 @@ export default function Home() {
             {/* Section Header */}
             <div className="grid lg:grid-cols-2 gap-8 mb-20">
               <FadeUp>
-                <h2
+                <div
                   className={`text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] ${themeTransition} ${
                     isProgramsDark ? "text-[#F7F3EE]" : "text-[#041540]"
                   }`}
                 >
-                  <span className="text-[#0115DF]">/</span>
-                  programs
-                </h2>
+                  <span className="text-[#0115DF] mr-2">/</span>
+                  <TextType
+                    text="programs"
+                    typingSpeed={50}
+                    initialDelay={100}
+                    loop={false}
+                    showCursor={true}
+                    hideCursorOnComplete={true}
+                    cursorCharacter="|"
+                    className="inline-block"
+                    startOnVisible={true}
+                  />
+                </div>
               </FadeUp>
               <FadeUp delay={0.1}>
                 <p
@@ -387,14 +406,34 @@ export default function Home() {
               {/* Left - Content */}
               <div>
                 <FadeUp>
-                  <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540] mb-8">
-                    <span className="text-[#0115DF]">/</span>
-                    events
-                  </h2>
-                  <p className="mb-4 font-bold text-2xl text-[#041540] lg:text-3xl text-center md:text-left">
-                    <span className="text-[#0115DF]">/</span>
-                    speakers
-                  </p>
+                  <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540] mb-8">
+                    <span className="text-[#0115DF] mr-2">/</span>
+                    <TextType
+                      text="events"
+                      typingSpeed={50}
+                      initialDelay={100}
+                      loop={false}
+                      showCursor={true}
+                      hideCursorOnComplete={true}
+                      cursorCharacter="|"
+                      className="inline-block"
+                      startOnVisible={true}
+                    />
+                  </div>
+                  <div className="mb-4 font-bold text-2xl text-[#041540] lg:text-3xl text-center md:text-left">
+                    <span className="text-[#0115DF] mr-2">/</span>
+                    <TextType
+                      text="speakers"
+                      typingSpeed={50}
+                      initialDelay={300}
+                      loop={false}
+                      showCursor={true}
+                      hideCursorOnComplete={true}
+                      cursorCharacter="|"
+                      className="inline-block"
+                      startOnVisible={true}
+                    />
+                  </div>
                 </FadeUp>
 
                 
@@ -474,10 +513,20 @@ export default function Home() {
           <div className="max-w-[1400px] mx-auto relative z-10">
             <div className="max-w-3xl">
               <FadeUp>
-                <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-white mb-8">
-                  <span className="text-[#0115DF]">/</span>
-                  join-us
-                </h2>
+                <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-white mb-8">
+                  <span className="text-[#0115DF] mr-2">/</span>
+                  <TextType
+                    text="join-us"
+                    typingSpeed={50}
+                    initialDelay={100}
+                    loop={false}
+                    showCursor={true}
+                    hideCursorOnComplete={true}
+                    cursorCharacter="|"
+                    className="inline-block"
+                    startOnVisible={true}
+                  />
+                </div>
               </FadeUp>
               
               <FadeUp delay={0.1}>

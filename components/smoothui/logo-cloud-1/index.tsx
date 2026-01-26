@@ -8,6 +8,7 @@ import {
 } from "motion/react";
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import TextType from '@/components/TextType';
 
 const ANIMATION_DURATION = 15;
 const STAGGER_DELAY = 0.1;
@@ -95,15 +96,26 @@ export function LogoCloudAnimated({
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="mb-4 font-bold text-2xl text-current lg:text-3xl">
+          <div className="mb-4 font-bold text-2xl text-current lg:text-3xl">
             {title === "Our Network" ? (
               <>
-                <span className="text-[#0115DF]">/</span>network
+                <span className="text-[#0115DF] mr-2">/</span>
+                <TextType
+                  text="network"
+                  typingSpeed={50}
+                  initialDelay={100}
+                  loop={false}
+                  showCursor={true}
+                  hideCursorOnComplete={true}
+                  cursorCharacter="|"
+                  className="inline-block"
+                  startOnVisible={true}
+                />
               </>
             ) : (
               title
             )}
-          </h2>
+          </div>
           {description && <p className="text-foreground/70 text-lg">{description}</p>}
         </motion.div>
         <div
