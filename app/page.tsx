@@ -197,15 +197,35 @@ function StatsGrid() {
   );
 }
 
-function PushPin({ color = "#0115DF" }: { color?: string }) {
+function PushPin({ color = "#0115DF", active = false }: { color?: string; active?: boolean }) {
+  const displayColor = active ? color : "#A0A0A0";
+  
   return (
-    <div className="absolute top-[-16px] left-1/2 -translate-x-1/2 z-20 pointer-events-none drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="8" r="5" fill={color} />
-        <circle cx="10.5" cy="6.5" r="1.5" fill="white" fillOpacity="0.3" />
-        <path d="M12 13V18" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" />
-        <path d="M10 13H14L13 15H11L10 13Z" fill={color} />
-        <ellipse cx="12" cy="20" rx="3" ry="1" fill="black" fillOpacity="0.2" />
+    <div className="absolute top-[2px] left-1/2 -translate-x-1/2 z-20 pointer-events-none">
+      <svg width="14" height="14" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.4)]">
+        <defs>
+          <radialGradient id="pinGradient" cx="40%" cy="40%" r="50%" fx="30%" fy="30%">
+            <stop offset="0%" stopColor="white" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="black" stopOpacity="0.2" />
+          </radialGradient>
+        </defs>
+        
+        <motion.circle 
+          cx="14" cy="16" r="7" 
+          animate={{ fill: displayColor }}
+          fillOpacity="0.8" 
+          transition={{ duration: 0.3 }}
+        />
+        <circle cx="14" cy="16" r="7" fill="url(#pinGradient)" />
+        
+        <motion.circle 
+          cx="14" cy="12" r="10" 
+          animate={{ fill: displayColor }}
+          transition={{ duration: 0.3 }}
+        />
+        <circle cx="14" cy="12" r="10" fill="url(#pinGradient)" />
+        
+        <circle cx="11" cy="9" r="2.5" fill="white" fillOpacity="0.35" />
       </svg>
     </div>
   );
@@ -218,6 +238,7 @@ function SpeakerPolaroidItem({ p, topIndex, setTopIndex }: { p: any; topIndex: n
   const scale = useSpring(1, { damping: 30, stiffness: 100, mass: 2 });
   const imgScale = useSpring(1, { damping: 30, stiffness: 100, mass: 2 });
   const [isDragging, setIsDragging] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     if (!ref.current || isDragging) return;
@@ -230,7 +251,10 @@ function SpeakerPolaroidItem({ p, topIndex, setTopIndex }: { p: any; topIndex: n
   };
 
   const handleMouseEnter = () => {
-    if (!isDragging) scale.set(1.1);
+    if (!isDragging) {
+      scale.set(1.1);
+      setIsHovered(true);
+    }
   };
 
   const handleMouseLeave = () => {
@@ -239,6 +263,7 @@ function SpeakerPolaroidItem({ p, topIndex, setTopIndex }: { p: any; topIndex: n
       imgScale.set(1);
       rotateX.set(0);
       rotateY.set(0);
+      setIsHovered(false);
     }
   };
 
@@ -289,7 +314,7 @@ function SpeakerPolaroidItem({ p, topIndex, setTopIndex }: { p: any; topIndex: n
           : "shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
       } [transform-style:preserve-3d] relative`}>
         <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 [transform:translateZ(40px)]">
-          <PushPin />
+          <PushPin active={isHovered || isDragging} />
         </div>
         <div 
           className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]"
