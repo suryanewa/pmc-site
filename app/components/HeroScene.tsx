@@ -266,7 +266,6 @@ useGLTF.preload("/mac_edited.glb");
 export function HeroScene() {
   const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
   const [modelReady, setModelReady] = useState(false);
-  const [controlsEnabled, setControlsEnabled] = useState(false);
 
   // Load video and start playing immediately
   useEffect(() => {
@@ -295,13 +294,6 @@ export function HeroScene() {
     };
   }, []);
 
-  useEffect(() => {
-    if (!modelReady) {
-      return;
-    }
-    setControlsEnabled(false);
-  }, [modelReady]);
-
   return (
     <div className="w-full h-full relative overflow-hidden">
       {/* Loading state */}
@@ -313,21 +305,20 @@ export function HeroScene() {
         </div>
       )}
 
-      {/* 3D Canvas with Mac */}
+        {/* 3D Canvas with Mac */}
         <Canvas
           camera={{ position: [0, 0.2, 4.5], fov: 45, near: 0.1, far: 100 }}
           dpr={[1, 2]}
           gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-          onPointerDown={() => setControlsEnabled(true)}
         >
           <OrbitControls
+            makeDefault
             enablePan={false}
             enableZoom={false}
             enableDamping={false}
             rotateSpeed={0.5}
             minPolarAngle={0.5}
             maxPolarAngle={1.8}
-            enabled={controlsEnabled}
           />
         {/* Lighting */}
         <ambientLight intensity={0.4} />
