@@ -19,6 +19,14 @@ const HeroScene = dynamic(
   }
 );
 
+const RocketScene = dynamic(
+  () => import('@/components/RocketScene'),
+  {
+    ssr: false,
+    loading: () => <div className="w-full h-full" />,
+  }
+);
+
 function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
     <motion.a
@@ -274,15 +282,16 @@ export default function Home() {
                     <TiltedCard
                       altText={`EEG ${program.title} program`}
                       captionText={program.title}
-                      containerHeight="360px"
+                      containerHeight="540px"
                       containerWidth="100%"
-                      imageHeight="360px"
+                      imageHeight="540px"
                       imageWidth="100%"
                       rotateAmplitude={10}
                       scaleOnHover={1.04}
                       showMobileWarning={false}
                       showTooltip={false}
                       backgroundColor={`${program.color}20`}
+                      backgroundContent={program.id === 'eir' ? (isHovered: boolean) => <RocketScene isHovered={isHovered} /> : undefined}
                       pixelEffect={{
                         colors: isProgramsDark
                           ? `${program.color},rgba(247,243,238,0.85),rgba(4,21,64,0.55)`
@@ -296,11 +305,12 @@ export default function Home() {
                       displayOverlayContent
                       overlayContent={
                         <div
-                          className={`flex flex-col justify-end h-full w-full p-6 ${themeTransition} ${
+                          className={`flex flex-col justify-start items-center text-center h-full w-full p-6 ${themeTransition} ${
                             isProgramsDark
                               ? "text-[#F7F3EE]"
                               : "text-[#041540]"
                           }`}
+                          style={{ paddingTop: '12%' }}
                         >
                           <h3
                             className="text-2xl font-medium tracking-[-0.02em]"

@@ -18,6 +18,7 @@ interface TiltedCardProps {
   overlayContent?: React.ReactNode;
   displayOverlayContent?: boolean;
   backgroundColor?: string;
+  backgroundContent?: React.ReactNode | ((isHovered: boolean) => React.ReactNode);
   borderRadius?: number;
   pixelEffect?: {
     colors: string;
@@ -48,6 +49,7 @@ export default function TiltedCard({
   overlayContent = null,
   displayOverlayContent = false,
   backgroundColor,
+  backgroundContent,
   borderRadius = 22,
   pixelEffect
 }: TiltedCardProps) {
@@ -142,6 +144,11 @@ export default function TiltedCard({
             className={pixelEffect.className}
             radius={borderRadius}
           />
+        )}
+        {backgroundContent && (
+          <div className="absolute inset-0 z-[1]" style={{ borderRadius: `${borderRadius}px`, overflow: 'hidden' }}>
+            {typeof backgroundContent === 'function' ? backgroundContent(isHovered) : backgroundContent}
+          </div>
         )}
         {imageSrc && (
           <motion.img
