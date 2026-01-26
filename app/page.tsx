@@ -12,6 +12,7 @@ import Link from "next/link";
 import { LogoCloudAnimated } from "@/components/smoothui/logo-cloud-1";
 import TiltedCard from "@/components/TiltedCard";
 import TextType from '@/components/TextType';
+import ConfettiCanvas, { ConfettiCanvasHandle } from '@/components/ConfettiCanvas';
 
 const HeroScene = dynamic(
   () => import('./components/HeroScene').then((mod) => ({ default: mod.HeroScene })),
@@ -108,15 +109,12 @@ function AnimatedStat({
   useEffect(() => {
     if (active) {
       animate(count, numericValue, {
-        duration: 2.8,
-        ease: [0.19, 1, 0.22, 1],
+        duration: 1.4,
+        ease: [0.16, 1, 0.3, 1],
+        onComplete: () => {
+          setShowLabel(true);
+        }
       });
-
-      const timer = setTimeout(() => {
-        setShowLabel(true);
-      }, 1500);
-
-      return () => clearTimeout(timer);
     }
   }, [active, numericValue, count]);
 
@@ -153,7 +151,8 @@ function AnimatedStat({
 
 function StatsGrid() {
   const [activeIndex, setActiveIndex] = useState(-1);
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const confettiRef = useRef<ConfettiCanvasHandle>(null);
   const isInView = useInView(containerRef, { once: true, amount: 0.5, margin: "-100px" });
 
   useEffect(() => {
@@ -162,27 +161,39 @@ function StatsGrid() {
     }
   }, [isInView, activeIndex]);
 
+  const handleFinalComplete = () => {
+    if (containerRef.current && confettiRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      confettiRef.current.burst(x, y);
+    }
+  };
+
   return (
-    <div ref={containerRef} className="grid grid-cols-3 gap-8 pt-8 border-t border-[#041540]/10">
-      <AnimatedStat 
-        number="20+" 
-        label="Years Active" 
-        active={activeIndex >= 0} 
-        onComplete={() => setActiveIndex(prev => prev === 0 ? 1 : prev)} 
-      />
-      <AnimatedStat 
-        number="100+" 
-        label="Alumni Network" 
-        active={activeIndex >= 1} 
-        onComplete={() => setActiveIndex(prev => prev === 1 ? 2 : prev)} 
-      />
-      <AnimatedStat 
-        number="250+" 
-        label="Speaker Events" 
-        active={activeIndex >= 2} 
-        onComplete={() => {}} 
-      />
-    </div>
+    <>
+      <ConfettiCanvas ref={confettiRef} />
+      <div ref={containerRef} className="grid grid-cols-3 gap-8 pt-8 border-t border-[#041540]/10">
+        <AnimatedStat 
+          number="20+" 
+          label="Years Active" 
+          active={activeIndex >= 0} 
+          onComplete={() => setActiveIndex(prev => prev === 0 ? 1 : prev)} 
+        />
+        <AnimatedStat 
+          number="100+" 
+          label="Alumni Network" 
+          active={activeIndex >= 1} 
+          onComplete={() => setActiveIndex(prev => prev === 1 ? 2 : prev)} 
+        />
+        <AnimatedStat 
+          number="250+" 
+          label="Speaker Events" 
+          active={activeIndex >= 2} 
+          onComplete={handleFinalComplete} 
+        />
+      </div>
+    </>
   );
 }
 
