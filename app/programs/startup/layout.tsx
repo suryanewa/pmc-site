@@ -1,3 +1,5 @@
+import { Navbar } from '../../components/Navbar';
+
 export default function StartupLayout({
   children,
 }: {
@@ -6,12 +8,12 @@ export default function StartupLayout({
   return (
     <>
       <style>{`
-        /* Hide root navbar and footer on startup page */
-        body > nav:first-of-type,
-        body > footer {
+        /* Hide root navbar on startup page - we use our own */
+        body > nav:first-of-type {
           display: none !important;
         }
       `}</style>
+      <Navbar variant="dark" logoSuffix="startup" logoSuffixColor="#AD1DE0" />
       {children}
     </>
   );

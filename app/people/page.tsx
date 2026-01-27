@@ -1,7 +1,5 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Button } from '../components/Button';
 import { FadeUp, FadeIn } from '../components/ScrollAnimations';
 import { Polaroid } from '../components/Polaroid';
 import { LeadershipMember } from '../components/LeadershipMember';
@@ -28,80 +26,25 @@ const leadershipMembers = [
   { id: 7, src: '/profiles/vihaan.jpg', name: 'vihaan-agarwal', role: 'eir-lead' },
   { id: 8, src: '/profiles/zaara.jpg', name: 'zaara-israni', role: 'marketing-lead' },
   { id: 9, src: '/profiles/nicole.jpg', name: 'nicole-hwang', role: 'community-lead' },
-  { id: 10, src: '/profiles/sophia.jpg', name: 'sophia-chen', role: 'community-lead' },
+  { id: 10, src: '/profiles/sophia-new.jpg', name: 'sophia-chen', role: 'community-lead' },
   { id: 11, src: '/profiles/pranav.jpg', name: 'pranav-sarma', role: 'treasurer' },
   { id: 12, src: '/profiles/lia.jpg', name: 'lia-kostas', role: 'growth' },
   { id: 13, src: '/profiles/xander.png', name: 'xander-wanagel', role: 'growth' },
-  { id: 14, src: '/profiles/surya.jpg', name: 'surya-newa', role: 'startup' },
-  { id: 15, src: '/profiles/neel.jpg', name: 'neel-khurana', role: 'investing' },
-  { id: 16, src: '/profiles/shray.jpg', name: 'shray-patel', role: 'investing' },
-  { id: 17, src: '/profiles/jessie.jpg', name: 'jessie-lee', role: 'marketing' },
-  { id: 18, src: '/profiles/priscilla.jpg', name: 'priscilla-tu', role: 'marketing' },
-  { id: 19, src: '/profiles/marco.jpg', name: 'marco-kosasih', role: 'marketing' },
-  { id: 20, src: '/profiles/katherine.jpg', name: 'katherine-graci', role: 'community' },
-  { id: 21, src: '/profiles/dustin.jpg', name: 'dustin-he', role: 'community' },
+  { id: 14, src: '/profiles/zach.jpg', name: 'zach-semple', role: 'growth' },
+  { id: 15, src: '/profiles/surya.jpg', name: 'surya-newa', role: 'startup' },
+  { id: 16, src: '/profiles/neel.jpg', name: 'neel-khurana', role: 'investing' },
+  { id: 17, src: '/profiles/shray.jpg', name: 'shray-patel', role: 'investing' },
+  { id: 18, src: '/profiles/jessie.jpg', name: 'jessie-lee', role: 'marketing' },
+  { id: 19, src: '/profiles/priscilla.jpg', name: 'priscilla-tu', role: 'marketing' },
+  { id: 20, src: '/profiles/marco.jpg', name: 'marco-kosasih', role: 'marketing' },
+  { id: 21, src: '/profiles/katherine.jpg', name: 'katherine-graci', role: 'community' },
+  { id: 22, src: '/profiles/dustin.jpg', name: 'dustin-he', role: 'community' },
 
-];
-
-const programsDropdownItems = [
-  { label: '/startup', href: '/programs/startup' },
-  { label: '/investing', href: '/programs/investing' },
-  { label: '/eir', href: '/programs/eir' },
 ];
 
 export default function PeoplePage() {
-  const [isPastHero, setIsPastHero] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const heroThreshold = window.innerHeight * 0.8;
-      setIsPastHero(window.scrollY > heroThreshold);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
   return (
     <div className="bg-[#F7F3EE] min-h-screen">
-      {/* Navbar - transparent in hero, solid + compact when scrolled */}
-      <nav className={`flex items-center justify-between w-full px-[80px] fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isPastHero ? 'py-4 shadow-sm bg-[#F7F3EE]' : 'py-[43px] bg-transparent'}`}>
-        <a href="/" className="flex items-center gap-[2px]">
-          <img src="/eeg-logo.svg" alt="EEG" className="h-[44px]" />
-        </a>
-
-        <div className="flex items-center gap-[60px]">
-          {/* Programs dropdown */}
-          <div className="relative group">
-            <span className="text-[#041540] text-lg font-medium hover:opacity-70 transition-opacity cursor-default">
-              EEG/programs
-            </span>
-            {/* Dropdown menu */}
-            <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-              <div className="bg-[#F7F3EE] border border-[#041540]/10 rounded-lg shadow-lg py-2 min-w-[160px]">
-                {programsDropdownItems.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    className="block px-4 py-2 text-[#041540] text-base font-medium hover:bg-[#041540]/5 transition-colors"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-          <a
-            href="/people"
-            className="text-[#041540] text-lg font-medium hover:opacity-70 transition-opacity"
-          >
-            EEG/people
-          </a>
-          <Button size="lg" className="w-[175px]">
-            EEG/coffee
-          </Button>
-        </div>
-      </nav>
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex flex-col items-center justify-center">
@@ -115,7 +58,7 @@ export default function PeoplePage() {
         {/* Content */}
         <div className="relative z-10 flex flex-col items-center gap-8">
           <FadeUp>
-            <h1 className="text-[92px] font-medium leading-none tracking-[-0.075em] text-black text-center">
+            <h1 className="text-[clamp(3rem,8vw,5.75rem)] font-medium leading-none tracking-[-0.03em] text-[#041540] text-center">
               We Are Our People
             </h1>
           </FadeUp>
@@ -131,22 +74,39 @@ export default function PeoplePage() {
       </section>
 
       {/* Community Section */}
-      <section className="relative px-[80px] pt-8 pb-32">
-        {/* Section Header */}
-        <FadeUp>
-          <h2 className="text-[28px] font-medium text-[#041540] tracking-[-0.075em] mb-4">
-            /community
-          </h2>
-        </FadeUp>
+      <section className="relative px-6 md:px-16 lg:px-24 pt-16 pb-32">
+        <div className="max-w-[1400px] mx-auto">
+          {/* Section Header */}
+          <FadeUp>
+            <h2 className="text-[clamp(1.5rem,3vw,1.75rem)] font-medium text-[#041540] tracking-[-0.02em] mb-4">
+              /community
+            </h2>
+          </FadeUp>
 
-        <FadeUp delay={0.1}>
-          <p className="text-[28px] font-medium text-black tracking-[-0.075em] max-w-[1140px] mb-16">
-            We are most proud of our community; a group of students with deep and diverse interests and pursuits, brought together by a common love for the startup space.
-          </p>
-        </FadeUp>
+          <FadeUp delay={0.1}>
+            <p className="text-lg md:text-xl text-[#041540]/70 leading-relaxed max-w-3xl mb-16">
+              We are most proud of our community; a group of students with deep and diverse interests and pursuits, brought together by a common love for the startup space.
+            </p>
+          </FadeUp>
 
-        {/* Scattered Polaroids Container */}
-        <div className="relative h-[1000px] w-full" data-gsap="parallax" data-speed="0.08">
+        {/* Polaroids - Grid on mobile, scattered on desktop */}
+        {/* Mobile Grid Layout */}
+        <div className="grid grid-cols-2 gap-4 md:hidden">
+          {communityPolaroids.map((polaroid, index) => (
+            <FadeIn key={polaroid.id} delay={0.1 * index}>
+              <Polaroid
+                src={polaroid.src || '/placeholder.jpg'}
+                alt={polaroid.alt}
+                caption={polaroid.caption}
+                rotation={polaroid.rotation * 0.3}
+                className="w-full"
+              />
+            </FadeIn>
+          ))}
+        </div>
+
+        {/* Desktop Scattered Layout */}
+        <div className="hidden md:block relative h-[1000px] w-full" data-gsap="parallax" data-speed="0.08">
           {/* Row 1 - Top polaroids */}
           <FadeIn delay={0.2}>
             <Polaroid
@@ -154,7 +114,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[0].alt}
               caption={communityPolaroids[0].caption}
               rotation={communityPolaroids[0].rotation}
-              className="absolute w-[400px] left-[2%] top-[5%] z-10"
+              className="absolute w-[280px] lg:w-[400px] left-[2%] top-[5%] z-10"
             />
           </FadeIn>
 
@@ -164,7 +124,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[1].alt}
               caption={communityPolaroids[1].caption}
               rotation={communityPolaroids[1].rotation}
-              className="absolute w-[400px] left-[30%] top-[0%] z-20"
+              className="absolute w-[280px] lg:w-[400px] left-[30%] top-[10%] z-20"
             />
           </FadeIn>
 
@@ -174,7 +134,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[2].alt}
               caption={communityPolaroids[2].caption}
               rotation={communityPolaroids[2].rotation}
-              className="absolute w-[400px] right-[15%] top-[2%] z-10"
+              className="absolute w-[280px] lg:w-[400px] right-[10%] top-[6%] z-10"
             />
           </FadeIn>
 
@@ -185,7 +145,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[3].alt}
               caption={communityPolaroids[3].caption}
               rotation={communityPolaroids[3].rotation}
-              className="absolute w-[400px] left-[0%] top-[45%] z-30"
+              className="absolute w-[280px] lg:w-[400px] left-[0%] top-[45%] z-30"
             />
           </FadeIn>
 
@@ -195,7 +155,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[4].alt}
               caption={communityPolaroids[4].caption}
               rotation={communityPolaroids[4].rotation}
-              className="absolute w-[400px] left-[28%] top-[50%] z-20"
+              className="absolute w-[280px] lg:w-[400px] left-[28%] top-[60%] z-20"
             />
           </FadeIn>
 
@@ -205,7 +165,7 @@ export default function PeoplePage() {
               alt={communityPolaroids[5].alt}
               caption={communityPolaroids[5].caption}
               rotation={communityPolaroids[5].rotation}
-              className="absolute w-[400px] right-[25%] top-[48%] z-30"
+              className="absolute w-[280px] lg:w-[400px] left-[40%] top-[40%] z-30"
             />
           </FadeIn>
 
@@ -215,36 +175,39 @@ export default function PeoplePage() {
               alt={communityPolaroids[6].alt}
               caption={communityPolaroids[6].caption}
               rotation={communityPolaroids[6].rotation}
-              className="absolute w-[400px] right-[2%] top-[52%] z-10"
+              className="absolute w-[280px] lg:w-[400px] right-[5%] top-[52%] z-10"
             />
           </FadeIn>
+        </div>
         </div>
       </section>
 
       {/* Leadership Section */}
-      <section id="leadership-spring-26" className="relative px-[80px] pb-32">
-        {/* Section Header */}
-        <FadeUp>
-          <h2 className="text-[28px] font-medium text-[#041540] tracking-[-0.075em] mb-4">
-            /leadership-spring-26
-          </h2>
-        </FadeUp>
+      <section id="leadership-spring-26" className="relative px-6 md:px-16 lg:px-24 pb-32">
+        <div className="max-w-[1400px] mx-auto">
+          {/* Section Header */}
+          <FadeUp>
+            <h2 className="text-[clamp(1.5rem,3vw,1.75rem)] font-medium text-[#041540] tracking-[-0.02em] mb-4">
+              /leadership-spring-26
+            </h2>
+          </FadeUp>
 
-        {/* Horizontal Line - aligned with title and grid edges */}
-        <FadeIn delay={0.1}>
-          <div className="w-full h-[2px] bg-[#041540] mb-12" />
-        </FadeIn>
+          {/* Horizontal Line - aligned with title and grid edges */}
+          <FadeIn delay={0.1}>
+            <div className="w-full h-[2px] bg-[#041540]/20 mb-12" />
+          </FadeIn>
 
-        {/* Leadership Grid - 4 columns */}
-        <div className="grid grid-cols-5 gap-x-6 gap-y-12">
-          {leadershipMembers.map((member) => (
-            <LeadershipMember
-              key={member.id}
-              src={member.src}
-              name={member.name}
-              role={member.role}
-            />
-          ))}
+          {/* Leadership Grid - responsive columns */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-6 gap-y-12">
+            {leadershipMembers.map((member) => (
+              <LeadershipMember
+                key={member.id}
+                src={member.src}
+                name={member.name}
+                role={member.role}
+              />
+            ))}
+          </div>
         </div>
       </section>
     </div>

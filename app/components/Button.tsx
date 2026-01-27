@@ -67,7 +67,7 @@ export function Button({
   }
 
   const defaultStyles = !isCustom
-    ? 'bg-[#041540] text-white focus:ring-[#0115DF]'
+    ? 'bg-[#041540] text-white hover:bg-[#0a2a6e] focus:ring-[#0115DF]'
     : '';
 
   const handleMouseEnter = (e: React.MouseEvent) => {

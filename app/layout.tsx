@@ -25,6 +25,11 @@ const gothamBold = localFont({
 export const metadata: Metadata = {
   title: "EEG | NYU Stern's Premier Entrepreneurship Club",
   description: "Where NYU's Founders & Investors Are Made. Established in 2003, EEG is NYU Stern's premier entrepreneurship club.",
+  icons: {
+    icon: "/eeg-logo.svg",
+    shortcut: "/eeg-logo.svg",
+    apple: "/eeg-logo.svg",
+  },
 };
 
 export default function RootLayout({

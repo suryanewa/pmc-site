@@ -1,4 +1,6 @@
-export default function StartupLayout({
+import { Navbar } from '../../components/Navbar';
+
+export default function EirLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -6,12 +8,12 @@ export default function StartupLayout({
   return (
     <>
       <style>{`
-        /* Hide root navbar and footer on startup page */
-        body > nav:first-of-type,
-        body > footer {
+        /* Hide root navbar on eir page - we use our own */
+        body > nav:first-of-type {
           display: none !important;
         }
       `}</style>
+      <Navbar variant="dark" logoSuffix="eir" logoSuffixColor="#F0C75B" />
       {children}
     </>
   );
