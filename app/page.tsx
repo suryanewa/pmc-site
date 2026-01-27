@@ -7,6 +7,7 @@ import { Linkedin, Instagram } from 'lucide-react';
 import { Button } from './components/Button';
 import { Newsletter } from './components/Newsletter';
 import { FadeUp } from './components/ScrollAnimations';
+import { HeroWarpCanvas } from './components/HeroWarpCanvas';
 import Link from "next/link";
 import { LogoCloudAnimated } from "@/components/smoothui/logo-cloud-1";
 import TiltedCard from "@/components/TiltedCard";
@@ -589,8 +590,9 @@ export default function Home() {
   return (
     <div className="min-h-screen relative">
       <main>
-        {/* Hero Section - Clean and sophisticated */}
+        {/* Hero Section */}
         <section className="min-h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 bg-[#F7F3EE] py-24 relative overflow-hidden">
+          <HeroWarpCanvas />
           <div className="w-full max-w-[1400px] mx-auto relative z-10 grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:gap-20">
             <div className="max-w-[800px] text-left">
               {/* Subtle label */}
@@ -614,7 +616,7 @@ export default function Home() {
                 Founders & Investors
               </motion.h1>
 
-              {/* Description - shorter and cleaner */}
+              {/* Description */}
               <motion.p
                 className="text-lg text-[#041540]/50 leading-relaxed max-w-lg mb-10"
                 initial={{ opacity: 0, y: 15 }}
@@ -624,22 +626,32 @@ export default function Home() {
                 Hands-on programs to build startups, develop venture fundamentals, and connect with industry leaders.
               </motion.p>
 
-              {/* Single CTA */}
+              {/* Two CTAs */}
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.3 }}
               >
-                <Button
-                  href="#programs"
-                  className="px-8 py-4"
-                >
-                  Explore Programs
-                </Button>
+                <div className="flex flex-wrap items-center gap-4">
+                  <Button
+                    href="#programs"
+                    className="px-8 py-4"
+                  >
+                    Explore Programs
+                  </Button>
+                  <Button
+                    href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform"
+                    borderColor="#041540"
+                    textColor="#041540"
+                    className="px-8 py-4"
+                  >
+                    Coffee Chat
+                  </Button>
+                </div>
               </motion.div>
             </div>
 
-            {/* 3D Mac - slightly smaller and more balanced */}
+            {/* 3D Mac */}
             <div
               className="relative w-full h-[320px] md:h-[420px] lg:h-[520px]"
               data-gsap="parallax"
