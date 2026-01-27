@@ -28,14 +28,17 @@ export function Footer({ variant = 'default' }: { variant?: 'default' | 'light' 
           <div>
             <h4 className="text-xs tracking-[0.15em] uppercase text-[#041540]/50 mb-4">Programs</h4>
             <div className="flex flex-col gap-3">
-              {['/startup', '/investing', '/eir'].map((program) => (
+              {[
+                { name: 'startup', color: '#AD1DE0' },
+                { name: 'investing', color: '#2DB67D' },
+                { name: 'eir', color: '#F0C75B' }
+              ].map((program) => (
                 <Link 
-                  key={program}
-                  href={`/programs${program}`} 
+                  key={program.name}
+                  href={`/programs/${program.name}`} 
                   className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block"
-                  style={{ fontFamily: 'var(--font-gotham-medium)' }}
                 >
-                  {program}
+                  <span style={{ color: program.color }}>/</span>{program.name}
                 </Link>
               ))}
             </div>
