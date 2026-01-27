@@ -830,12 +830,13 @@ export default function Home() {
           />
           
           <div className="max-w-[1400px] mx-auto relative z-10">
-            <div className="grid lg:grid-cols-2 gap-12 items-center">
-              <div className="max-w-4xl">
-                <div className="flex flex-col lg:flex-row lg:items-end gap-6 lg:gap-12 mb-12">
+            <div className="grid lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-start">
+              <div className="col-span-12 lg:col-span-7 flex flex-col justify-center pt-12">
+                
+                <div className="mb-20 lg:mb-32">
                   <FadeUp>
-                    <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-white whitespace-nowrap">
-                      <span className="text-[#0115DF]">/</span>
+                    <div className="text-[clamp(3.5rem,7vw,6rem)] font-medium leading-[0.9] tracking-[-0.04em] text-white mb-8">
+                      <span className="text-[#0115DF] mr-2">/</span>
                       <TextType
                         text="join-us"
                         typingSpeed={50}
@@ -852,16 +853,16 @@ export default function Home() {
                   </FadeUp>
                   
                   <FadeUp delay={0.1}>
-                    <p className="text-lg text-white/60 leading-relaxed max-w-sm pb-1">
+                    <p className="text-xl md:text-2xl text-white/60 leading-relaxed max-w-2xl font-light">
                       Get access to exclusive events, mentorship, and a network of ambitious students and industry leaders.
                     </p>
                   </FadeUp>
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
-                  <div className="flex-1 w-full max-w-xl">
+                <div className="grid md:grid-cols-12 gap-12 items-end">
+                  <div className="md:col-span-7 lg:col-span-8">
                     <FadeUp delay={0.2}>
-                      <div className="mb-6 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap">
+                      <div className="mb-8 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap flex items-center gap-2">
                         <span className="text-[#0115DF]">/</span>
                         <TextType
                           text="newsletter"
@@ -880,9 +881,9 @@ export default function Home() {
                     </FadeUp>
                   </div>
 
-                  <div className="w-full lg:w-auto">
+                  <div className="md:col-span-5 lg:col-span-4">
                     <FadeUp delay={0.3}>
-                      <div className="mb-6 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap">
+                      <div className="mb-8 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap flex items-center gap-2">
                         <span className="text-[#0115DF]">/</span>
                         <TextType
                           text="socials"
@@ -903,18 +904,18 @@ export default function Home() {
                           borderColor="rgba(255, 255, 255, 0.6)"
                           textColor="rgba(255, 255, 255, 0.6)"
                           rippleColor="#0115DF"
-                          className="!p-0 size-12 !border"
+                          className="!p-0 size-14 !border"
                         >
-                          <Linkedin className="size-5" strokeWidth={1} />
+                          <Linkedin className="size-6" strokeWidth={1} />
                         </Button>
                         <Button
                           href="https://x.com/nyueeg"
                           borderColor="rgba(255, 255, 255, 0.6)"
                           textColor="rgba(255, 255, 255, 0.6)"
                           rippleColor="#0115DF"
-                          className="!p-0 size-12 !border"
+                          className="!p-0 size-14 !border"
                         >
-                          <svg viewBox="0 0 24 24" aria-hidden="true" className="size-5" fill="currentColor">
+                          <svg viewBox="0 0 24 24" aria-hidden="true" className="size-6" fill="currentColor">
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.134l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
                           </svg>
                         </Button>
@@ -923,9 +924,9 @@ export default function Home() {
                           borderColor="rgba(255, 255, 255, 0.6)"
                           textColor="rgba(255, 255, 255, 0.6)"
                           rippleColor="#0115DF"
-                          className="!p-0 size-12 !border"
+                          className="!p-0 size-14 !border"
                         >
-                          <Instagram className="size-5" strokeWidth={1} />
+                          <Instagram className="size-6" strokeWidth={1} />
                         </Button>
                       </div>
                     </FadeUp>
@@ -933,10 +934,12 @@ export default function Home() {
                 </div>
               </div>
 
-              <div className="hidden lg:block h-[728px] relative -mt-32">
-                <Suspense fallback={null}>
-                  <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
-                </Suspense>
+              <div className="hidden lg:block col-span-12 lg:col-span-5 relative h-[800px] -mt-40 pointer-events-none">
+                 <div className="absolute inset-0 w-full h-full scale-110 origin-top">
+                  <Suspense fallback={null}>
+                    <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
+                  </Suspense>
+                </div>
               </div>
             </div>
           </div>
