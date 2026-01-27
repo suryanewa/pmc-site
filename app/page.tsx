@@ -565,138 +565,6 @@ function EventsSection({ eventsTopRef }: { eventsTopRef: React.RefObject<HTMLDiv
   );
 }
 
-function CTASection() {
-  const sectionRef = useRef<HTMLElement>(null);
-  const isInView = useInView(sectionRef, { amount: 0.1 });
-
-  return (
-    <section ref={sectionRef} className="py-32 px-6 md:px-16 lg:px-24 bg-[#041540] relative z-10">
-      <motion.div
-        className="absolute inset-0 opacity-30 overflow-hidden"
-        animate={{
-          background: [
-            "radial-gradient(circle at 0% 0%, #0115DF20 0%, transparent 50%)",
-            "radial-gradient(circle at 100% 100%, #0115DF20 0%, transparent 50%)",
-            "radial-gradient(circle at 0% 0%, #0115DF20 0%, transparent 50%)",
-          ]
-        }}
-        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-      />
-      
-      <div className="max-w-[1400px] mx-auto relative z-10">
-        <div className="grid lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-start">
-          <div className="col-span-12 lg:col-span-7 flex flex-col justify-center pt-12 relative z-10">
-            
-            <div className="mb-20 lg:mb-32">
-              <FadeUp>
-                <div className="text-[clamp(3.5rem,7vw,6rem)] font-medium leading-[0.9] tracking-[-0.04em] text-white mb-8">
-                  <span className="text-[#0115DF] mr-2">/</span>
-                  <TextType
-                    text="join-us"
-                    typingSpeed={50}
-                    initialDelay={100}
-                    loop={false}
-                    showCursor={true}
-                    hideCursorOnComplete={true}
-                    cursorCharacter="|"
-                    className="inline"
-                    as="span"
-                    startOnVisible={true}
-                  />
-                </div>
-              </FadeUp>
-              
-              <FadeUp delay={0.1}>
-                <p className="text-xl md:text-2xl text-white/60 leading-relaxed max-w-2xl font-light">
-                  Get access to exclusive events, mentorship, and a network of ambitious students and industry leaders.
-                </p>
-              </FadeUp>
-            </div>
-
-            <div className="grid md:grid-cols-12 gap-12 items-end">
-              <div className="md:col-span-7 lg:col-span-8">
-                <FadeUp delay={0.2}>
-                  <div className="mb-8 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap flex items-center gap-2">
-                    <span className="text-[#0115DF]">/</span>
-                    <TextType
-                      text="newsletter"
-                      typingSpeed={50}
-                      initialDelay={300}
-                      loop={false}
-                      showCursor={true}
-                      hideCursorOnComplete={true}
-                      cursorCharacter="|"
-                      className="inline"
-                      as="span"
-                      startOnVisible={true}
-                    />
-                  </div>
-                  <Newsletter variant="dark" />
-                </FadeUp>
-              </div>
-
-              <div className="md:col-span-5 lg:col-span-4">
-                <FadeUp delay={0.3}>
-                  <div className="mb-8 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap flex items-center gap-2">
-                    <span className="text-[#0115DF]">/</span>
-                    <TextType
-                      text="socials"
-                      typingSpeed={50}
-                      initialDelay={300}
-                      loop={false}
-                      showCursor={true}
-                      hideCursorOnComplete={true}
-                      cursorCharacter="|"
-                      className="inline"
-                      as="span"
-                      startOnVisible={true}
-                    />
-                  </div>
-                  <div className="flex flex-wrap gap-4">
-                    <Button
-                      href="https://www.linkedin.com/company/nyueeg/"
-                      borderColor="rgba(255, 255, 255, 0.6)"
-                      textColor="rgba(255, 255, 255, 0.6)"
-                      rippleColor="#0115DF"
-                      className="!p-0 size-14 !border"
-                    >
-                      <Linkedin className="size-6" strokeWidth={1} />
-                    </Button>
-                    <Button
-                      href="https://x.com/nyueeg"
-                      borderColor="rgba(255, 255, 255, 0.6)"
-                      textColor="rgba(255, 255, 255, 0.6)"
-                      rippleColor="#0115DF"
-                      className="!p-0 size-14 !border"
-                    >
-                      <svg viewBox="0 0 24 24" aria-hidden="true" className="size-6" fill="currentColor">
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.134l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                      </svg>
-                    </Button>
-                    <Button
-                      href="https://www.instagram.com/nyu.eeg/"
-                      borderColor="rgba(255, 255, 255, 0.6)"
-                      textColor="rgba(255, 255, 255, 0.6)"
-                      rippleColor="#0115DF"
-                      className="!p-0 size-14 !border"
-                    >
-                      <Instagram className="size-6" strokeWidth={1} />
-                    </Button>
-                  </div>
-                </FadeUp>
-              </div>
-            </div>
-          </div>
-
-          <Suspense fallback={null}>
-            <Lanyard position={[8, 4, 20]} gravity={[0, -40, 0]} visible={isInView} anchorToSection={sectionRef} />
-          </Suspense>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function Home() {
   const programsTopRef = useRef<HTMLDivElement | null>(null);
   const eventsTopRef = useRef<HTMLDivElement | null>(null);
@@ -991,7 +859,135 @@ export default function Home() {
       
 
         {/* CTA Section - Minimal Dark */}
-        <CTASection />
+        <section className="py-32 px-6 md:px-16 lg:px-24 bg-[#041540] relative z-10">
+          {/* Subtle animated gradient */}
+          <motion.div
+            className="absolute inset-0 opacity-30 overflow-hidden"
+            animate={{
+              background: [
+                "radial-gradient(circle at 0% 0%, #0115DF20 0%, transparent 50%)",
+                "radial-gradient(circle at 100% 100%, #0115DF20 0%, transparent 50%)",
+                "radial-gradient(circle at 0% 0%, #0115DF20 0%, transparent 50%)",
+              ]
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          />
+          
+          <div className="max-w-[1400px] mx-auto relative z-10">
+            <div className="grid lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-start">
+              <div className="col-span-12 lg:col-span-7 flex flex-col justify-center pt-12">
+                
+                <div className="mb-20 lg:mb-32">
+                  <FadeUp>
+                    <div className="text-[clamp(3.5rem,7vw,6rem)] font-medium leading-[0.9] tracking-[-0.04em] text-white mb-8">
+                      <span className="text-[#0115DF] mr-2">/</span>
+                      <TextType
+                        text="join-us"
+                        typingSpeed={50}
+                        initialDelay={100}
+                        loop={false}
+                        showCursor={true}
+                        hideCursorOnComplete={true}
+                        cursorCharacter="|"
+                        className="inline"
+                        as="span"
+                        startOnVisible={true}
+                      />
+                    </div>
+                  </FadeUp>
+                  
+                  <FadeUp delay={0.1}>
+                    <p className="text-xl md:text-2xl text-white/60 leading-relaxed max-w-2xl font-light">
+                      Get access to exclusive events, mentorship, and a network of ambitious students and industry leaders.
+                    </p>
+                  </FadeUp>
+                </div>
+
+                <div className="grid md:grid-cols-12 gap-12 items-end">
+                  <div className="md:col-span-7 lg:col-span-8">
+                    <FadeUp delay={0.2}>
+                      <div className="mb-8 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap flex items-center gap-2">
+                        <span className="text-[#0115DF]">/</span>
+                        <TextType
+                          text="newsletter"
+                          typingSpeed={50}
+                          initialDelay={300}
+                          loop={false}
+                          showCursor={true}
+                          hideCursorOnComplete={true}
+                          cursorCharacter="|"
+                          className="inline"
+                          as="span"
+                          startOnVisible={true}
+                        />
+                      </div>
+                      <Newsletter variant="dark" />
+                    </FadeUp>
+                  </div>
+
+                  <div className="md:col-span-5 lg:col-span-4">
+                    <FadeUp delay={0.3}>
+                      <div className="mb-8 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap flex items-center gap-2">
+                        <span className="text-[#0115DF]">/</span>
+                        <TextType
+                          text="socials"
+                          typingSpeed={50}
+                          initialDelay={300}
+                          loop={false}
+                          showCursor={true}
+                          hideCursorOnComplete={true}
+                          cursorCharacter="|"
+                          className="inline"
+                          as="span"
+                          startOnVisible={true}
+                        />
+                      </div>
+                      <div className="flex flex-wrap gap-4">
+                        <Button
+                          href="https://www.linkedin.com/company/nyueeg/"
+                          borderColor="rgba(255, 255, 255, 0.6)"
+                          textColor="rgba(255, 255, 255, 0.6)"
+                          rippleColor="#0115DF"
+                          className="!p-0 size-14 !border"
+                        >
+                          <Linkedin className="size-6" strokeWidth={1} />
+                        </Button>
+                        <Button
+                          href="https://x.com/nyueeg"
+                          borderColor="rgba(255, 255, 255, 0.6)"
+                          textColor="rgba(255, 255, 255, 0.6)"
+                          rippleColor="#0115DF"
+                          className="!p-0 size-14 !border"
+                        >
+                          <svg viewBox="0 0 24 24" aria-hidden="true" className="size-6" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.134l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                          </svg>
+                        </Button>
+                        <Button
+                          href="https://www.instagram.com/nyu.eeg/"
+                          borderColor="rgba(255, 255, 255, 0.6)"
+                          textColor="rgba(255, 255, 255, 0.6)"
+                          rippleColor="#0115DF"
+                          className="!p-0 size-14 !border"
+                        >
+                          <Instagram className="size-6" strokeWidth={1} />
+                        </Button>
+                      </div>
+                    </FadeUp>
+                  </div>
+                </div>
+              </div>
+
+              <div className="hidden lg:block col-span-12 lg:col-span-5 relative h-[800px] -mt-32">
+                 <div className="absolute inset-0 w-full h-full scale-110 origin-top">
+                  <Suspense fallback={null}>
+                    <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
+                  </Suspense>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   );

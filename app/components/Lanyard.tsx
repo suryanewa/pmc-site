@@ -25,54 +25,20 @@ interface LanyardProps {
   gravity?: [number, number, number];
   fov?: number;
   transparent?: boolean;
-  visible?: boolean;
-  anchorToSection?: React.RefObject<HTMLElement | null>;
 }
 
 export default function Lanyard({
   position = [0, 0, 20],
   gravity = [0, -40, 0],
   fov = 20,
-  transparent = true,
-  visible = true,
-  anchorToSection
+  transparent = true
 }: LanyardProps) {
-  const [sectionOffset, setSectionOffset] = useState({ top: 0, right: 0 });
-
-  useEffect(() => {
-    if (!anchorToSection?.current) return;
-    
-    const updateOffset = () => {
-      if (anchorToSection.current) {
-        const rect = anchorToSection.current.getBoundingClientRect();
-        setSectionOffset({ top: rect.top, right: window.innerWidth - rect.right });
-      }
-    };
-    
-    updateOffset();
-    window.addEventListener('scroll', updateOffset, { passive: true });
-    window.addEventListener('resize', updateOffset);
-    
-    return () => {
-      window.removeEventListener('scroll', updateOffset);
-      window.removeEventListener('resize', updateOffset);
-    };
-  }, [anchorToSection]);
-
-  if (!visible) return null;
-  
   return (
-    <div 
-      className="fixed inset-0 z-[60] pointer-events-none"
-    >
+    <div className="relative z-0 w-full h-full flex justify-center items-center transform scale-100 origin-center min-h-[500px]">
       <Canvas
-        camera={{ position: [8, 4, 20], fov }}
+        camera={{ position, fov }}
         gl={{ alpha: transparent }}
-        style={{ pointerEvents: 'auto', width: '100vw', height: '100vh' }}
-        onCreated={({ camera, gl }) => {
-          camera.lookAt(8, 4, 0);
-          gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
-        }}
+        onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity as any} timeStep={1 / 60}>
@@ -233,7 +199,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
   return (
     <>
-      <group position={[8, 4, 0]}>
+      <group position={[0, 4, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps} type="dynamic">
           <BallCollider args={[0.1]} />
