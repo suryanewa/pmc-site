@@ -87,6 +87,11 @@ export default function PixelFillCanvas({
   const lastActiveRef = useRef(active);
   const waveClock = useRef(0);
   const [maxDistance, setMaxDistance] = useState(0);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const initPixels = useCallback(() => {
     if (!containerRef.current || !canvasRef.current) return;
@@ -176,13 +181,22 @@ export default function PixelFillCanvas({
     };
   }, [active, animate]);
 
+  if (!isMounted) {
+    return (
+      <span 
+        className={`absolute inset-0 pointer-events-none ${className}`}
+        style={{ borderRadius, overflow: 'hidden', display: 'block' }}
+      />
+    );
+  }
+
   return (
-    <div 
+    <span 
       ref={containerRef} 
       className={`absolute inset-0 pointer-events-none ${className}`}
-      style={{ borderRadius, overflow: 'hidden' }}
+      style={{ borderRadius, overflow: 'hidden', display: 'block' }}
     >
       <canvas ref={canvasRef} className="w-full h-full" />
-    </div>
+    </span>
   );
 }

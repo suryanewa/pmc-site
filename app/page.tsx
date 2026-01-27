@@ -571,7 +571,7 @@ export default function Home() {
           <div className="w-full max-w-[1400px] mx-auto relative z-10 grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:gap-16">
             <div className="max-w-[1000px] text-left">
             {/* Subtitle */}
-            <motion.p
+            <motion.div
               className="mb-8"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -581,7 +581,7 @@ export default function Home() {
                 <HeroChip>NYU&apos;s Premier Entrepreneurship Club</HeroChip>
                 <HeroChip>Est. 2003</HeroChip>
               </span>
-            </motion.p>
+            </motion.div>
 
             {/* Main Headline */}
             <motion.div
