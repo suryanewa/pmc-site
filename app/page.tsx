@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { Linkedin, Instagram } from 'lucide-react';
 import { Button } from './components/Button';
 import { Newsletter } from './components/Newsletter';
+import PixelFillCanvas from './components/PixelFillCanvas';
 import { FadeUp, FadeIn } from './components/ScrollAnimations';
 import { Polaroid } from './components/Polaroid';
 import { HeroWarpCanvas } from './components/HeroWarpCanvas';
@@ -68,6 +69,46 @@ function SocialIcon({ href, label, children }: { href: string; label: string; ch
     >
       {children}
     </motion.a>
+  );
+}
+
+function HeroChip({ children }: { children: React.ReactNode }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+  const chipRef = useRef<HTMLSpanElement>(null);
+
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    if (chipRef.current) {
+      const rect = chipRef.current.getBoundingClientRect();
+      setMousePos({
+        x: (e.clientX - rect.left) / rect.width,
+        y: (e.clientY - rect.top) / rect.height,
+      });
+    }
+    setIsHovered(true);
+  };
+
+  return (
+    <motion.span
+      ref={chipRef}
+      className="relative overflow-hidden inline-flex items-center border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 cursor-default"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={() => setIsHovered(false)}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <PixelFillCanvas
+        active={isHovered}
+        origin={mousePos}
+        color="#041540"
+        gap={8}
+        speed={0.4}
+        className="z-0"
+      />
+      <span className={`relative z-10 transition-colors duration-300 ${isHovered ? 'text-white' : ''}`}>
+        {children}
+      </span>
+    </motion.span>
   );
 }
 
@@ -537,12 +578,8 @@ export default function Home() {
               transition={{ duration: 0.6 }}
             >
               <span className="inline-flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 opacity-70 hover:opacity-100 hover:bg-[#041540] hover:text-white transition-all duration-300">
-                  NYU&apos;s Premier Entrepreneurship Club
-                </span>
-                <span className="inline-flex items-center border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 opacity-70 hover:opacity-100 hover:bg-[#041540] hover:text-white transition-all duration-300">
-                  Est. 2003
-                </span>
+                <HeroChip>NYU&apos;s Premier Entrepreneurship Club</HeroChip>
+                <HeroChip>Est. 2003</HeroChip>
               </span>
             </motion.p>
 
@@ -618,6 +655,7 @@ export default function Home() {
 
         {/* Programs Section */}
         <section
+          id="programs"
           className={`relative py-32 px-6 md:px-16 lg:px-24 ${themeTransition} ${
             isProgramsDark ? "text-[#F7F3EE]" : "text-[#041540]"
           }`}
