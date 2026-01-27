@@ -30,15 +30,15 @@ const leadershipMembers = [
   { id: 9, src: '/profiles/nicole.jpg', name: 'nicole-hwang', role: 'community-lead' },
   { id: 10, src: '/profiles/sophia.jpg', name: 'sophia-chen', role: 'community-lead' },
   { id: 11, src: '/profiles/pranav.jpg', name: 'pranav-sarma', role: 'treasurer' },
-  { id: 12, src: '', name: 'lia-kostas', role: 'growth' },
-  { id: 13, src: '', name: 'xander-wanagel', role: 'growth' },
-  { id: 14, src: '', name: 'surya-newa', role: 'startup' },
+  { id: 12, src: '/profiles/lia.jpg', name: 'lia-kostas', role: 'growth' },
+  { id: 13, src: '/profiles/xander.png', name: 'xander-wanagel', role: 'growth' },
+  { id: 14, src: '/profiles/surya.jpg', name: 'surya-newa', role: 'startup' },
   { id: 15, src: '/profiles/neel.jpg', name: 'neel-khurana', role: 'investing' },
   { id: 16, src: '/profiles/shray.jpg', name: 'shray-patel', role: 'investing' },
-  { id: 17, src: '', name: 'jessie-lee', role: 'marketing' },
-  { id: 18, src: '', name: 'priscilla-tu', role: 'marketing' },
-  { id: 19, src: '', name: 'marco-kosasih', role: 'marketing' },
-  { id: 20, src: '', name: 'katherine-graci', role: 'community' },
+  { id: 17, src: '/profiles/jessie.jpg', name: 'jessie-lee', role: 'marketing' },
+  { id: 18, src: '/profiles/priscilla.jpg', name: 'priscilla-tu', role: 'marketing' },
+  { id: 19, src: '/profiles/marco.jpg', name: 'marco-kosasih', role: 'marketing' },
+  { id: 20, src: '/profiles/katherine.jpg', name: 'katherine-graci', role: 'community' },
   { id: 21, src: '/profiles/dustin.jpg', name: 'dustin-he', role: 'community' },
 
 ];
@@ -120,7 +120,7 @@ export default function PeoplePage() {
             </h1>
           </FadeUp>
 
-          <FadeIn delay={0.3}>
+          <FadeIn delay={0.3} data-gsap="parallax" data-speed="0.06">
             <img
               src="/heart.png"
               alt="Heart"
@@ -146,7 +146,7 @@ export default function PeoplePage() {
         </FadeUp>
 
         {/* Scattered Polaroids Container */}
-        <div className="relative h-[1000px] w-full">
+        <div className="relative h-[1000px] w-full" data-gsap="parallax" data-speed="0.08">
           {/* Row 1 - Top polaroids */}
           <FadeIn delay={0.2}>
             <Polaroid

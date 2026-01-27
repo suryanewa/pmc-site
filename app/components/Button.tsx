@@ -1,3 +1,10 @@
+import Link from 'next/link';
+import { useState, useRef } from 'react';
+import { motion } from 'framer-motion';
+import PixelFillCanvas from './PixelFillCanvas';
+
+const MotionLink = motion(Link);
+
 interface ButtonProps {
   children: React.ReactNode;
   size?: 'default' | 'lg';
@@ -8,7 +15,8 @@ interface ButtonProps {
   fillColor?: string;
   borderColor?: string;
   textColor?: string;
-  hoverFillColor?: string;
+  href?: string;
+  rippleColor?: string;
 }
 
 export function Button({
@@ -21,34 +29,33 @@ export function Button({
   fillColor,
   borderColor,
   textColor,
-  hoverFillColor,
+  href,
+  rippleColor,
 }: ButtonProps) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+  const buttonRef = useRef<HTMLElement>(null);
+
   const sizeStyles = {
     default: 'h-[46px] text-base',
     lg: 'h-[55px] text-lg',
   };
 
-  // Determine if this is a custom colored button or default
   const isCustom = fillColor || borderColor;
-
-  // For outlined buttons (borderColor only, no fillColor)
   const isOutlined = borderColor && !fillColor;
 
-  const baseStyles = 'font-medium px-8 flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+  const baseStyles = 'relative overflow-hidden font-medium px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer transition-transform';
 
-  // Build inline styles for custom colors
   const inlineStyles: React.CSSProperties = {};
 
   if (isCustom) {
     if (isOutlined) {
-      // Outlined button: transparent bg, colored border and text
       inlineStyles.backgroundColor = 'transparent';
       inlineStyles.borderWidth = '2px';
       inlineStyles.borderStyle = 'solid';
       inlineStyles.borderColor = borderColor;
       inlineStyles.color = textColor || borderColor;
     } else {
-      // Filled button
       inlineStyles.backgroundColor = fillColor;
       inlineStyles.color = textColor || 'white';
       if (borderColor) {
@@ -59,26 +66,68 @@ export function Button({
     }
   }
 
-  // Default styles when no custom colors
   const defaultStyles = !isCustom
-    ? 'bg-[#0115DF] text-white hover:bg-[#0010b8] focus:ring-[#0115DF]'
+    ? 'bg-[#041540] text-white focus:ring-[#0115DF]'
     : '';
 
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    if (buttonRef.current) {
+      const rect = buttonRef.current.getBoundingClientRect();
+      setMousePos({
+        x: (e.clientX - rect.left) / rect.width,
+        y: (e.clientY - rect.top) / rect.height,
+      });
+    }
+    setIsHovered(true);
+  };
+
+  const content = (
+    <>
+      <PixelFillCanvas
+        active={isHovered}
+        origin={mousePos}
+        color={rippleColor || "#0115DF"}
+        gap={12}
+        speed={0.4}
+        className="z-0"
+      />
+      <span className={`relative z-10 transition-colors duration-300 ${isHovered ? 'text-white' : ''}`}>
+        {children}
+      </span>
+    </>
+  );
+
+  const commonProps = {
+    className: `${baseStyles} ${sizeStyles[size]} ${defaultStyles} ${className}`,
+    style: isCustom ? inlineStyles : undefined,
+    onMouseEnter: handleMouseEnter,
+    onMouseLeave: () => setIsHovered(false),
+    whileHover: { scale: 1.02 },
+    whileTap: { scale: 0.98 },
+  };
+
+  if (href) {
+    return (
+      <MotionLink 
+        href={href} 
+        onClick={onClick}
+        {...(commonProps as any)}
+        ref={buttonRef as any}
+      >
+        {content}
+      </MotionLink>
+    );
+  }
+
   return (
-    <button
+    <motion.button
+      {...commonProps}
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`${baseStyles} ${sizeStyles[size]} ${defaultStyles} ${className}`}
-      style={isCustom ? inlineStyles : undefined}
-      onMouseEnter={hoverFillColor ? (e) => {
-        (e.currentTarget as HTMLButtonElement).style.backgroundColor = hoverFillColor;
-      } : undefined}
-      onMouseLeave={hoverFillColor ? (e) => {
-        (e.currentTarget as HTMLButtonElement).style.backgroundColor = isOutlined ? 'transparent' : (fillColor || '');
-      } : undefined}
+      ref={buttonRef as any}
     >
-      {children}
-    </button>
+      {content}
+    </motion.button>
   );
 }

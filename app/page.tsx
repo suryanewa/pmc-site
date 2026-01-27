@@ -1,318 +1,990 @@
 'use client';
 
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useInView, animate, useMotionValue, useTransform, AnimatePresence, useSpring } from 'framer-motion';
+import { Suspense, useEffect, useRef, useState, useCallback } from 'react';
+import dynamic from 'next/dynamic';
+import { Linkedin, Instagram } from 'lucide-react';
 import { Button } from './components/Button';
 import { Newsletter } from './components/Newsletter';
-import { FadeUp, FadeLeft, FadeIn, StaggerContainer, StaggerItem } from './components/ScrollAnimations';
+import PixelFillCanvas from './components/PixelFillCanvas';
+import { FadeUp, FadeIn } from './components/ScrollAnimations';
 import { Polaroid } from './components/Polaroid';
-import { ProgramCard } from './components/ProgramCard';
-import LogoLoop from '../components/LogoLoop';
+import { HeroWarpCanvas } from './components/HeroWarpCanvas';
 import Link from "next/link";
+import { LogoCloudAnimated } from "@/components/smoothui/logo-cloud-1";
+import TiltedCard from "@/components/TiltedCard";
+import TextType from '@/components/TextType';
+import ConfettiCanvas, { ConfettiCanvasHandle } from '@/components/ConfettiCanvas';
+
+const HeroScene = dynamic(
+  () => import('./components/HeroScene').then((mod) => ({ default: mod.HeroScene })),
+  {
+    ssr: false,
+    loading: () => <div className="w-full h-full" />,
+  }
+);
+
+const RocketScene = dynamic(
+  () => import('@/components/RocketScene'),
+  {
+    ssr: false,
+    loading: () => <div className="w-full h-full" />,
+  }
+);
+
+const Lanyard = dynamic(
+  () => import('./components/Lanyard'),
+  {
+    ssr: false,
+    loading: () => <div className="w-full h-full" />,
+  }
+);
+
+const PlantsScene = dynamic(
+  () => import('@/components/PlantsScene'),
+  {
+    ssr: false,
+    loading: () => <div className="w-full h-full" />,
+  }
+);
+
+const CandleScene = dynamic(
+  () => import('@/components/CandleScene'),
+  {
+    ssr: false,
+    loading: () => <div className="w-full h-full" />,
+  }
+);
 
 function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
   return (
-    <a
+    <motion.a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="size-10 flex items-center justify-center hover:opacity-70 transition-opacity"
+      className="size-9 flex items-center justify-center text-[#041540]/60 hover:text-[#041540] transition-colors duration-300"
+      whileHover={{ scale: 1.1, y: -2 }}
+      whileTap={{ scale: 0.95 }}
     >
       {children}
-    </a>
+    </motion.a>
   );
 }
 
-// Parallax decorative element
-function ParallaxDecoration({
-  src,
-  className,
-  speed = 0.5,
-  position = 'fixed'
-}: {
-  src: string;
-  className: string;
-  speed?: number;
-  position?: 'fixed' | 'absolute';
-}) {
-  const { scrollY } = useScroll();
-  const y = useTransform(scrollY, [0, 3000], [0, -300 * speed]);
+function HeroChip({ children }: { children: React.ReactNode }) {
+  const [isHovered, setIsHovered] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
+  const chipRef = useRef<HTMLSpanElement>(null);
+
+  const handleMouseEnter = (e: React.MouseEvent) => {
+    if (chipRef.current) {
+      const rect = chipRef.current.getBoundingClientRect();
+      setMousePos({
+        x: (e.clientX - rect.left) / rect.width,
+        y: (e.clientY - rect.top) / rect.height,
+      });
+    }
+    setIsHovered(true);
+  };
 
   return (
-    <motion.img
-      src={src}
-      alt=""
-      style={{ y }}
-      className={`${position} pointer-events-none ${className}`}
-    />
+    <motion.span
+      ref={chipRef}
+      className="relative overflow-hidden inline-flex items-center border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 cursor-default"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={() => setIsHovered(false)}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+    >
+      <PixelFillCanvas
+        active={isHovered}
+        origin={mousePos}
+        color="#041540"
+        gap={8}
+        speed={0.4}
+        className="z-0"
+      />
+      <span className={`relative z-10 transition-colors duration-300 ${isHovered ? 'text-white' : ''}`}>
+        {children}
+      </span>
+    </motion.span>
+  );
+}
+
+// Programs data
+const programs = [
+  {
+    id: 'startup',
+    title: '/startup',
+    description: 'A 9-week, build-from-zero accelerator. You\'ll interview users to validate a real market gap, design and ship a product, and ultimately take it to market.',
+    color: '#AD1DE0',
+    href: '/programs/startup',
+  },
+  {
+    id: 'investing',
+    title: '/investing',
+    description: 'An intensive 9-week program focused on how real investors evaluate startups. Break down deals, analyze companies, and build investment theses.',
+    color: '#2DB67D',
+    href: '/programs/investing',
+  },
+  {
+    id: 'eir',
+    title: '/eir',
+    description: 'A selective program for NYU founders who are actively building. Get 1-on-1 mentorship and direct access to venture capitalists.',
+    color: '#F0C75B',
+    href: '/programs/eir',
+  },
+];
+
+// Animated counter component
+function AnimatedStat({ 
+  number, 
+  label, 
+  active, 
+  onComplete 
+}: { 
+  number: string; 
+  label: string; 
+  active: boolean; 
+  onComplete: () => void 
+}) {
+  const [showLabel, setShowLabel] = useState(false);
+  const count = useMotionValue(0);
+  const rounded = useTransform(count, latest => Math.round(latest));
+  
+  const numericValue = parseInt(number.replace(/\D/g, ''));
+  const suffix = number.replace(/\d/g, '');
+
+  useEffect(() => {
+    if (active) {
+      animate(count, numericValue, {
+        duration: 1.4,
+        ease: [0.16, 1, 0.3, 1],
+        onComplete: () => {
+          setShowLabel(true);
+        }
+      });
+    }
+  }, [active, numericValue, count]);
+
+  return (
+    <div className="flex flex-col">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: active ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        className="text-4xl md:text-5xl font-medium text-[#041540] tracking-tight"
+        whileHover={{ scale: 1.05 }}
+      >
+        <motion.span>{rounded}</motion.span>
+        <span>{suffix}</span>
+      </motion.div>
+      <div className="min-h-[1.5rem]">
+        <AnimatePresence>
+          {showLabel && (
+            <motion.div
+              initial={{ opacity: 0, y: 5 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              onAnimationComplete={onComplete}
+              className="text-sm text-[#041540]/50 mt-1"
+            >
+              {label}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+function StatsGrid({ sectionRef }: { sectionRef: React.RefObject<HTMLElement | null> }) {
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const confettiRef = useRef<ConfettiCanvasHandle>(null);
+  const isInView = useInView(containerRef, { once: true, amount: 0.5, margin: "-100px" });
+
+  useEffect(() => {
+    if (isInView && activeIndex === -1) {
+      setActiveIndex(0);
+    }
+  }, [isInView, activeIndex]);
+
+  const handleFinalComplete = () => {
+    if (containerRef.current && confettiRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const x = rect.left + rect.width / 2;
+      const y = rect.top + rect.height / 2;
+      confettiRef.current.burst(x, y);
+    }
+  };
+
+  return (
+    <>
+      <ConfettiCanvas ref={confettiRef} containerRef={sectionRef} />
+      <div ref={containerRef} className="grid grid-cols-3 gap-8 pt-8 border-t border-[#041540]/10">
+        <AnimatedStat 
+          number="20+" 
+          label="Years Active" 
+          active={activeIndex >= 0} 
+          onComplete={() => setActiveIndex(prev => prev === 0 ? 1 : prev)} 
+        />
+        <AnimatedStat 
+          number="100+" 
+          label="Alumni Network" 
+          active={activeIndex >= 1} 
+          onComplete={() => setActiveIndex(prev => prev === 1 ? 2 : prev)} 
+        />
+        <AnimatedStat 
+          number="250+" 
+          label="Speaker Events" 
+          active={activeIndex >= 2} 
+          onComplete={handleFinalComplete} 
+        />
+      </div>
+    </>
+  );
+}
+
+function PushPin({ color = "#0115DF", active = false, size = 14 }: { color?: string; active?: boolean; size?: number }) {
+  const displayColor = active ? color : "#A0A0A0";
+  
+  return (
+    <div 
+      className="absolute left-1/2 -translate-x-1/2 z-20 pointer-events-none"
+      style={{ top: size === 14 ? "2px" : "0px" }}
+    >
+      <svg width={size} height={size} viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.4)]">
+        <defs>
+          <radialGradient id={`pinGradient-${size}`} cx="40%" cy="40%" r="50%" fx="30%" fy="30%">
+            <stop offset="0%" stopColor="white" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="black" stopOpacity="0.2" />
+          </radialGradient>
+          <radialGradient id={`topSurface-${size}`} cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor={color} stopOpacity="0.9" />
+            <stop offset="100%" stopColor={color} />
+          </radialGradient>
+        </defs>
+        
+        <motion.circle 
+          cx="14" cy="16" r="7" 
+          animate={{ fill: displayColor }}
+          fillOpacity="0.8" 
+          transition={{ duration: 0.3 }}
+        />
+        <circle cx="14" cy="16" r="7" fill={`url(#pinGradient-${size})`} />
+        
+        <motion.circle 
+          cx="14" cy="12" r="10" 
+          animate={{ fill: displayColor }}
+          transition={{ duration: 0.3 }}
+        />
+        <circle cx="14" cy="12" r="10" fill={`url(#pinGradient-${size})`} />
+        
+        <circle cx="11" cy="9" r="2.5" fill="white" fillOpacity="0.35" />
+      </svg>
+    </div>
+  );
+}
+
+function SpeakerPolaroidItem({ 
+  p, 
+  topIndex, 
+  setTopIndex,
+  onSelect 
+}: { 
+  p: any; 
+  topIndex: number | null; 
+  setTopIndex: (id: number) => void;
+  onSelect: () => void;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const rotateX = useSpring(0, { damping: 30, stiffness: 100, mass: 2 });
+  const rotateY = useSpring(0, { damping: 30, stiffness: 100, mass: 2 });
+  const scale = useSpring(1, { damping: 30, stiffness: 100, mass: 2 });
+  const imgScale = useSpring(1, { damping: 30, stiffness: 100, mass: 2 });
+  const [isDragging, setIsDragging] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!ref.current || isDragging) return;
+    const rect = ref.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left - rect.width / 2;
+    const offsetY = e.clientY - rect.top - rect.height / 2;
+    
+    rotateX.set((offsetY / (rect.height / 2)) * -25);
+    rotateY.set((offsetX / (rect.width / 2)) * 25);
+  };
+
+  const handleMouseEnter = () => {
+    if (!isDragging) {
+      scale.set(1.1);
+      setIsHovered(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!isDragging) {
+      scale.set(1);
+      imgScale.set(1);
+      rotateX.set(0);
+      rotateY.set(0);
+      setIsHovered(false);
+    }
+  };
+
+  const entryVariants = {
+    hidden: { 
+      x: p.left ? "120%" : p.right ? "-120%" : 0, 
+      y: p.top ? "120%" : p.bottom ? "-120%" : 0,
+      rotate: 0,
+      opacity: 0,
+      scale: 0.5
+    },
+    visible: { 
+      x: 0, 
+      y: 0, 
+      rotate: p.rotate,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: "spring" as const,
+        damping: 20,
+        stiffness: 80,
+        delay: p.delay + 0.5,
+        duration: 1.2
+      }
+    }
+  };
+
+  return (
+    <div
+      data-gsap="parallax"
+      data-speed={p.speed}
+      className="absolute"
+      style={{
+        left: p.left,
+        top: p.top,
+        right: p.right,
+        bottom: p.bottom,
+        zIndex: topIndex === p.id ? 100 : 10 + p.id,
+      }}
+    >
+      <motion.div
+        ref={ref}
+        drag
+        dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
+        dragTransition={{ power: 0.005, timeConstant: 50 }}
+        onDragStart={() => {
+          setTopIndex(p.id);
+          setIsDragging(true);
+          scale.set(1.2);
+          rotateX.set(0);
+          rotateY.set(0);
+        }}
+        onDragEnd={() => {
+          setIsDragging(false);
+          scale.set(1.1);
+        }}
+        onTap={() => {
+          if (!isDragging) onSelect();
+        }}
+        onMouseMove={handleMouseMove}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        variants={entryVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-50px" }}
+        className="w-[240px] md:w-[280px] cursor-pointer select-none [perspective:800px] will-change-transform"
+        style={{
+          rotateX,
+          rotateY,
+          scale
+        }}
+      >
+        <div className={`bg-white p-2.5 transition-shadow duration-300 ${
+          isDragging 
+            ? "shadow-[0_30px_60px_rgba(0,0,0,0.15)]" 
+            : "shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
+        } [transform-style:preserve-3d] relative will-change-transform`}>
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 [transform:translateZ(40px)]">
+            <PushPin active={isHovered || isDragging} />
+          </div>
+          <div 
+            className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]"
+            onMouseEnter={() => !isDragging && imgScale.set(1.08)}
+            onMouseLeave={() => !isDragging && imgScale.set(1)}
+          >
+            <motion.img
+              src={p.src}
+              alt={p.alt}
+              draggable={false}
+              className="w-full h-full object-cover select-none"
+              style={{ scale: imgScale }}
+            />
+          </div>
+          <p className="mt-2 text-center text-xs tracking-wide text-[#041540]/50 font-mono pointer-events-none">
+            {p.caption}
+          </p>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+function SpeakerPolaroids() {
+  const [topIndex, setTopIndex] = useState<number | null>(null);
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const polaroids = [
+    { id: 0, src: "/lux.jpeg", alt: "Lux Capital", caption: "eeg/lux-capital", left: "0%", top: "0%", rotate: -3, speed: "0.08", delay: 0.2 },
+    { id: 1, src: "/zfellows.jpeg", alt: "Zfellows", caption: "eeg/zfellows", right: "5%", top: "8%", rotate: 2, speed: "0.14", delay: 0.35 },
+    { id: 2, src: "/beli.png", alt: "Beli", caption: "eeg/beli", left: "15%", top: "40%", rotate: 4, speed: "0.1", delay: 0.5 },
+    { id: 3, src: "/varun-rana.png", alt: "Varun Rana", caption: "eeg/varun-rana", right: "0%", bottom: "5%", rotate: -2, speed: "0.06", delay: 0.65 },
+  ];
+
+  const selectedPolaroid = polaroids.find(p => p.id === selectedId);
+
+  return (
+    <div className="relative min-h-[500px] lg:min-h-[600px]">
+      {polaroids.map((p) => (
+        <SpeakerPolaroidItem 
+          key={p.id} 
+          p={p} 
+          topIndex={topIndex} 
+          setTopIndex={setTopIndex} 
+          onSelect={() => setSelectedId(p.id)}
+        />
+      ))}
+
+      <AnimatePresence>
+        {selectedId !== null && selectedPolaroid && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ 
+              opacity: 0, 
+              pointerEvents: 'none',
+              transition: { duration: 0.2 } 
+            }}
+            onClick={() => setSelectedId(null)}
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-[#041540]/90 backdrop-blur-sm cursor-zoom-out p-6"
+          >
+            <motion.div
+              initial={{ scale: 0.8, y: 20, rotate: selectedPolaroid.rotate }}
+              animate={{ scale: 1, y: 0, rotate: 0 }}
+              exit={{ scale: 0.8, y: 20, rotate: selectedPolaroid.rotate }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="bg-white p-4 md:p-8 shadow-2xl w-full max-w-[700px] flex flex-col relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]">
+                <img
+                  src={selectedPolaroid.src}
+                  alt={selectedPolaroid.alt}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <p className="mt-4 text-center text-base md:text-lg tracking-widest text-[#041540]/70 font-mono">
+                {selectedPolaroid.caption}
+              </p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function EventsSection({ eventsTopRef }: { eventsTopRef: React.RefObject<HTMLDivElement | null> }) {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  return (
+    <section ref={sectionRef} className="py-32 px-6 md:px-16 lg:px-24 bg-white relative z-10 overflow-hidden">
+      <div
+        ref={eventsTopRef}
+        className="absolute inset-x-0 top-0 h-px pointer-events-none"
+        aria-hidden="true"
+      />
+      <div className="max-w-[1400px] mx-auto">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+          <div>
+            <FadeUp>
+              <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540] mb-8 whitespace-nowrap">
+                <span className="text-[#0115DF]">/</span>
+                <TextType
+                  text="events"
+                  typingSpeed={50}
+                  initialDelay={100}
+                  loop={false}
+                  showCursor={true}
+                  hideCursorOnComplete={true}
+                  cursorCharacter="|"
+                  className="inline"
+                  as="span"
+                  startOnVisible={true}
+                />
+              </div>
+              <div className="mb-4 font-bold text-2xl text-[#041540] lg:text-3xl text-center md:text-left whitespace-nowrap">
+                <span className="text-[#0115DF]">/</span>
+                <TextType
+                  text="speakers"
+                  typingSpeed={50}
+                  initialDelay={300}
+                  loop={false}
+                  showCursor={true}
+                  hideCursorOnComplete={true}
+                  cursorCharacter="|"
+                  className="inline"
+                  as="span"
+                  startOnVisible={true}
+                />
+              </div>
+            </FadeUp>
+
+            <FadeUp delay={0.1}>
+              <div className="space-y-6 mb-12">
+                <p className="text-lg text-[#041540]/70 leading-relaxed">
+                  We host our weekly speaker series on <span className="text-[#041540] font-medium">Thursdays @ 12:30 pm</span>. All members of the NYU community are welcome.
+                </p>
+                <p className="text-lg text-[#041540]/70 leading-relaxed">
+                  So far, we&apos;ve hosted over <span className="text-[#041540] font-medium">250 conversations</span> with founders, operators and investors—the best in their fields.
+                </p>
+              </div>
+            </FadeUp>
+
+            <StatsGrid sectionRef={sectionRef} />
+          </div>
+
+          <SpeakerPolaroids />
+        </div>
+      </div>
+    </section>
   );
 }
 
 export default function Home() {
+  const programsTopRef = useRef<HTMLDivElement | null>(null);
+  const eventsTopRef = useRef<HTMLDivElement | null>(null);
+  const [isProgramsDark, setIsProgramsDark] = useState(false);
+  const isProgramsDarkRef = useRef(false);
+  const themeTransition = "transition-colors duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)]";
+
+  useEffect(() => {
+    isProgramsDarkRef.current = isProgramsDark;
+  }, [isProgramsDark]);
+
+  useEffect(() => {
+    const navbar = document.querySelector<HTMLElement>("[data-navbar]");
+    let ticking = false;
+    let lastValue = isProgramsDarkRef.current;
+
+    const update = () => {
+      ticking = false;
+      const programsTop = programsTopRef.current;
+      const eventsTop = eventsTopRef.current;
+      if (navbar && programsTop && eventsTop) {
+        const navBottom = navbar.getBoundingClientRect().bottom;
+        const programsTopPos = programsTop.getBoundingClientRect().top;
+        const eventsTopPos = eventsTop.getBoundingClientRect().top;
+        const nextValue = programsTopPos <= navBottom && eventsTopPos > navBottom;
+
+        if (nextValue !== lastValue) {
+          lastValue = nextValue;
+          isProgramsDarkRef.current = nextValue;
+          setIsProgramsDark(nextValue);
+        }
+      }
+    };
+
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+
+    const resizeObserver = navbar ? new ResizeObserver(onScroll) : null;
+    resizeObserver?.observe(navbar as Element);
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      resizeObserver?.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty(
+      "--scroll-background",
+      isProgramsDark ? "#041540" : "#F7F3EE"
+    );
+
+    return () => {
+      root.style.setProperty("--scroll-background", "#F7F3EE");
+    };
+  }, [isProgramsDark]);
+
   return (
-    <div className="min-h-screen bg-[#F7F3EE] relative overflow-hidden pt-[130px]">
-      {/* Parallax Decorative elements - layered throughout page */}
+    <div className="min-h-screen relative">
+      <main>
+        {/* Hero Section - Clean text-based */}
+        <section className="min-h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 bg-[#F7F3EE] py-24 relative overflow-hidden">
+          <HeroWarpCanvas />
+          <div className="w-full max-w-[1400px] mx-auto relative z-10 grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:gap-16">
+            <div className="max-w-[1000px] text-left">
+            {/* Subtitle */}
+            <motion.div
+              className="mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+            >
+              <span className="inline-flex flex-wrap items-center gap-2">
+                <HeroChip>NYU&apos;s Premier Entrepreneurship Club</HeroChip>
+                <HeroChip>Est. 2003</HeroChip>
+              </span>
+            </motion.div>
 
-      {/* Hero Section decorations - expanded coverage */}
-      {/* Large blue - right edge, bleeds off screen */}
-      <ParallaxDecoration
-        src="/building-block-blue.svg"
-        className="w-[550px] top-[12vh] right-[-8vw] opacity-55"
-        speed={0.15}
-      />
-      {/* Medium blue - upper right area */}
-      <ParallaxDecoration
-        src="/building-block-blue.svg"
-        className="w-[280px] top-[5vh] right-[25vw] opacity-40"
-        speed={0.1}
-      />
-      {/* Small blue - mid right */}
-      <ParallaxDecoration
-        src="/building-block-blue.svg"
-        className="w-[200px] top-[45vh] right-[12vw] opacity-35"
-        speed={0.2}
-      />
-      {/* Large pink - bottom left, bleeds off */}
-      <ParallaxDecoration
-        src="/building-block.svg"
-        className="w-[400px] top-[60vh] left-[-6vw] opacity-50"
-        speed={0.25}
-      />
-      {/* Medium pink - upper left area */}
-      <ParallaxDecoration
-        src="/building-block.svg"
-        className="w-[220px] top-[8vh] left-[55vw] opacity-35"
-        speed={0.12}
-      />
-      {/* Small pink - mid right */}
-      <ParallaxDecoration
-        src="/building-block.svg"
-        className="w-[180px] top-[35vh] right-[5vw] opacity-40"
-        speed={0.18}
-      />
-      {/* Extra blue - bottom right corner */}
-      <ParallaxDecoration
-        src="/building-block-blue.svg"
-        className="w-[320px] top-[70vh] right-[20vw] opacity-30"
-        speed={0.22}
-      />
-      {/* Extra pink - center right, adds depth */}
-      <ParallaxDecoration
-        src="/building-block.svg"
-        className="w-[150px] top-[25vh] right-[35vw] opacity-25"
-        speed={0.08}
-      />
-
-      {/* Programs Section decorations */}
-      {/* Pink - right side */}
-      <ParallaxDecoration
-        src="/building-block.svg"
-        className="w-[320px] top-[105vh] right-[6vw] opacity-45"
-        speed={0.35}
-        position="absolute"
-      />
-      {/* Blue - left edge, bleeds off */}
-      <ParallaxDecoration
-        src="/building-block-blue.svg"
-        className="w-[380px] top-[135vh] left-[-6vw] opacity-40"
-        speed={0.3}
-        position="absolute"
-      />
-
-      {/* Events Section decorations */}
-      {/* Pink - right */}
-      <ParallaxDecoration
-        src="/building-block.svg"
-        className="w-[260px] top-[195vh] right-[22vw] opacity-45"
-        speed={0.4}
-        position="absolute"
-      />
-      {/* Blue - bottom left */}
-      <ParallaxDecoration
-        src="/building-block-blue.svg"
-        className="w-[300px] top-[240vh] left-[8vw] opacity-40"
-        speed={0.45}
-        position="absolute"
-      />
-
-      <main className="relative z-10">
-        {/* Hero Section - Full viewport height */}
-        <section className="min-h-screen px-[80px] pt-8">
-          <div className="max-w-[874px]">
-            {/* Hero Headline */}
-            <FadeUp>
-              <h1 className="text-[92px] font-medium leading-none tracking-[-0.075em] text-black mb-8">
-                Where NYU&apos;s Founders & Investors Are Made
-              </h1>
-            </FadeUp>
+            {/* Main Headline */}
+            <motion.div
+              className="text-[clamp(2rem,6vw,4.5rem)] font-medium leading-[1.05] tracking-[-0.03em] text-[#041540] mb-8"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1 }}
+            >
+              <TextType
+                text={['The Home of NYU\nFounders & Investors']}
+                typingSpeed={50}
+                initialDelay={500}
+                loop={false}
+                showCursor={true}
+                hideCursorOnComplete={true}
+                cursorCharacter="|"
+                className="block"
+              />
+            </motion.div>
 
             {/* Description */}
-            <FadeUp delay={0.15}>
-              <p className="text-[28px] font-medium leading-snug tracking-[-0.075em] text-black max-w-[639px] mb-8">
-                Established in 2003, EEG is NYU Stern&apos;s premier entrepreneurship club,
-                immersing students in the worlds of entrepreneurship, technology, and venture
-                capital. To stay up to date, subscribe to our newsletter and follow our socials below!
-              </p>
-            </FadeUp>
+            <motion.p
+              className="text-lg md:text-xl text-[#041540]/60 leading-relaxed max-w-2xl mb-10"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              Guiding the next generation of founders and investors through hands-on programs to build startups, develop venture fundamentals, and accelerate proven teams with direct access to industry leaders.
+            </motion.p>
 
-            {/* Email Subscription */}
-            <FadeUp delay={0.3}>
-              <div className="flex flex-col gap-4">
-                <Newsletter variant="light" />
-
-                {/* Social Icons */}
-                <div className="flex items-center gap-5">
-                  {/* LinkedIn */}
-                  <SocialIcon href="https://www.linkedin.com/company/nyueeg/" label="LinkedIn">
-                    <svg className="size-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M33.3333 5H6.66667C5.74619 5 5 5.74619 5 6.66667V33.3333C5 34.2538 5.74619 35 6.66667 35H33.3333C34.2538 35 35 34.2538 35 33.3333V6.66667C35 5.74619 34.2538 5 33.3333 5ZM14.1667 30H9.16667V16.6667H14.1667V30ZM11.6667 14.1667C10.0983 14.1667 8.83333 12.9017 8.83333 11.3333C8.83333 9.765 10.0983 8.5 11.6667 8.5C13.235 8.5 14.5 9.765 14.5 11.3333C14.5 12.9017 13.235 14.1667 11.6667 14.1667ZM30.8333 30H25.8333V23.3333C25.8333 21.4917 25.8 19.1667 23.3333 19.1667C20.8333 19.1667 20.5 21.1667 20.5 23.1667V30H15.5V16.6667H20.3333V18.8333H20.4C21.0667 17.5667 22.7333 16.2333 25.2333 16.2333C30.3 16.2333 30.8333 19.5333 30.8333 23.8333V30Z" fill="black"/>
-                    </svg>
-                  </SocialIcon>
-
-                  {/* X (Twitter) */}
-                  <SocialIcon href="https://x.com/nyueeg" label="X">
-                    <svg className="size-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M29.6875 6.25H34.3125L23.6562 18.4375L36.25 33.75H26.25L18.5938 23.9062L9.84375 33.75H5.15625L16.5625 20.625L4.375 6.25H14.6875L21.5625 15.1562L29.6875 6.25ZM27.8125 30.9375H30.3125L12.8125 8.75H10.1562L27.8125 30.9375Z" fill="black"/>
-                    </svg>
-                  </SocialIcon>
-
-                  {/* Instagram */}
-                  <SocialIcon href="https://www.instagram.com/nyu.eeg/" label="Instagram">
-                    <svg className="size-10" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M20 10.625C16.875 10.625 16.4844 10.6406 15.2656 10.6969C14.0469 10.7531 13.2031 10.9531 12.4531 11.25C11.6875 11.5469 11.0156 11.9844 10.4375 12.5625C9.85938 13.1406 9.42188 13.8125 9.125 14.5781C8.82812 15.3281 8.62813 16.1719 8.57188 17.3906C8.51563 18.6094 8.5 19 8.5 22.125C8.5 25.25 8.51563 25.6406 8.57188 26.8594C8.62813 28.0781 8.82812 28.9219 9.125 29.6719C9.42188 30.4375 9.85938 31.1094 10.4375 31.6875C11.0156 32.2656 11.6875 32.7031 12.4531 33C13.2031 33.2969 14.0469 33.4969 15.2656 33.5531C16.4844 33.6094 16.875 33.625 20 33.625C23.125 33.625 23.5156 33.6094 24.7344 33.5531C25.9531 33.4969 26.7969 33.2969 27.5469 33C28.3125 32.7031 28.9844 32.2656 29.5625 31.6875C30.1406 31.1094 30.5781 30.4375 30.875 29.6719C31.1719 28.9219 31.3719 28.0781 31.4281 26.8594C31.4844 25.6406 31.5 25.25 31.5 22.125C31.5 19 31.4844 18.6094 31.4281 17.3906C31.3719 16.1719 31.1719 15.3281 30.875 14.5781C30.5781 13.8125 30.1406 13.1406 29.5625 12.5625C28.9844 11.9844 28.3125 11.5469 27.5469 11.25C26.7969 10.9531 25.9531 10.7531 24.7344 10.6969C23.5156 10.6406 23.125 10.625 20 10.625ZM20 12.6875C23.0625 12.6875 23.4219 12.7031 24.625 12.7594C25.7344 12.8125 26.3438 13.0031 26.7469 13.1656C27.2812 13.3813 27.6719 13.6406 28.0781 14.0469C28.4844 14.4531 28.7438 14.8438 28.9594 15.3781C29.1219 15.7813 29.3125 16.3906 29.3656 17.5C29.4219 18.7031 29.4375 19.0625 29.4375 22.125C29.4375 25.1875 29.4219 25.5469 29.3656 26.75C29.3125 27.8594 29.1219 28.4688 28.9594 28.8719C28.7438 29.4062 28.4844 29.7969 28.0781 30.2031C27.6719 30.6094 27.2812 30.8688 26.7469 31.0844C26.3438 31.2469 25.7344 31.4375 24.625 31.4906C23.4219 31.5469 23.0625 31.5625 20 31.5625C16.9375 31.5625 16.5781 31.5469 15.375 31.4906C14.2656 31.4375 13.6562 31.2469 13.2531 31.0844C12.7188 30.8688 12.3281 30.6094 11.9219 30.2031C11.5156 29.7969 11.2562 29.4062 11.0406 28.8719C10.8781 28.4688 10.6875 27.8594 10.6344 26.75C10.5781 25.5469 10.5625 25.1875 10.5625 22.125C10.5625 19.0625 10.5781 18.7031 10.6344 17.5C10.6875 16.3906 10.8781 15.7813 11.0406 15.3781C11.2562 14.8438 11.5156 14.4531 11.9219 14.0469C12.3281 13.6406 12.7188 13.3813 13.2531 13.1656C13.6562 13.0031 14.2656 12.8125 15.375 12.7594C16.5781 12.7031 16.9375 12.6875 20 12.6875ZM20 16.375C17.0938 16.375 14.75 18.7188 14.75 21.625C14.75 24.5312 17.0938 26.875 20 26.875C22.9062 26.875 25.25 24.5312 25.25 21.625C25.25 18.7188 22.9062 16.375 20 16.375ZM20 24.8125C18.2344 24.8125 16.8125 23.3906 16.8125 21.625C16.8125 19.8594 18.2344 18.4375 20 18.4375C21.7656 18.4375 23.1875 19.8594 23.1875 21.625C23.1875 23.3906 21.7656 24.8125 20 24.8125ZM27.5469 16.1406C27.5469 16.8906 26.9375 17.5 26.1875 17.5C25.4375 17.5 24.8281 16.8906 24.8281 16.1406C24.8281 15.3906 25.4375 14.7812 26.1875 14.7812C26.9375 14.7812 27.5469 15.3906 27.5469 16.1406Z" fill="black"/>
-                    </svg>
-                  </SocialIcon>
-                </div>
+            {/* CTA Button */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <div className="flex flex-wrap items-center gap-4">
+                <Button
+                  href="#programs"
+                  className="px-8 py-4"
+                >
+                  Explore Our Programs
+                </Button>
+                <Button
+                  href="#"
+                  borderColor="#041540"
+                  textColor="#041540"
+                  className="px-8 py-4"
+                >
+                  Coffee Chat Leadership
+                </Button>
               </div>
-            </FadeUp>
+            </motion.div>
+
+            </div>
+            <div
+              className="relative w-full h-[360px] md:h-[460px] lg:h-[600px]"
+              data-gsap="parallax"
+              data-speed="0.12"
+            >
+              <Suspense fallback={<div className="w-full h-full" />}>
+                <HeroScene />
+              </Suspense>
+            </div>
           </div>
         </section>
 
-        {/* Programs Section */}
-        <section className="min-h-screen px-[80px] py-16 bg-[#F7F3EE]">
-          <FadeUp>
-            <h2 className="text-[28px] font-bold text-[#041540] tracking-[-0.075em] mb-2">
-              /programs
-            </h2>
-          </FadeUp>
-            <FadeUp delay={0.1}>
-              <p className="text-[28px] font-medium text-black tracking-[-0.075em] mb-8 max-w-[1183px]">
-                Whether you&apos;re interested in startups, investing, or are already building, our semester-long programs bring students into NYU&apos;s startup, tech, and venture capital ecosystem.
-              </p>
-            </FadeUp>
+        <section className="bg-[#F7F3EE] text-[#041540]">
+          <LogoCloudAnimated title="Our Network" description="" />
+        </section>
 
-            <FadeUp delay={0.2}>
-              <div className="grid grid-cols-3 gap-8 max-w-[1200px] mx-auto">
-                <ProgramCard
-                  title="/startup"
-                  description="A 9-week, build-from-zero accelerator. You'll interview users to validate a real market gap, design and ship a product, and ultimately take it to market and maximize revenue."
-                  accentColor="#AD1DE0"
-                  learnMoreHref="/programs/startup"
-                />
-                <ProgramCard
-                  title="/investing"
-                  description="An intensive 9-week program focused on how real investors evaluate startups. You'll break down deals, analyze companies, build investment theses, and learn how funds source, diligence, and decide."
-                  accentColor="#2DB67D"
-                  learnMoreHref="/programs/investing"
-                />
-                <ProgramCard
-                  title="/eir"
-                  description="A selective program for NYU founders who are actively building. Get 1-on-1 mentorship, hands-on workshops, and direct access to venture capitalists who help you sharpen your strategy, refine your pitch, and prepare for fundraising."
-                  accentColor="#F0C75B"
-                  learnMoreHref="/programs/eir"
-                />
-              </div>
-            </FadeUp>
+        {/* Programs Section */}
+        <section
+          id="programs"
+          className={`relative py-32 px-6 md:px-16 lg:px-24 ${themeTransition} ${
+            isProgramsDark ? "text-[#F7F3EE]" : "text-[#041540]"
+          }`}
+        >
+          <div
+            ref={programsTopRef}
+            className="absolute inset-x-0 top-0 h-px pointer-events-none"
+            aria-hidden="true"
+          />
+          <div className="max-w-[1400px] mx-auto">
+            {/* Section Header */}
+            <div className="grid lg:grid-cols-2 gap-8 mb-20">
+              <FadeUp>
+                <div
+                  className={`text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] whitespace-nowrap ${themeTransition} ${
+                    isProgramsDark ? "text-[#F7F3EE]" : "text-[#041540]"
+                  }`}
+                >
+                  <span className="text-[#0115DF]">/</span>
+                  <TextType
+                    text="programs"
+                    typingSpeed={50}
+                    initialDelay={100}
+                    loop={false}
+                    showCursor={true}
+                    hideCursorOnComplete={true}
+                    cursorCharacter="|"
+                    className="inline"
+                    as="span"
+                    startOnVisible={true}
+                  />
+                </div>
+              </FadeUp>
+              <FadeUp delay={0.1}>
+                <p
+                  className={`text-lg leading-relaxed lg:pt-4 ${themeTransition} ${
+                    isProgramsDark ? "text-[#F7F3EE]/70" : "text-[#041540]/60"
+                  }`}
+                >
+                  Whether you&apos;re interested in startups, investing, or are already building, our semester-long programs bring students into NYU&apos;s startup, tech, and venture capital ecosystem.
+                </p>
+              </FadeUp>
+            </div>
+
+            {/* Programs Cards */}
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {programs.map((program, index) => (
+                <FadeUp key={program.id} delay={0.1 * index}>
+                  <Link href={program.href} className="block">
+                    <TiltedCard
+                      altText={`EEG ${program.title} program`}
+                      captionText={program.title}
+                      containerHeight="540px"
+                      containerWidth="100%"
+                      imageHeight="540px"
+                      imageWidth="100%"
+                      rotateAmplitude={10}
+                      scaleOnHover={1.04}
+                      showMobileWarning={false}
+                      showTooltip={false}
+                      borderRadius={0}
+                      backgroundColor={`${program.color}20`}
+                      backgroundContent={
+                        program.id === 'eir' 
+                          ? (isHovered: boolean) => <RocketScene isHovered={isHovered} /> 
+                          : program.id === 'startup'
+                            ? (isHovered: boolean) => <PlantsScene isHovered={isHovered} />
+                            : program.id === 'investing'
+                              ? (isHovered: boolean) => <CandleScene isHovered={isHovered} />
+                              : undefined
+                      }
+                      pixelEffect={{
+                        colors: isProgramsDark
+                          ? `${program.color},rgba(247,243,238,0.85),rgba(4,21,64,0.55)`
+                          : `${program.color},rgba(4,21,64,0.6),rgba(247,243,238,0.7)`,
+                        gap: 6,
+                        speed: 30,
+                        className: isProgramsDark
+                          ? "opacity-40 mix-blend-screen"
+                          : "opacity-35 mix-blend-multiply",
+                      }}
+                      displayOverlayContent
+                      overlayContent={
+                        <div
+                          className={`flex flex-col justify-start items-center text-center h-full w-full p-6 ${themeTransition} ${
+                            isProgramsDark
+                              ? "text-[#F7F3EE]"
+                              : "text-[#041540]"
+                          }`}
+                          style={{ paddingTop: '12%' }}
+                        >
+                          <h3
+                            className="text-2xl font-medium tracking-[-0.02em]"
+                            style={{ fontFamily: 'var(--font-gotham-medium)' }}
+                          >
+                            <span
+                              className={`${themeTransition} ${
+                                isProgramsDark ? "text-white" : "text-[#041540]"
+                              }`}
+                            >
+                              eeg
+                            </span>
+                            <span style={{ color: program.color }}>{program.title}</span>
+                          </h3>
+                          <p
+                            className={`mt-3 text-sm leading-relaxed ${themeTransition} ${
+                              isProgramsDark ? "text-[#F7F3EE]/70" : "text-[#041540]/60"
+                            }`}
+                          >
+                            {program.description}
+                          </p>
+                          <Button
+                            className="mt-5 !px-4 !py-2 text-xs uppercase tracking-[0.2em] !h-auto"
+                            borderColor={program.color}
+                            rippleColor={program.color}
+                            fillColor="transparent"
+                            textColor={isProgramsDark ? "white" : "#041540"}
+                          >
+                            Explore Program
+                            <span aria-hidden="true" className="ml-2">↗</span>
+                          </Button>
+                        </div>
+                      }
+                    />
+                  </Link>
+                </FadeUp>
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* Events Section */}
-        <section className="min-h-screen px-[80px] py-16 bg-[#F7F3EE] relative">
-          <FadeUp>
-            <h2 className="text-[28px] font-bold text-[#041540] tracking-[-0.075em] mb-8">
-              /events
-            </h2>
-          </FadeUp>
+        <EventsSection eventsTopRef={eventsTopRef} />
+      
 
-          <div className="flex gap-8">
-            {/* General Meetings Card */}
-            <FadeLeft className="bg-[#d9d9d9] border border-black px-10 py-10 w-[506px] flex flex-col gap-6 shrink-0">
-              <h3 className="text-[28px] font-bold text-[#041540] tracking-[-0.075em]">
-                General Meetings
-              </h3>
-              <div className="text-[28px] font-medium text-black tracking-[-0.075em] leading-snug">
-                <p className="mb-4">
-                  We host our weekly speaker series on Thursdays @ 12:30 pm. All members of the NYU community are welcome to attend!
-                </p>
-                <p>
-                  So far, we&apos;ve hosted over 250 chats with founders, operators and investors - the best in their fields. Subscribe to our newsletter to stay updated!
-                </p>
-              </div>
+        {/* CTA Section - Minimal Dark */}
+        <section className="py-32 px-6 md:px-16 lg:px-24 bg-[#041540] relative z-10">
+          {/* Subtle animated gradient */}
+          <motion.div
+            className="absolute inset-0 opacity-30 overflow-hidden"
+            animate={{
+              background: [
+                "radial-gradient(circle at 0% 0%, #0115DF20 0%, transparent 50%)",
+                "radial-gradient(circle at 100% 100%, #0115DF20 0%, transparent 50%)",
+                "radial-gradient(circle at 0% 0%, #0115DF20 0%, transparent 50%)",
+              ]
+            }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          />
+          
+          <div className="max-w-[1400px] mx-auto relative z-10">
+            <div className="grid lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-start">
+              <div className="col-span-12 lg:col-span-7 flex flex-col justify-center pt-12">
+                
+                <div className="mb-20 lg:mb-32">
+                  <FadeUp>
+                    <div className="text-[clamp(3.5rem,7vw,6rem)] font-medium leading-[0.9] tracking-[-0.04em] text-white mb-8">
+                      <span className="text-[#0115DF] mr-2">/</span>
+                      <TextType
+                        text="join-us"
+                        typingSpeed={50}
+                        initialDelay={100}
+                        loop={false}
+                        showCursor={true}
+                        hideCursorOnComplete={true}
+                        cursorCharacter="|"
+                        className="inline"
+                        as="span"
+                        startOnVisible={true}
+                      />
+                    </div>
+                  </FadeUp>
+                  
+                  <FadeUp delay={0.1}>
+                    <p className="text-xl md:text-2xl text-white/60 leading-relaxed max-w-2xl font-light">
+                      Get access to exclusive events, mentorship, and a network of ambitious students and industry leaders.
+                    </p>
+                  </FadeUp>
+                </div>
 
-              {/* Company Logos - animated loop */}
-              <div className="mt-6 h-[75px]">
-                <LogoLoop
-                  logos={[
-                    { src: "/companies/lux_capital_logo.jpeg", alt: "Lux Capital", title: "Lux Capital" },
-                    { src: "/companies/a16z.jpg", alt: "A16Z", title: "A16Z" },
-                    { src: "/companies/figma.png", alt: "Figma", title: "Figma" },
-                    { src: "/companies/venmo.png", alt: "Venmo", title: "Venmo" },
-                    { src: "/companies/anthropic.png", alt: "Anthropic", title: "Anthropic" },
-                    { src: "/companies/usv.jpg", alt: "USV", title: "USV" },
-                    { src: "/companies/bessemer.png", alt: "Bessemer", title: "Bessemer" },
-                    { src: "/companies/meta.png", alt: "Meta", title: "Meta" },
-                  ]}
-                  speed={50}
-                  direction="left"
-                  logoHeight={52}
-                  gap={48}
-                  pauseOnHover={true}
-                  scaleOnHover={true}
-                  fadeOut={true}
-                  fadeOutColor="#d9d9d9"
-                  ariaLabel="Company partners and sponsors"
-                  renderItem={(item, key) => {
-                    if ('src' in item) {
-                      return (
-                        <div
-                          className="flex items-center justify-center
-                                    w-[120px] h-[75px]
-                                    rounded-xl
-                                    bg-white/50
-                                    backdrop-blur-sm
-                                    px-4"
+                <div className="grid md:grid-cols-12 gap-12 items-end">
+                  <div className="md:col-span-7 lg:col-span-8">
+                    <FadeUp delay={0.2}>
+                      <div className="mb-8 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap flex items-center gap-2">
+                        <span className="text-[#0115DF]">/</span>
+                        <TextType
+                          text="newsletter"
+                          typingSpeed={50}
+                          initialDelay={300}
+                          loop={false}
+                          showCursor={true}
+                          hideCursorOnComplete={true}
+                          cursorCharacter="|"
+                          className="inline"
+                          as="span"
+                          startOnVisible={true}
+                        />
+                      </div>
+                      <Newsletter variant="dark" />
+                    </FadeUp>
+                  </div>
+
+                  <div className="md:col-span-5 lg:col-span-4">
+                    <FadeUp delay={0.3}>
+                      <div className="mb-8 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap flex items-center gap-2">
+                        <span className="text-[#0115DF]">/</span>
+                        <TextType
+                          text="socials"
+                          typingSpeed={50}
+                          initialDelay={300}
+                          loop={false}
+                          showCursor={true}
+                          hideCursorOnComplete={true}
+                          cursorCharacter="|"
+                          className="inline"
+                          as="span"
+                          startOnVisible={true}
+                        />
+                      </div>
+                      <div className="flex flex-wrap gap-4">
+                        <Button
+                          href="https://www.linkedin.com/company/nyueeg/"
+                          borderColor="rgba(255, 255, 255, 0.6)"
+                          textColor="rgba(255, 255, 255, 0.6)"
+                          rippleColor="#0115DF"
+                          className="!p-0 size-14 !border"
                         >
-                          <img
-                            src={item.src}
-                            alt={item.alt || ''}
-                            className="max-h-[52px] max-w-[100px] object-contain
-                                      opacity-80 transition hover:opacity-100"
-                          />
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
+                          <Linkedin className="size-6" strokeWidth={1} />
+                        </Button>
+                        <Button
+                          href="https://x.com/nyueeg"
+                          borderColor="rgba(255, 255, 255, 0.6)"
+                          textColor="rgba(255, 255, 255, 0.6)"
+                          rippleColor="#0115DF"
+                          className="!p-0 size-14 !border"
+                        >
+                          <svg viewBox="0 0 24 24" aria-hidden="true" className="size-6" fill="currentColor">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.134l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                          </svg>
+                        </Button>
+                        <Button
+                          href="https://www.instagram.com/nyu.eeg/"
+                          borderColor="rgba(255, 255, 255, 0.6)"
+                          textColor="rgba(255, 255, 255, 0.6)"
+                          rippleColor="#0115DF"
+                          className="!p-0 size-14 !border"
+                        >
+                          <Instagram className="size-6" strokeWidth={1} />
+                        </Button>
+                      </div>
+                    </FadeUp>
+                  </div>
+                </div>
               </div>
-            </FadeLeft>
 
-            {/* Polaroid Photos - larger with shadows */}
-            <div className="relative flex-1 max-w-[1250px] min-h-[800px]">
-              <FadeIn delay={0.2} className="absolute w-[450px] left-[3%] hover:z-50">
-                <Polaroid src="/lux.jpeg" alt="Lux Capital" caption="eeg/lux-capital" rotation={-6} />
-              </FadeIn>
-              <FadeIn delay={0.8} className="absolute w-[450px] top-[0] right-[5%] hover:z-50">
-                <Polaroid src="/zfellows.jpeg" alt="Zfellows" caption="eeg/zfellows" rotation={0}/>
-              </FadeIn>
-              <FadeIn delay={0.4} className="absolute w-[450px] bottom-[20%] left-[35%] z-30 hover:z-50">
-                <Polaroid src="/beli.png" alt="Beli" caption="eeg/beli" rotation={6} />
-              </FadeIn>
-              <FadeIn delay={0.6} className="absolute w-[450px] bottom-0 left-[10%] hover:z-50">
-                <Polaroid src="/varun-rana.png" alt="Varun Rana" caption="eeg/varun-rana" rotation={0}/>
-              </FadeIn>
-              <FadeIn delay={0.9} className="absolute w-[450px] bottom-0 right-[0%] hover:z-50">
-                <Polaroid src="/EEGBobby.jpeg" alt="Bobby Shmurda" caption="eeg/bobby-shmurda" rotation={0}/>
-              </FadeIn>
+              <div className="hidden lg:block col-span-12 lg:col-span-5 relative h-[800px] -mt-32">
+                 <div className="absolute inset-0 w-full h-full scale-110 origin-top">
+                  <Suspense fallback={null}>
+                    <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
+                  </Suspense>
+                </div>
+              </div>
             </div>
           </div>
         </section>

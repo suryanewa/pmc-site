@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "./tw-animate.css";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -39,17 +39,140 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
+
+  @keyframes scroll {
+    to {
+      transform: translate(calc(-50% - 0.5rem));
+    }
+  }
+
+  @keyframes subtle-float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   --radius-sm: calc(var(--radius) - 4px);
+
   --radius-md: calc(var(--radius) - 2px);
+
   --radius-lg: var(--radius);
+
   --radius-xl: calc(var(--radius) + 4px);
+
   --radius-2xl: calc(var(--radius) + 8px);
+
   --radius-3xl: calc(var(--radius) + 12px);
-  --radius-4xl: calc(var(--radius) + 16px);
+
+  --radius-4xl: calc(var(--radius) + 16px)
+}
+
+/* Base HTML smooth scroll (fallback if Lenis fails) */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Lenis smooth scroll styles */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+body {
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Gotham font utility classes */
+.font-gotham {
+  font-family: var(--font-gotham-medium), system-ui, sans-serif;
+}
+
+.font-gotham-bold {
+  font-family: var(--font-gotham-bold), system-ui, sans-serif;
+}
+
+/* Marquee animation */
+.animate-scroll {
+  animation: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+}
+
+/* Subtle float for decorative elements */
+.animate-subtle-float {
+  animation: subtle-float 8s ease-in-out infinite;
+}
+
+/* Custom scrollbar - minimal */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #041540;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0115DF;
+}
+
+/* Selection color */
+::selection {
+  background: #0115DF;
+  color: white;
+}
+
+/* Smooth transitions for all interactive elements */
+a, button {
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hide scrollbar during preloader */
+body.loading {
+  overflow: hidden;
+}
+
+/* Focus visible styles for accessibility */
+:focus-visible {
+  outline: 2px solid #0115DF;
+  outline-offset: 2px;
 }
 
 :root {
   --radius: 0.625rem;
+  --scroll-background: #F7F3EE;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
@@ -124,4 +247,50 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Retro MacOS Cursors (1.5x Scaled) */
+html, body {
+  cursor: url('/cursors/default.png') 3 2, auto !important;
+}
+
+a, button, [role="button"], input[type="submit"], input[type="button"], label, select, summary, [type="checkbox"], [type="radio"], .cursor-pointer {
+  cursor: url('/cursors/pointer.png') 3 5, pointer !important;
+}
+
+input[type="text"], input[type="password"], input[type="email"], input[type="number"], textarea, .cursor-text {
+  cursor: url('/cursors/text.png') 9 12, text !important;
+}
+
+.cursor-move {
+  cursor: url('/cursors/move.png') 23 23, move !important;
+}
+
+.cursor-not-allowed, :disabled, [aria-disabled="true"] {
+  cursor: url('/cursors/not-allowed.png') 3 2, not-allowed !important;
+}
+
+.cursor-wait {
+  cursor: url('/cursors/wait.ani'), wait !important;
+}
+
+.cursor-ew-resize, .resize-x {
+  cursor: url('/cursors/ew-resize.png') 23 23, ew-resize !important;
+}
+
+.cursor-ns-resize, .resize-y {
+  cursor: url('/cursors/ns-resize.png') 23 23, ns-resize !important;
+}
+
+.cursor-nesw-resize {
+  cursor: url('/cursors/nesw-resize.png') 23 23, nesw-resize !important;
+}
+
+.cursor-nwse-resize {
+  cursor: url('/cursors/nwse-resize.png') 23 23, nwse-resize !important;
+}
+
+/* Force grab cursor when hovering the 3D Mac */
+body.mac-hovered {
+  cursor: url('/cursors/move.png') 23 23, move !important;
 }

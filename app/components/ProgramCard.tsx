@@ -1,3 +1,6 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Button } from './Button';
 
@@ -17,7 +20,11 @@ export function ProgramCard({
   applyHref,
 }: ProgramCardProps) {
   return (
-    <div className="bg-white rounded-[20px] overflow-hidden flex flex-col">
+    <motion.div
+      className="bg-white rounded-[20px] overflow-hidden flex flex-col"
+      whileHover={{ y: -6 }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+    >
       {/* Colored Header */}
       <div
         className="h-[112px] flex items-center justify-center"
@@ -36,36 +43,26 @@ export function ProgramCard({
 
         {/* Buttons */}
         <div className="flex flex-col gap-4 items-center">
-          <Link href={learnMoreHref} className="w-[254px]">
-            <Button
-              size="lg"
-              fillColor={accentColor}
-              className="w-full"
-            >
-              Learn More
-            </Button>
-          </Link>
-          {applyHref ? (
-            <Link href={applyHref} className="w-[254px]">
-              <Button
-                size="lg"
-                borderColor={accentColor}
-                className="w-full"
-              >
-                Apply Now
-              </Button>
-            </Link>
-          ) : (
-            <Button
-              size="lg"
-              borderColor={accentColor}
-              className="w-[254px]"
-            >
-              Apply Now
-            </Button>
-          )}
+          <Button
+            href={learnMoreHref}
+            size="lg"
+            fillColor={accentColor}
+            rippleColor={accentColor}
+            className="w-[254px]"
+          >
+            Learn More
+          </Button>
+          <Button
+            href={applyHref || '#'}
+            size="lg"
+            borderColor={accentColor}
+            rippleColor={accentColor}
+            className="w-[254px]"
+          >
+            Apply Now
+          </Button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
