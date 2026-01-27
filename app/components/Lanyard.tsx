@@ -66,10 +66,11 @@ export default function Lanyard({
       className="fixed z-[60] pointer-events-none"
       style={{
         top: anchorToSection ? sectionOffset.top : 0,
+        left: anchorToSection ? undefined : 0,
         right: anchorToSection ? sectionOffset.right : 0,
-        width: '25%',
-        height: anchorToSection ? '100vh' : '100vh',
-        marginLeft: 'auto'
+        bottom: anchorToSection ? 0 : undefined,
+        width: anchorToSection ? undefined : '100vw',
+        height: anchorToSection ? '100vh' : '100vh'
       }}
     >
       <Canvas
@@ -237,7 +238,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
   return (
     <>
-      <group position={[0, 4, 0]}>
+      <group position={[8, 4, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps} type="dynamic">
           <BallCollider args={[0.1]} />
