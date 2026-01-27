@@ -199,7 +199,7 @@ function AnimatedStat({
   );
 }
 
-function StatsGrid() {
+function StatsGrid({ sectionRef }: { sectionRef: React.RefObject<HTMLElement | null> }) {
   const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const confettiRef = useRef<ConfettiCanvasHandle>(null);
@@ -222,7 +222,7 @@ function StatsGrid() {
 
   return (
     <>
-      <ConfettiCanvas ref={confettiRef} />
+      <ConfettiCanvas ref={confettiRef} containerRef={sectionRef} />
       <div ref={containerRef} className="grid grid-cols-3 gap-8 pt-8 border-t border-[#041540]/10">
         <AnimatedStat 
           number="20+" 
@@ -495,6 +495,73 @@ function SpeakerPolaroids() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+function EventsSection({ eventsTopRef }: { eventsTopRef: React.RefObject<HTMLDivElement | null> }) {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  return (
+    <section ref={sectionRef} className="py-32 px-6 md:px-16 lg:px-24 bg-white relative z-10 overflow-hidden">
+      <div
+        ref={eventsTopRef}
+        className="absolute inset-x-0 top-0 h-px pointer-events-none"
+        aria-hidden="true"
+      />
+      <div className="max-w-[1400px] mx-auto">
+        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+          <div>
+            <FadeUp>
+              <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540] mb-8 whitespace-nowrap">
+                <span className="text-[#0115DF]">/</span>
+                <TextType
+                  text="events"
+                  typingSpeed={50}
+                  initialDelay={100}
+                  loop={false}
+                  showCursor={true}
+                  hideCursorOnComplete={true}
+                  cursorCharacter="|"
+                  className="inline"
+                  as="span"
+                  startOnVisible={true}
+                />
+              </div>
+              <div className="mb-4 font-bold text-2xl text-[#041540] lg:text-3xl text-center md:text-left whitespace-nowrap">
+                <span className="text-[#0115DF]">/</span>
+                <TextType
+                  text="speakers"
+                  typingSpeed={50}
+                  initialDelay={300}
+                  loop={false}
+                  showCursor={true}
+                  hideCursorOnComplete={true}
+                  cursorCharacter="|"
+                  className="inline"
+                  as="span"
+                  startOnVisible={true}
+                />
+              </div>
+            </FadeUp>
+
+            <FadeUp delay={0.1}>
+              <div className="space-y-6 mb-12">
+                <p className="text-lg text-[#041540]/70 leading-relaxed">
+                  We host our weekly speaker series on <span className="text-[#041540] font-medium">Thursdays @ 12:30 pm</span>. All members of the NYU community are welcome.
+                </p>
+                <p className="text-lg text-[#041540]/70 leading-relaxed">
+                  So far, we&apos;ve hosted over <span className="text-[#041540] font-medium">250 conversations</span> with founders, operators and investors—the best in their fields.
+                </p>
+              </div>
+            </FadeUp>
+
+            <StatsGrid sectionRef={sectionRef} />
+          </div>
+
+          <SpeakerPolaroids />
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -788,69 +855,8 @@ export default function Home() {
         </section>
 
         {/* Events Section */}
-        <section className="py-32 px-6 md:px-16 lg:px-24 bg-white relative z-10">
-          <div
-            ref={eventsTopRef}
-            className="absolute inset-x-0 top-0 h-px pointer-events-none"
-            aria-hidden="true"
-          />
-          <div className="max-w-[1400px] mx-auto">
-            <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-              {/* Left - Content */}
-              <div>
-                <FadeUp>
-                  <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540] mb-8 whitespace-nowrap">
-                    <span className="text-[#0115DF]">/</span>
-                    <TextType
-                      text="events"
-                      typingSpeed={50}
-                      initialDelay={100}
-                      loop={false}
-                      showCursor={true}
-                      hideCursorOnComplete={true}
-                      cursorCharacter="|"
-                      className="inline"
-                      as="span"
-                      startOnVisible={true}
-                    />
-                  </div>
-                  <div className="mb-4 font-bold text-2xl text-[#041540] lg:text-3xl text-center md:text-left whitespace-nowrap">
-                    <span className="text-[#0115DF]">/</span>
-                    <TextType
-                      text="speakers"
-                      typingSpeed={50}
-                      initialDelay={300}
-                      loop={false}
-                      showCursor={true}
-                      hideCursorOnComplete={true}
-                      cursorCharacter="|"
-                      className="inline"
-                      as="span"
-                      startOnVisible={true}
-                    />
-                  </div>
-                </FadeUp>
-
-                
-                <FadeUp delay={0.1}>
-                  <div className="space-y-6 mb-12">
-                    <p className="text-lg text-[#041540]/70 leading-relaxed">
-                      We host our weekly speaker series on <span className="text-[#041540] font-medium">Thursdays @ 12:30 pm</span>. All members of the NYU community are welcome.
-                    </p>
-                    <p className="text-lg text-[#041540]/70 leading-relaxed">
-                      So far, we&apos;ve hosted over <span className="text-[#041540] font-medium">250 conversations</span> with founders, operators and investors—the best in their fields.
-                    </p>
-                  </div>
-                </FadeUp>
-
-                {/* Stats */}
-                <StatsGrid />
-              </div>
-
-              <SpeakerPolaroids />
-            </div>
-          </div>
-        </section>
+        <EventsSection eventsTopRef={eventsTopRef} />
+      
 
         {/* CTA Section - Minimal Dark */}
         <section className="py-32 px-6 md:px-16 lg:px-24 bg-[#041540] relative z-10 overflow-hidden">

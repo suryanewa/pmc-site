@@ -95,7 +95,11 @@ export interface ConfettiCanvasHandle {
   burst: (x: number, y: number) => void;
 }
 
-const ConfettiCanvas = React.forwardRef<ConfettiCanvasHandle>((_, ref) => {
+interface ConfettiCanvasProps {
+  containerRef?: React.RefObject<HTMLElement | null>;
+}
+
+const ConfettiCanvas = React.forwardRef<ConfettiCanvasHandle, ConfettiCanvasProps>(({ containerRef }, ref) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const confettiRef = useRef<Confetto[]>([]);
   const sequinsRef = useRef<Sequin[]>([]);
@@ -104,13 +108,18 @@ const ConfettiCanvas = React.forwardRef<ConfettiCanvasHandle>((_, ref) => {
   const burst = useCallback((x: number, y: number) => {
     if (!canvasRef.current) return;
     const canvas = canvasRef.current;
+    
+    const containerRect = containerRef?.current?.getBoundingClientRect();
+    const relativeX = containerRect ? x - containerRect.left : x;
+    const relativeY = containerRect ? y - containerRect.top : y;
+    
     for (let i = 0; i < confettiCount; i++) {
-      confettiRef.current.push(new Confetto(canvas.width, canvas.height, x, y));
+      confettiRef.current.push(new Confetto(canvas.width, canvas.height, relativeX, relativeY));
     }
     for (let i = 0; i < sequinCount; i++) {
-      sequinsRef.current.push(new Sequin(canvas.width, canvas.height, x, y));
+      sequinsRef.current.push(new Sequin(canvas.width, canvas.height, relativeX, relativeY));
     }
-  }, []);
+  }, [containerRef]);
 
   React.useImperativeHandle(ref, () => ({
     burst,
@@ -161,7 +170,13 @@ const ConfettiCanvas = React.forwardRef<ConfettiCanvasHandle>((_, ref) => {
 
   useEffect(() => {
     const handleResize = () => {
-      if (canvasRef.current) {
+      if (!canvasRef.current) return;
+      
+      if (containerRef?.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        canvasRef.current.width = rect.width;
+        canvasRef.current.height = rect.height;
+      } else {
         canvasRef.current.width = window.innerWidth;
         canvasRef.current.height = window.innerHeight;
       }
@@ -175,13 +190,18 @@ const ConfettiCanvas = React.forwardRef<ConfettiCanvasHandle>((_, ref) => {
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(requestRef.current);
     };
-  }, [render]);
+  }, [render, containerRef]);
+
+  const isContained = !!containerRef;
 
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-[100]"
-      style={{ width: '100vw', height: '100vh' }}
+      className={isContained 
+        ? "absolute inset-0 pointer-events-none z-[100]" 
+        : "fixed inset-0 pointer-events-none z-[100]"
+      }
+      style={isContained ? undefined : { width: '100vw', height: '100vh' }}
     />
   );
 });
