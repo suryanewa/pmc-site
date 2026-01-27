@@ -6,10 +6,7 @@ import dynamic from 'next/dynamic';
 import { Linkedin, Instagram } from 'lucide-react';
 import { Button } from './components/Button';
 import { Newsletter } from './components/Newsletter';
-import PixelFillCanvas from './components/PixelFillCanvas';
-import { FadeUp, FadeIn } from './components/ScrollAnimations';
-import { Polaroid } from './components/Polaroid';
-import { HeroWarpCanvas } from './components/HeroWarpCanvas';
+import { FadeUp } from './components/ScrollAnimations';
 import Link from "next/link";
 import { LogoCloudAnimated } from "@/components/smoothui/logo-cloud-1";
 import TiltedCard from "@/components/TiltedCard";
@@ -69,46 +66,6 @@ function SocialIcon({ href, label, children }: { href: string; label: string; ch
     >
       {children}
     </motion.a>
-  );
-}
-
-function HeroChip({ children }: { children: React.ReactNode }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
-  const chipRef = useRef<HTMLSpanElement>(null);
-
-  const handleMouseEnter = (e: React.MouseEvent) => {
-    if (chipRef.current) {
-      const rect = chipRef.current.getBoundingClientRect();
-      setMousePos({
-        x: (e.clientX - rect.left) / rect.width,
-        y: (e.clientY - rect.top) / rect.height,
-      });
-    }
-    setIsHovered(true);
-  };
-
-  return (
-    <motion.span
-      ref={chipRef}
-      className="relative overflow-hidden inline-flex items-center border border-[#041540]/40 bg-[#F7F3EE] px-4 py-2 text-xs font-medium uppercase tracking-[0.2em] text-[#041540]/70 cursor-default"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
-    >
-      <PixelFillCanvas
-        active={isHovered}
-        origin={mousePos}
-        color="#041540"
-        gap={8}
-        speed={0.4}
-        className="z-0"
-      />
-      <span className={`relative z-10 transition-colors duration-300 ${isHovered ? 'text-white' : ''}`}>
-        {children}
-      </span>
-    </motion.span>
   );
 }
 
@@ -632,82 +589,61 @@ export default function Home() {
   return (
     <div className="min-h-screen relative">
       <main>
-        {/* Hero Section - Clean text-based */}
+        {/* Hero Section - Clean and sophisticated */}
         <section className="min-h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 bg-[#F7F3EE] py-24 relative overflow-hidden">
-          <HeroWarpCanvas />
-          <div className="w-full max-w-[1400px] mx-auto relative z-10 grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,520px)] lg:gap-16">
-            <div className="max-w-[1000px] text-left">
-            {/* Subtitle */}
-            <motion.div
-              className="mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <span className="inline-flex flex-wrap items-center gap-2">
-                <HeroChip>NYU&apos;s Premier Entrepreneurship Club</HeroChip>
-                <HeroChip>Est. 2003</HeroChip>
-              </span>
-            </motion.div>
+          <div className="w-full max-w-[1400px] mx-auto relative z-10 grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:gap-20">
+            <div className="max-w-[800px] text-left">
+              {/* Subtle label */}
+              <motion.p
+                className="text-xs uppercase tracking-[0.2em] text-[#041540]/40 mb-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8 }}
+              >
+                NYU Stern · Est. 2003
+              </motion.p>
 
-            {/* Main Headline */}
-            <motion.div
-              className="text-[clamp(2rem,6vw,4.5rem)] font-medium leading-[1.05] tracking-[-0.03em] text-[#041540] mb-8"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1 }}
-            >
-              <TextType
-                text={['The Home of NYU\nFounders & Investors']}
-                typingSpeed={50}
-                initialDelay={500}
-                loop={false}
-                showCursor={true}
-                hideCursorOnComplete={true}
-                cursorCharacter="|"
-                className="block"
-              />
-            </motion.div>
+              {/* Main Headline */}
+              <motion.h1
+                className="text-[clamp(2.5rem,6vw,4.5rem)] font-medium leading-[1.05] tracking-[-0.03em] text-[#041540] mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, delay: 0.1 }}
+              >
+                The Home of NYU<br />
+                Founders & Investors
+              </motion.h1>
 
-            {/* Description */}
-            <motion.p
-              className="text-lg md:text-xl text-[#041540]/60 leading-relaxed max-w-2xl mb-10"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              Guiding the next generation of founders and investors through hands-on programs to build startups, develop venture fundamentals, and accelerate proven teams with direct access to industry leaders.
-            </motion.p>
+              {/* Description - shorter and cleaner */}
+              <motion.p
+                className="text-lg text-[#041540]/50 leading-relaxed max-w-lg mb-10"
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                Hands-on programs to build startups, develop venture fundamentals, and connect with industry leaders.
+              </motion.p>
 
-            {/* CTA Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <div className="flex flex-wrap items-center gap-4">
+              {/* Single CTA */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+              >
                 <Button
                   href="#programs"
                   className="px-8 py-4"
                 >
-                  Explore Our Programs
+                  Explore Programs
                 </Button>
-                <Button
-                  href="#"
-                  borderColor="#041540"
-                  textColor="#041540"
-                  className="px-8 py-4"
-                >
-                  Coffee Chat Leadership
-                </Button>
-              </div>
-            </motion.div>
-
+              </motion.div>
             </div>
+
+            {/* 3D Mac - slightly smaller and more balanced */}
             <div
-              className="relative w-full h-[360px] md:h-[460px] lg:h-[600px]"
+              className="relative w-full h-[320px] md:h-[420px] lg:h-[520px]"
               data-gsap="parallax"
-              data-speed="0.12"
+              data-speed="0.08"
             >
               <Suspense fallback={<div className="w-full h-full" />}>
                 <HeroScene />
