@@ -74,10 +74,13 @@ export default function Lanyard({
       }}
     >
       <Canvas
-        camera={{ position: [5, 0, 20], fov }}
+        camera={{ position: [8, 0, 20], fov }}
         gl={{ alpha: transparent }}
         style={{ pointerEvents: 'auto' }}
-        onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
+        onCreated={({ camera, gl }) => {
+          camera.lookAt(4, 0, 0);
+          gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);
+        }}
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity as any} timeStep={1 / 60}>
@@ -238,7 +241,7 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
   return (
     <>
-      <group position={[8, 4, 0]}>
+      <group position={[4, 4, 0]}>
         <RigidBody ref={fixed} {...segmentProps} type="fixed" />
         <RigidBody position={[0.5, 0, 0]} ref={j1} {...segmentProps} type="dynamic">
           <BallCollider args={[0.1]} />
