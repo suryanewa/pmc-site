@@ -63,20 +63,12 @@ export default function Lanyard({
   
   return (
     <div 
-      className="fixed z-[60] pointer-events-none"
-      style={{
-        top: anchorToSection ? sectionOffset.top : 0,
-        left: anchorToSection ? undefined : 0,
-        right: anchorToSection ? sectionOffset.right : 0,
-        bottom: anchorToSection ? 0 : undefined,
-        width: anchorToSection ? undefined : '100vw',
-        height: anchorToSection ? '100vh' : '100vh'
-      }}
+      className="fixed inset-0 z-[60] pointer-events-none"
     >
       <Canvas
         camera={{ position: [8, 0, 20], fov }}
         gl={{ alpha: transparent }}
-        style={{ pointerEvents: 'auto' }}
+        style={{ pointerEvents: 'auto', width: '100vw', height: '100vh' }}
         onCreated={({ camera, gl }) => {
           camera.lookAt(4, 0, 0);
           gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1);

@@ -688,11 +688,9 @@ function CTASection() {
             </div>
           </div>
 
-          <div className="hidden lg:block col-span-12 lg:col-span-5 relative h-[800px] -mt-40">
-            <Suspense fallback={null}>
-              <Lanyard position={[8, 0, 20]} gravity={[0, -40, 0]} visible={isInView} anchorToSection={sectionRef} />
-            </Suspense>
-          </div>
+          <Suspense fallback={null}>
+            <Lanyard position={[8, 0, 20]} gravity={[0, -40, 0]} visible={isInView} anchorToSection={sectionRef} />
+          </Suspense>
         </div>
       </div>
     </section>
