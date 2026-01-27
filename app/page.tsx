@@ -585,7 +585,7 @@ function CTASection() {
       
       <div className="max-w-[1400px] mx-auto relative z-10">
         <div className="grid lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-start">
-          <div className="col-span-12 lg:col-span-7 flex flex-col justify-center pt-12">
+          <div className="col-span-12 lg:col-span-7 flex flex-col justify-center pt-12 relative z-10">
             
             <div className="mb-20 lg:mb-32">
               <FadeUp>
@@ -689,7 +689,7 @@ function CTASection() {
           </div>
 
           <Suspense fallback={null}>
-            <Lanyard position={[8, 0, 20]} gravity={[0, -40, 0]} visible={isInView} anchorToSection={sectionRef} />
+            <Lanyard position={[8, 4, 20]} gravity={[0, -40, 0]} visible={isInView} anchorToSection={sectionRef} />
           </Suspense>
         </div>
       </div>
