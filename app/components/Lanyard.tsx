@@ -25,19 +25,56 @@ interface LanyardProps {
   gravity?: [number, number, number];
   fov?: number;
   transparent?: boolean;
+  visible?: boolean;
+  anchorToSection?: React.RefObject<HTMLElement | null>;
 }
 
 export default function Lanyard({
   position = [0, 0, 20],
   gravity = [0, -40, 0],
   fov = 20,
-  transparent = true
+  transparent = true,
+  visible = true,
+  anchorToSection
 }: LanyardProps) {
+  const [sectionOffset, setSectionOffset] = useState({ top: 0, right: 0 });
+
+  useEffect(() => {
+    if (!anchorToSection?.current) return;
+    
+    const updateOffset = () => {
+      if (anchorToSection.current) {
+        const rect = anchorToSection.current.getBoundingClientRect();
+        setSectionOffset({ top: rect.top, right: window.innerWidth - rect.right });
+      }
+    };
+    
+    updateOffset();
+    window.addEventListener('scroll', updateOffset, { passive: true });
+    window.addEventListener('resize', updateOffset);
+    
+    return () => {
+      window.removeEventListener('scroll', updateOffset);
+      window.removeEventListener('resize', updateOffset);
+    };
+  }, [anchorToSection]);
+
+  if (!visible) return null;
+  
   return (
-    <div className="relative z-0 w-full h-full flex justify-center items-center transform scale-100 origin-center min-h-[500px]">
+    <div 
+      className="fixed z-[60] pointer-events-none"
+      style={{
+        top: anchorToSection ? sectionOffset.top : 0,
+        left: 0,
+        right: anchorToSection ? sectionOffset.right : 0,
+        bottom: 0
+      }}
+    >
       <Canvas
         camera={{ position, fov }}
         gl={{ alpha: transparent }}
+        style={{ pointerEvents: 'auto' }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
