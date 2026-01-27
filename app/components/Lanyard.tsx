@@ -66,9 +66,10 @@ export default function Lanyard({
       className="fixed z-[60] pointer-events-none"
       style={{
         top: anchorToSection ? sectionOffset.top : 0,
-        left: 0,
         right: anchorToSection ? sectionOffset.right : 0,
-        bottom: 0
+        width: '25%',
+        height: anchorToSection ? '100vh' : '100vh',
+        marginLeft: 'auto'
       }}
     >
       <Canvas
