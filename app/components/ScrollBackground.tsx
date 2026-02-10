@@ -1,19 +1,14 @@
-"use client";
-
-import { motion } from "framer-motion";
-
 export function ScrollBackground() {
-  
   return (
     <>
       {/* Main animated background */}
-      <motion.div
+      <div
         className="fixed inset-0 -z-20 transition-colors duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
         style={{ backgroundColor: "var(--scroll-background, #000000)" }}
       />
       
       {/* Subtle noise texture overlay */}
-      <motion.div
+      <div
         className="fixed inset-0 -z-10 pointer-events-none"
         style={{ opacity: 0.02 }}
       >
@@ -24,7 +19,7 @@ export function ScrollBackground() {
             opacity: 0.4,
           }}
         />
-      </motion.div>
+      </div>
     </>
   );
 }

@@ -62,7 +62,7 @@ export function LogoCloudAnimated({
     };
 
     updateWidth();
-    window.addEventListener("resize", updateWidth);
+    window.addEventListener("resize", updateWidth, { passive: true });
 
     return () => {
       window.removeEventListener("resize", updateWidth);

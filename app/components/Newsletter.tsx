@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect, useRef, FormEvent } from 'react';
 import { toast } from 'sonner';
 import { ArrowRight } from 'lucide-react';

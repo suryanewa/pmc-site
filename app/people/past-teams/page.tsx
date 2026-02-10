@@ -12,7 +12,7 @@ import {
 } from './teams-data';
 import { TeamMemberCard } from '../../components/TeamMemberCard';
 import { FilterChip } from '../../components/FilterChip';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import { TextAnimate } from '@/components/ui/text-animate';
 import { JoinUsSection } from '../../components/JoinUsSection';
 

@@ -1,4 +1,3 @@
-@import url("https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -11,14 +10,6 @@
   --font-mono: var(--font-geist-mono);
   --font-gotham-medium: var(--font-gotham-medium);
   --font-gotham-bold: var(--font-gotham-bold);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -118,7 +109,7 @@ html.lenis, html.lenis body {
 }
 
 :root {
-  --font-satoshi: "Satoshi", system-ui, -apple-system, sans-serif;
+  --font-satoshi: var(--font-satoshi-local), "Satoshi", system-ui, -apple-system, sans-serif;
 }
 
 body {
@@ -214,7 +205,9 @@ h6,
 
 /* Smooth transitions for all interactive elements */
 a, button {
-  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: color 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Hide scrollbar during preloader */
@@ -254,49 +247,9 @@ body.loading {
   --chart-3: #6966E3;
   --chart-4: #DBDBDB;
   --chart-5: #3F3F3F;
-  --sidebar: #000000;
-  --sidebar-foreground: #DBDBDB;
-  --sidebar-primary: #41C9C1;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #3F3F3F;
-  --sidebar-accent-foreground: #DBDBDB;
-  --sidebar-border: #3F3F3F;
-  --sidebar-ring: #41C9C1;
 }
 
-.dark {
-  --background: #000000;
-  --foreground: #DBDBDB;
-  --card: #3F3F3F;
-  --card-foreground: #DBDBDB;
-  --popover: #3F3F3F;
-  --popover-foreground: #DBDBDB;
-  --primary: #41C9C1;
-  --primary-foreground: #000000;
-  --secondary: #3F3F3F;
-  --secondary-foreground: #DBDBDB;
-  --muted: #3F3F3F;
-  --muted-foreground: rgba(219, 219, 219, 0.7);
-  --accent: #41C9C1;
-  --accent-foreground: #000000;
-  --destructive: #6966E3;
-  --border: #3F3F3F;
-  --input: #3F3F3F;
-  --ring: #41C9C1;
-  --chart-1: #41C9C1;
-  --chart-2: #5076DD;
-  --chart-3: #6966E3;
-  --chart-4: #DBDBDB;
-  --chart-5: #3F3F3F;
-  --sidebar: #000000;
-  --sidebar-foreground: #DBDBDB;
-  --sidebar-primary: #41C9C1;
-  --sidebar-primary-foreground: #000000;
-  --sidebar-accent: #3F3F3F;
-  --sidebar-accent-foreground: #DBDBDB;
-  --sidebar-border: #3F3F3F;
-  --sidebar-ring: #41C9C1;
-}
+/* .dark block removed — :root values are identical (dark-only site) */
 
 @layer base {
   * {

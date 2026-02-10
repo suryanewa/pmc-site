@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from './Button';
@@ -81,7 +81,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
       setIsPastHero(window.scrollY > 100);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -92,7 +92,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
         setIsMobileMenuOpen(false);
       }
     };
-    window.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 

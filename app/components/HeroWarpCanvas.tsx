@@ -62,7 +62,24 @@ export function HeroWarpCanvas() {
     const pointerEase = 0.08;
     let smoothedMx = 0;
 
+    let isVisible = true;
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && rafId === null) {
+          lastTime = 0;
+          rafId = requestAnimationFrame(warp);
+        }
+      },
+      { threshold: 0 }
+    );
+    visibilityObserver.observe(canvas);
+
     const warp = (time: number) => {
+      if (!isVisible) {
+        rafId = null;
+        return;
+      }
       if (!lastTime) lastTime = time;
       const delta = Math.min(0.05, (time - lastTime) / 1000);
       lastTime = time;
@@ -176,7 +193,7 @@ export function HeroWarpCanvas() {
 
     init();
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener("resize", handleResize, { passive: true });
     if (!isMobile) {
       hero.addEventListener("pointerdown", invert, { passive: true });
       hero.addEventListener("pointerup", invert, { passive: true });
@@ -186,6 +203,7 @@ export function HeroWarpCanvas() {
     }
 
     return () => {
+      visibilityObserver.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("resize", handleResize);
       if (!isMobile) {

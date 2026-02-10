@@ -1,15 +1,19 @@
 "use client";
 
-import { ThemeProvider } from "next-themes";
+import dynamic from "next/dynamic";
 import { Toaster } from "@/components/ui/sonner";
-import { AnimatedCursor } from "./AnimatedCursor";
+
+const AnimatedCursor = dynamic(
+  () => import("./AnimatedCursor").then((mod) => ({ default: mod.AnimatedCursor })),
+  { ssr: false }
+);
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+    <>
       {children}
       <Toaster />
       <AnimatedCursor />
-    </ThemeProvider>
+    </>
   );
 }

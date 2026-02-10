@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, HTMLMotionProps, useReducedMotion } from 'framer-motion';
+import { motion, HTMLMotionProps, useReducedMotion } from 'motion/react';
 import type { HTMLAttributes, ReactNode } from 'react';
 import { useIsMobile } from '../../hooks/use-is-mobile';
 

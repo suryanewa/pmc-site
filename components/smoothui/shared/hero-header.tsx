@@ -1,9 +1,10 @@
 "use client";
 
-import { Button } from "@repo/shadcn-ui/components/ui/button";
-import { cn } from "@repo/shadcn-ui/lib/utils";
+import { Button } from "./smoothbutton";
+import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import Link from "next/link";
 import { useState } from "react";
 
 const menuItems = [
@@ -41,7 +42,7 @@ export const HeroHeader = () => {
           <div className="mx-auto max-w-5xl px-6">
             <div className="relative flex flex-wrap items-center justify-between gap-6 py-6 transition-all duration-200 lg:gap-0">
               <div className="flex w-full justify-between gap-6 lg:w-auto">
-                <a
+                <Link
                   aria-label="SmoothUI home"
                   className="flex items-center gap-2"
                   href="/"
@@ -54,8 +55,8 @@ export const HeroHeader = () => {
                     height={28}
                     src="/logo-smoothui.svg"
                     width={140}
-                  />
-                </a>
+                   />
+                </Link>
 
                 <button
                   aria-label={menuState === true ? "Close Menu" : "Open Menu"}

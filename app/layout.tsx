@@ -3,6 +3,16 @@ import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import localFont from "next/font/local";
 import "./globals.css";
+
+const satoshi = localFont({
+  src: [
+    { path: "../public/fonts/satoshi/Satoshi-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/satoshi/Satoshi-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/satoshi/Satoshi-Bold.woff2", weight: "700", style: "normal" },
+  ],
+  variable: "--font-satoshi-local",
+  display: "swap",
+});
 import { getSiteUrl } from "@/lib/site-url";
 import { Footer } from "./components/Footer";
 import { RootNavbar } from "./components/RootNavbar";
@@ -66,7 +76,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning className="dark">
-      <body className={`${GeistSans.variable} ${GeistMono.variable} ${gothamMedium.variable} ${gothamBold.variable} ${GeistSans.className} antialiased`}>
+        <body className={`${GeistSans.variable} ${GeistMono.variable} ${gothamMedium.variable} ${gothamBold.variable} ${satoshi.variable} ${GeistSans.className} antialiased`}>
         <Providers>
           <a
             href="#main"

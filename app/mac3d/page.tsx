@@ -1,6 +1,6 @@
 'use client';
 
-import { motion, useReducedMotion } from 'framer-motion';
+import { motion, useReducedMotion } from 'motion/react';
 import { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';

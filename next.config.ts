@@ -1,4 +1,3 @@
-import withMillionLint from "@million/lint/next";
 import type { NextConfig } from "next";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -11,6 +10,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withMillionLint(nextConfig, {
-  rsc: true,
-});
+export default nextConfig;

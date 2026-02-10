@@ -1,6 +1,6 @@
 'use client';
 
-import { AnimatePresence, motion, useReducedMotion, useSpring } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion, useSpring } from 'motion/react';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { useIsMobile } from '../../hooks/use-is-mobile';
