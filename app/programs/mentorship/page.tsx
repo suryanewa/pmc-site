@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useState } from 'react';
 import { FadeUp, FadeIn } from '../../components/ScrollAnimations';
 import { Chip } from '../../components/Chip';
@@ -15,20 +16,77 @@ const UnicornScene = dynamic(() => import('unicornstudio-react/next'), { ssr: fa
 const ACCENT = '#6966E3';
 const ACCENT_SECONDARY = '#41C9C1';
 
-const mentorCompanies = [
-  'Google',
-  'JPMC',
-  'Mastercard',
-  'PwC',
-  'NYU Langone',
+interface CompanyLogo {
+  name: string;
+  logo: string;
+  invert?: boolean;
+}
+
+const mentorCompanies: CompanyLogo[] = [
+  { name: 'Google', logo: 'https://svgl.app/library/google.svg' },
+  { name: 'JPMorgan Chase', logo: '/companies/chase-logo.svg', invert: true },
+  { name: 'Mastercard', logo: '/companies/mastercard.svg', invert: true },
+  { name: 'PwC', logo: '/companies/pwc.svg', invert: true },
+  { name: 'Capital One', logo: '/companies/capital-one.png', invert: true },
+  { name: 'Meta', logo: '/companies/meta.png', invert: true },
 ];
 
 const additionalEvents = [
-  { title: 'Intro Mentorship Kickoff', description: 'Welcome session for the Intro track — meet your mentor and set semester goals.' },
-  { title: 'Advanced Mentorship Kickoff', description: 'Welcome session for the Advanced track — align on recruiting goals with your industry mentor.' },
-  { title: 'Career Development Workshops', description: 'Hands-on sessions covering resume building, networking strategy, and interview prep.' },
-  { title: 'Mastercard NYC Office Visit', description: 'An exclusive behind-the-scenes tour of Mastercard\'s New York office.' },
-  { title: 'Mentorship Farewell', description: 'Celebrate the semester\'s growth and recognize outstanding mentor-mentee pairs.' },
+  {
+    title: 'Intro Mentorship Kickoff',
+    description: 'Welcome session for the Intro track — meet your mentor and set semester goals.',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+        <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+        <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+        <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Advanced Mentorship Kickoff',
+    description: 'Welcome session for the Advanced track — align on recruiting goals with your industry mentor.',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M10.536 21.37a1 1 0 0 0 1.02-.096l7.172-5.22a2 2 0 0 0 .451-2.862L10.4 1.666A1 1 0 0 0 8.68 2.04l-.65 7.762a2 2 0 0 1-.766 1.38l-5.991 4.36a1 1 0 0 0 .096 1.72z" />
+        <path d="m12.5 15.5 2 2" />
+        <path d="m15 13 4 4" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Career Development Workshops',
+    description: 'Hands-on sessions covering resume building, networking strategy, and interview prep.',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+        <rect width="20" height="14" x="2" y="6" rx="2" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Mastercard NYC Office Visit',
+    description: 'An exclusive behind-the-scenes tour of Mastercard\'s New York office.',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <rect width="20" height="14" x="2" y="5" rx="2" />
+        <line x1="2" x2="22" y1="10" y2="10" />
+      </svg>
+    ),
+  },
+  {
+    title: 'Mentorship Farewell',
+    description: 'Celebrate the semester\'s growth and recognize outstanding mentor-mentee pairs.',
+    icon: (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2" />
+        <path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" />
+        <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8" />
+        <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+      </svg>
+    ),
+  },
 ];
 
 const whatToExpect = [
@@ -232,15 +290,38 @@ export default function MentorshipPage() {
                   <h3 className="text-sm font-bold tracking-widest text-[#DBDBDB] uppercase mb-6">
                     Featuring Mentors From
                   </h3>
-                  <div className="flex flex-wrap gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {mentorCompanies.map((company) => (
-                      <Chip key={company} color={ACCENT} variant="filled" textColor="gray">
-                        {company}
-                      </Chip>
+                      <div
+                        key={company.name}
+                        className="flex items-center justify-center h-16 border border-[#3F3F3F]/40 bg-[#3F3F3F]/10 hover:bg-[#3F3F3F]/20 transition-colors duration-300 px-4"
+                      >
+                        {company.logo.startsWith('http') ? (
+                          <img
+                            src={company.logo}
+                            alt={company.name}
+                            className="h-8 w-auto object-contain"
+                            style={company.invert ? { filter: 'brightness(0) invert(1)' } : undefined}
+                          />
+                        ) : (
+                          <Image
+                            src={company.logo}
+                            alt={company.name}
+                            width={120}
+                            height={32}
+                            className="h-8 w-auto object-contain"
+                            style={company.invert ? { filter: 'brightness(0) invert(1)' } : undefined}
+                          />
+                        )}
+                      </div>
                     ))}
-                    <span className="inline-flex items-center px-4 py-2 text-sm text-[#DBDBDB]/50">
-                      ...and more
-                    </span>
+                  </div>
+                  <div className="flex justify-center mt-4">
+                    <div className="flex items-center justify-center h-14 px-8 border border-[#3F3F3F]/40 bg-[#3F3F3F]/10">
+                      <span className="text-sm font-bold tracking-wide uppercase text-white">
+                        And More
+                      </span>
+                    </div>
                   </div>
                 </div>
               </FadeUp>
@@ -270,7 +351,7 @@ export default function MentorshipPage() {
               {additionalEvents.map((event, i) => (
                 <div
                   key={event.title}
-                  className="bg-black p-6 md:p-8 flex items-start gap-6 group hover:bg-[#3F3F3F]/10 transition-colors duration-300 cursor-default"
+                  className="bg-black p-6 md:p-8 flex items-center gap-6 group hover:bg-[#3F3F3F]/10 transition-colors duration-300 cursor-default"
                 >
                   <span
                     className="text-sm font-medium tracking-widest uppercase shrink-0 w-8 text-right transition-colors duration-300"
@@ -278,10 +359,13 @@ export default function MentorshipPage() {
                   >
                     {String(i + 1).padStart(2, '0')}
                   </span>
-                  <div>
+                  <div className="flex-1">
                     <h4 className="text-lg font-medium text-[#DBDBDB] mb-1">{event.title}</h4>
                     <p className="text-[#DBDBDB]/60 text-sm leading-relaxed">{event.description}</p>
                   </div>
+                  <span className="shrink-0 text-[#6966E3]">
+                    {event.icon}
+                  </span>
                 </div>
               ))}
             </div>

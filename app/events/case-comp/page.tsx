@@ -326,124 +326,6 @@ export default function CaseCompPage() {
         </div>
       </section>
 
-      {/* How to Participate */}
-      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24">
-        <div className="max-w-[1400px] mx-auto">
-          <FadeUp>
-            <h2 className="section-title text-[#DBDBDB] text-center mb-16">
-              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
-                How to Participate
-              </TextAnimate>
-            </h2>
-          </FadeUp>
-
-          <div className="max-w-3xl mx-auto space-y-4">
-            {participateSteps.map((step, i) => (
-              <FadeUp delay={i * 0.08} key={i}>
-                <div 
-                  className="relative overflow-hidden flex gap-6 group p-6 cursor-default border border-[#3F3F3F]/40 bg-[#3F3F3F]/20"
-                  onMouseEnter={() => setHoveredBenefit(i + 20)}
-                  onMouseLeave={() => setHoveredBenefit(null)}
-                >
-                  <AsciiHoverEffect
-                    active={hoveredBenefit === i + 20}
-                    colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
-                    className="opacity-40 mix-blend-screen"
-                  />
-                  <span className="relative z-10 flex items-center justify-center w-10 h-10 border border-[#3F3F3F]/60 text-[#DBDBDB] text-sm font-medium shrink-0 transition-colors duration-300 group-hover:border-[#6966E3] group-hover:text-[#6966E3]">
-                    {step.number}
-                  </span>
-                  <div className="relative z-10">
-                    <h4 className="text-lg text-[#DBDBDB] font-medium mb-1">{step.title}</h4>
-                    <p className="text-[#DBDBDB]/60 text-base leading-relaxed">{step.description}</p>
-                  </div>
-                </div>
-              </FadeUp>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* What You Gain — 3+2 Benefit Cards */}
-      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24">
-        <div className="max-w-[1400px] mx-auto">
-          <FadeUp>
-            <h2 className="section-title text-[#DBDBDB] text-center mb-16">
-              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
-                What You Gain
-              </TextAnimate>
-            </h2>
-          </FadeUp>
-
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {competitionBenefits.slice(0, 3).map((b, i) => (
-              <StaggerItem key={b.title}>
-                <div
-                  className="relative overflow-hidden bg-[#3F3F3F]/20 border border-[#3F3F3F]/40 p-8 md:p-10 cursor-default h-full"
-                  onMouseEnter={() => setHoveredBenefit(i)}
-                  onMouseLeave={() => setHoveredBenefit(null)}
-                >
-                  <AsciiHoverEffect
-                    active={hoveredBenefit === i}
-                    colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
-                    className="opacity-40 mix-blend-screen"
-                  />
-                  <div className="relative z-10">
-                    <div className="w-10 h-10 mb-6 text-[#6966E3]">{b.icon}</div>
-                    <h3 className="sub-section-title text-[#DBDBDB] mb-3">{b.title}</h3>
-                    <p className="text-[#DBDBDB]/70 text-base leading-relaxed">{b.desc}</p>
-                  </div>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-
-          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 max-w-[900px] mx-auto">
-            {competitionBenefits.slice(3).map((b, i) => (
-              <StaggerItem key={b.title}>
-                <div
-                  className="relative overflow-hidden bg-[#3F3F3F]/20 border border-[#3F3F3F]/40 p-8 md:p-10 cursor-default h-full"
-                  onMouseEnter={() => setHoveredBenefit(i + 3)}
-                  onMouseLeave={() => setHoveredBenefit(null)}
-                >
-                  <AsciiHoverEffect
-                    active={hoveredBenefit === i + 3}
-                    colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
-                    className="opacity-40 mix-blend-screen"
-                  />
-                  <div className="relative z-10">
-                    <div className="w-10 h-10 mb-6 text-[#6966E3]">{b.icon}</div>
-                    <h3 className="sub-section-title text-[#DBDBDB] mb-3">{b.title}</h3>
-                    <p className="text-[#DBDBDB]/70 text-base leading-relaxed">{b.desc}</p>
-                  </div>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
-        </div>
-      </section>
-
-      {/* Timeline */}
-      <section id="timeline" className="relative z-10 px-6 md:px-16 lg:px-24 pt-24 pb-24">
-        <div className="max-w-[1400px] mx-auto">
-          <FadeUp>
-            <h2 className="section-title text-[#DBDBDB] mb-0 text-center">
-              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
-                The Timeline
-              </TextAnimate>
-            </h2>
-          </FadeUp>
-          <FadeIn delay={0.2}>
-            <div className="dark">
-              <Timeline data={timelineData} showHeader={false} lineColor="#6966E3" />
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
       {/* Past Partners */}
       <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24">
         <div className="max-w-[1400px] mx-auto">
@@ -579,6 +461,153 @@ export default function CaseCompPage() {
             fadeOutColor="#000000"
           />
         </FadeIn>
+      </section>
+
+      {/* How to Participate */}
+      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24">
+        <div className="max-w-[1400px] mx-auto">
+          <FadeUp>
+            <h2 className="section-title text-[#DBDBDB] text-center mb-16">
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                How to Participate
+              </TextAnimate>
+            </h2>
+          </FadeUp>
+
+          <div className="max-w-3xl mx-auto space-y-4">
+            {participateSteps.map((step, i) => (
+              <FadeUp delay={i * 0.08} key={i}>
+                <div 
+                  className="relative overflow-hidden flex gap-6 group p-6 cursor-default border border-[#3F3F3F]/40 bg-[#3F3F3F]/20"
+                  onMouseEnter={() => setHoveredBenefit(i + 20)}
+                  onMouseLeave={() => setHoveredBenefit(null)}
+                >
+                  <AsciiHoverEffect
+                    active={hoveredBenefit === i + 20}
+                    colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
+                    fontSize={10}
+                    className="opacity-40 mix-blend-screen"
+                  />
+                  <span className="relative z-10 flex items-center justify-center w-10 h-10 border border-[#3F3F3F]/60 text-[#DBDBDB] text-sm font-medium shrink-0 transition-colors duration-300 group-hover:border-[#6966E3] group-hover:text-[#6966E3]">
+                    {step.number}
+                  </span>
+                  <div className="relative z-10">
+                    <h4 className="text-lg text-[#DBDBDB] font-medium mb-1">{step.title}</h4>
+                    <p className="text-[#DBDBDB]/60 text-base leading-relaxed">{step.description}</p>
+                  </div>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* What You Gain — 3+2 Benefit Cards */}
+      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24">
+        <div className="max-w-[1400px] mx-auto">
+          <FadeUp>
+            <h2 className="section-title text-[#DBDBDB] text-center mb-16">
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                What You Gain
+              </TextAnimate>
+            </h2>
+          </FadeUp>
+
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {competitionBenefits.slice(0, 3).map((b, i) => (
+              <StaggerItem key={b.title}>
+                <div
+                  className="relative overflow-hidden bg-[#3F3F3F]/20 border border-[#3F3F3F]/40 p-8 md:p-10 cursor-default h-full"
+                  onMouseEnter={() => setHoveredBenefit(i)}
+                  onMouseLeave={() => setHoveredBenefit(null)}
+                >
+                  <AsciiHoverEffect
+                    active={hoveredBenefit === i}
+                    colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
+                    fontSize={10}
+                    className="opacity-40 mix-blend-screen"
+                  />
+                  <div className="relative z-10">
+                    <div className="w-10 h-10 mb-6 text-[#6966E3]">{b.icon}</div>
+                    <h3 className="sub-section-title text-[#DBDBDB] mb-3">{b.title}</h3>
+                    <p className="text-[#DBDBDB]/70 text-base leading-relaxed">{b.desc}</p>
+                  </div>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+
+          <StaggerContainer className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 max-w-[900px] mx-auto">
+            {competitionBenefits.slice(3).map((b, i) => (
+              <StaggerItem key={b.title}>
+                <div
+                  className="relative overflow-hidden bg-[#3F3F3F]/20 border border-[#3F3F3F]/40 p-8 md:p-10 cursor-default h-full"
+                  onMouseEnter={() => setHoveredBenefit(i + 3)}
+                  onMouseLeave={() => setHoveredBenefit(null)}
+                >
+                  <AsciiHoverEffect
+                    active={hoveredBenefit === i + 3}
+                    colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
+                    fontSize={10}
+                    className="opacity-40 mix-blend-screen"
+                  />
+                  <div className="relative z-10">
+                    <div className="w-10 h-10 mb-6 text-[#6966E3]">{b.icon}</div>
+                    <h3 className="sub-section-title text-[#DBDBDB] mb-3">{b.title}</h3>
+                    <p className="text-[#DBDBDB]/70 text-base leading-relaxed">{b.desc}</p>
+                  </div>
+                </div>
+              </StaggerItem>
+            ))}
+          </StaggerContainer>
+        </div>
+      </section>
+
+      {/* Competition in Action — 2x2 Grid */}
+      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24">
+        <div className="max-w-[1400px] mx-auto">
+          <FadeUp>
+            <h2 className="section-title text-[#DBDBDB] text-center mb-12">
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                Competition in Action
+              </TextAnimate>
+            </h2>
+          </FadeUp>
+          <FadeIn delay={0.2}>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
+                <Image src="/case-comp/IMG_2261.jpeg" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
+              </div>
+              <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
+                <Image src="/case-comp/IMG_2226.jpeg" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
+              </div>
+              <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
+                <Image src="/case-comp/IMG_2227.jpeg" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
+              </div>
+              <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
+                <Image src="/case-comp/IMG_6944.jpeg" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Timeline */}
+      <section id="timeline" className="relative z-10 px-6 md:px-16 lg:px-24 pt-24 pb-24">
+        <div className="max-w-[1400px] mx-auto">
+          <FadeUp>
+            <h2 className="section-title text-[#DBDBDB] mb-0 text-center">
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                The Timeline
+              </TextAnimate>
+            </h2>
+          </FadeUp>
+          <FadeIn delay={0.2}>
+            <div className="dark">
+              <Timeline data={timelineData} showHeader={false} lineColor="#6966E3" />
+            </div>
+          </FadeIn>
+        </div>
       </section>
 
       <JoinUsSection variant="default" newsletterSource="case-comp" />

@@ -261,6 +261,33 @@ export default function OfficeVisitsPage() {
         </div>
       </section>
 
+      {/* Stats */}
+      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-16">
+        <div className="max-w-[1400px] mx-auto">
+          <FadeUp>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {stats.map((stat, i) => (
+                <div
+                  key={stat.label}
+                  className={`text-center ${i < stats.length - 1 ? 'md:border-r md:border-[#3F3F3F]/40' : ''}`}
+                >
+                  <span
+                    className="section-title text-[#5076DD]"
+                    style={{ fontFamily: 'var(--font-gotham-medium)' }}
+                  >
+                    <CountUp to={stat.value} duration={2} />
+                    {stat.suffix}
+                  </span>
+                  <p className="text-sm uppercase tracking-widest text-[#DBDBDB]/50 mt-2">
+                    {stat.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </FadeUp>
+        </div>
+      </section>
+
       {/* More Than a Visit — Benefit Cards */}
       <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24">
         <div className="max-w-[1400px] mx-auto">
@@ -316,33 +343,6 @@ export default function OfficeVisitsPage() {
             <div className="flex flex-wrap justify-center gap-3 max-w-2xl mx-auto">
               {industries.map((type) => (
                 <Chip color="#5076DD" key={type}>{type}</Chip>
-              ))}
-            </div>
-          </FadeUp>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-16">
-        <div className="max-w-[1400px] mx-auto">
-          <FadeUp>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {stats.map((stat, i) => (
-                <div
-                  key={stat.label}
-                  className={`text-center ${i < stats.length - 1 ? 'md:border-r md:border-[#3F3F3F]/40' : ''}`}
-                >
-                  <span
-                    className="section-title text-[#5076DD]"
-                    style={{ fontFamily: 'var(--font-gotham-medium)' }}
-                  >
-                    <CountUp to={stat.value} duration={2} />
-                    {stat.suffix}
-                  </span>
-                  <p className="text-sm uppercase tracking-widest text-[#DBDBDB]/50 mt-2">
-                    {stat.label}
-                  </p>
-                </div>
               ))}
             </div>
           </FadeUp>

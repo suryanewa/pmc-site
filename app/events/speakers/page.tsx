@@ -1,6 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useState } from 'react';
 
 import { FadeUp, FadeIn, StaggerContainer, StaggerItem } from '../../components/ScrollAnimations';
@@ -327,6 +328,25 @@ export default function SpeakersPage() {
               </FadeUp>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ───── Image Row ───── */}
+      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-12">
+        <div className="max-w-[1400px] mx-auto">
+          <FadeUp>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
+                <Image src="/speakers/IMG_3671.jpeg" alt="Speaker event" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+              </div>
+              <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
+                <Image src="/speakers/_DSC6939.jpeg" alt="Speaker event" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+              </div>
+              <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
+                <Image src="/speakers/1770754775263.jpeg" alt="Speaker event" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+              </div>
+            </div>
+          </FadeUp>
         </div>
       </section>
 
