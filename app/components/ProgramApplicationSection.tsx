@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, type CSSProperties, type MouseEvent } from "react";
+import { type CSSProperties } from "react";
 import { FadeUp } from "./ScrollAnimations";
 import { TextAnimate } from "@/components/ui/text-animate";
-import PixelFillCanvas from "./PixelFillCanvas";
 
 interface ProgramApplicationSectionProps {
   accentColor?: string;
@@ -44,35 +43,12 @@ function ProcessStepItem({
   step: ProcessStep;
   accentColor: string;
 }) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
-
-  const handleMouseEnter = (e: MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setMousePos({
-      x: (e.clientX - rect.left) / rect.width,
-      y: (e.clientY - rect.top) / rect.height,
-    });
-    setIsHovered(true);
-  };
-
   return (
     <div
       className="flex gap-6 group cursor-default"
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setIsHovered(false)}
       style={{ "--accent-color": accentColor } as CSSProperties}
     >
-      <span className="relative flex items-center justify-center w-9 h-9 border border-[#3F3F3F]/60 text-[#DBDBDB] text-sm shrink-0 mt-0.5 overflow-hidden transition-colors duration-300 group-hover:border-[var(--accent-color)]">
-        <PixelFillCanvas
-          active={isHovered}
-          origin={mousePos}
-          color={accentColor}
-          gap={8}
-          speed={0.4}
-          className="z-0"
-          borderRadius={0}
-        />
+      <span className="relative flex items-center justify-center w-9 h-9 border border-[#3F3F3F]/60 text-[#DBDBDB] text-sm shrink-0 mt-0.5 transition-colors duration-300 group-hover:border-[var(--accent-color)]">
         <span className="relative z-10">{step.number}</span>
       </span>
       <div>
