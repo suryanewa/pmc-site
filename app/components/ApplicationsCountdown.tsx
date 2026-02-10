@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "motion/react";
 import { Countdown } from "./Countdown";
-import PixelFillCanvas from "./PixelFillCanvas";
 
 // Helper function to convert hex to rgba
 function hexToRgba(hex: string, alpha: number): string {
@@ -15,26 +14,12 @@ function hexToRgba(hex: string, alpha: number): string {
 
 export function ApplicationsCountdown({ accentColor = "#41C9C1" }: { accentColor?: string }) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
-  const chipRef = useRef<HTMLDivElement>(null);
   const dateRef = useRef<HTMLSpanElement>(null);
   const countdownRef = useRef<HTMLDivElement>(null);
   const width = useMotionValue(0);
   const springWidth = useSpring(width, { stiffness: 300, damping: 30 });
   const [dateWidth, setDateWidth] = useState(0);
   const [countdownWidth, setCountdownWidth] = useState(0);
-
-  const handleMouseEnter = (e: React.MouseEvent) => {
-    if (chipRef.current) {
-      const rect = chipRef.current.getBoundingClientRect();
-      setMousePos({
-        x: (e.clientX - rect.left) / rect.width,
-        y: (e.clientY - rect.top) / rect.height,
-      });
-    }
-    setIsHovered(true);
-  };
   
   // Set target date to February 8th of the current year (or next year if already passed)
   const getTargetDate = () => {
@@ -148,24 +133,12 @@ export function ApplicationsCountdown({ accentColor = "#41C9C1" }: { accentColor
 
   return (
     <motion.div 
-      ref={chipRef}
       className="relative overflow-hidden inline-flex items-center px-4 h-[46px] text-xs font-medium uppercase tracking-[0.2em] cursor-default"
       style={chipStyle}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={() => setIsHovered(false)}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
-      <PixelFillCanvas
-        active={isHovered}
-        origin={mousePos}
-        color="#3F3F3F"
-        gap={8}
-        speed={0.5}
-        className="z-0"
-        borderRadius={0}
-      />
-      <span className="relative z-10 transition-colors duration-300" style={{ color: isHovered ? '#DBDBDB' : '#DBDBDB' }}>
+      <span className="relative z-10 text-[#DBDBDB]">
         Applications Open
       </span>
       <span className="mx-0.5 relative z-10"> </span>
