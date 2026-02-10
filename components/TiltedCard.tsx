@@ -2,6 +2,7 @@ import type { SpringOptions } from 'motion/react';
 import { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'motion/react';
 import PixelHoverCanvas from '@/components/PixelHoverCanvas';
+import { useIsMobile } from '../hooks/use-is-mobile';
 
 interface TiltedCardProps {
   imageSrc?: React.ComponentProps<'img'>['src'];
@@ -15,7 +16,8 @@ interface TiltedCardProps {
   rotateAmplitude?: number;
   showMobileWarning?: boolean;
   showTooltip?: boolean;
-  overlayContent?: React.ReactNode;
+  imageScaleOnHover?: number;
+  overlayContent?: React.ReactNode | ((isHovered: boolean) => React.ReactNode);
   displayOverlayContent?: boolean;
   backgroundColor?: string;
   backgroundContent?: React.ReactNode | ((isHovered: boolean) => React.ReactNode);
@@ -46,6 +48,7 @@ export default function TiltedCard({
   rotateAmplitude = 14,
   showMobileWarning = true,
   showTooltip = true,
+  imageScaleOnHover = 1.0,
   overlayContent = null,
   displayOverlayContent = false,
   backgroundColor,
@@ -54,11 +57,13 @@ export default function TiltedCard({
   pixelEffect
 }: TiltedCardProps) {
   const ref = useRef<HTMLElement>(null);
+  const isMobile = useIsMobile();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotateX = useSpring(useMotionValue(0), springValues);
   const rotateY = useSpring(useMotionValue(0), springValues);
   const scale = useSpring(1, springValues);
+  const imageScale = useSpring(1, springValues);
   const opacity = useSpring(0);
   const rotateFigcaption = useSpring(0, {
     stiffness: 350,
@@ -92,6 +97,7 @@ export default function TiltedCard({
 
   function handleMouseEnter() {
     scale.set(scaleOnHover);
+    imageScale.set(imageScaleOnHover);
     opacity.set(1);
     setIsHovered(true);
   }
@@ -99,6 +105,7 @@ export default function TiltedCard({
   function handleMouseLeave() {
     opacity.set(0);
     scale.set(1);
+    imageScale.set(1);
     rotateX.set(0);
     rotateY.set(0);
     rotateFigcaption.set(0);
@@ -113,9 +120,9 @@ export default function TiltedCard({
         height: containerHeight,
         width: containerWidth
       }}
-      onMouseMove={handleMouse}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      onMouseMove={isMobile ? undefined : handleMouse}
+      onMouseEnter={isMobile ? undefined : handleMouseEnter}
+      onMouseLeave={isMobile ? undefined : handleMouseLeave}
     >
       {showMobileWarning && (
         <div className="absolute top-4 text-center text-sm block sm:hidden">
@@ -128,14 +135,14 @@ export default function TiltedCard({
         style={{
           width: imageWidth,
           height: imageHeight,
-          rotateX,
-          rotateY,
-          scale,
+          rotateX: isMobile ? 0 : rotateX,
+          rotateY: isMobile ? 0 : rotateY,
+          scale: isMobile ? 1 : scale,
           backgroundColor,
           borderRadius: `${borderRadius}px`
         }}
       >
-        {pixelEffect && (
+        {pixelEffect && !isMobile && (
           <PixelHoverCanvas
             active={isHovered}
             colors={pixelEffect.colors}
@@ -159,6 +166,7 @@ export default function TiltedCard({
             style={{
               width: imageWidth,
               height: imageHeight,
+              scale: isMobile ? 1 : imageScale,
               borderRadius: `${borderRadius}px`
             }}
           />
@@ -166,14 +174,14 @@ export default function TiltedCard({
 
         {displayOverlayContent && overlayContent && (
           <motion.div className="absolute inset-0 z-[2] will-change-transform [transform:translateZ(30px)]">
-            {overlayContent}
+            {typeof overlayContent === 'function' ? overlayContent(isHovered) : overlayContent}
           </motion.div>
         )}
       </motion.div>
 
-      {showTooltip && (
+      {showTooltip && !isMobile && (
         <motion.figcaption
-          className="pointer-events-none absolute left-0 top-0 rounded-[4px] bg-white px-[10px] py-[4px] text-[10px] text-[#2d2d2d] opacity-0 z-[3] hidden sm:block"
+          className="pointer-events-none absolute left-0 top-0 rounded-[4px] bg-[#3F3F3F] px-[10px] py-[4px] text-[10px] text-[#DBDBDB] opacity-0 z-[3] hidden sm:block"
           style={{
             x,
             y,

@@ -11,10 +11,10 @@ const dragSequins = 0.02;
 const terminalVelocity = 3;
 
 const colors = [
-  { front: '#7b5cff', back: '#6245e0' }, // Purple
-  { front: '#b3c7ff', back: '#8fa5e5' }, // Light Blue
-  { front: '#5c86ff', back: '#345dd1' }, // Darker Blue
-  { front: '#0115DF', back: '#000eb3' }, // Blue Accent
+  { front: '#41C9C1', back: '#5076DD' }, // Cyan to Blue
+  { front: '#5076DD', back: '#6966E3' }, // Blue to Indigo
+  { front: '#6966E3', back: '#41C9C1' }, // Indigo to Cyan
+  { front: '#DBDBDB', back: '#3F3F3F' }, // Neutral
 ];
 
 const randomRange = (min: number, max: number) => Math.random() * (max - min) + min;
@@ -125,7 +125,7 @@ const ConfettiCanvas = React.forwardRef<ConfettiCanvasHandle, ConfettiCanvasProp
     burst,
   }));
 
-  const render = useCallback(() => {
+  const render = useCallback(function render() {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -134,8 +134,8 @@ const ConfettiCanvas = React.forwardRef<ConfettiCanvasHandle, ConfettiCanvasProp
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     confettiRef.current.forEach((confetto, index) => {
-      let width = confetto.dimensions.x * confetto.scale.x;
-      let height = confetto.dimensions.y * confetto.scale.y;
+      const width = confetto.dimensions.x * confetto.scale.x;
+      const height = confetto.dimensions.y * confetto.scale.y;
 
       ctx.save();
       ctx.translate(confetto.position.x, confetto.position.y);

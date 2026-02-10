@@ -1,389 +1,88 @@
 "use client";
 
-import * as THREE from "three";
-import gsap from "gsap";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Environment, ContactShadows, Bounds, OrbitControls, Center } from "@react-three/drei";
-import { useEffect, useMemo, useState, useRef, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 
-
-// Mac model with video texture - always shows video
-function MacModel({ 
-  onLoaded,
-}: { 
-  onLoaded: () => void;
-}) {
-  const { scene } = useGLTF("/mac_edited.glb");
-  const hasCalledOnLoaded = useRef(false);
-  const modelScale = 0.45;
-  const videoCanvasRef = useRef<HTMLCanvasElement | null>(null);
-  const videoCanvasTextureRef = useRef<THREE.CanvasTexture | null>(null);
-  const videoRafRef = useRef<number | null>(null);
-  const [videoEl, setVideoEl] = useState<HTMLVideoElement | null>(null);
-
-  // Hover state for cursor
-  const [hovered, setHovered] = useState(false);
-  useEffect(() => {
-    if (hovered) {
-      document.body.classList.add('mac-hovered');
-    } else {
-      document.body.classList.remove('mac-hovered');
-    }
-    return () => {
-      document.body.classList.remove('mac-hovered');
+declare global {
+  interface Window {
+    UnicornStudio?: {
+      init?: () => void;
+      isInitialized?: boolean;
     };
-  }, [hovered]);
-
-  // Load video internally
-  useEffect(() => {
-    const v = document.createElement("video");
-    v.src = "/eeg-crt.mp4";
-    v.muted = true;
-    v.loop = true;
-    v.playsInline = true;
-    v.crossOrigin = "anonymous";
-    
-    v.addEventListener("canplaythrough", () => {
-      v.play().catch(console.error);
-      setVideoEl(v);
-    });
-
-    v.load();
-
-    return () => {
-      v.pause();
-      v.src = "";
-    };
-  }, []);
-
-  // Create video texture - just rotate 90 degrees CCW (no mirror)
-  const videoTexture = useMemo(() => {
-    if (videoEl) {
-      const t = new THREE.VideoTexture(videoEl);
-      t.colorSpace = THREE.SRGBColorSpace;
-      t.minFilter = THREE.LinearFilter;
-      t.magFilter = THREE.LinearFilter;
-      t.generateMipmaps = false;
-      
-      t.center.set(0.5, 0.5);
-      t.rotation = Math.PI / 2;
-      t.wrapS = THREE.ClampToEdgeWrapping;
-      t.wrapT = THREE.ClampToEdgeWrapping;
-      t.repeat.set(1, 1);
-      t.offset.set(0, 0);
-      
-      return t;
-    }
-    
-    // Fallback gradient if no video
-    const canvas = document.createElement("canvas");
-    canvas.width = 512;
-    canvas.height = 320;
-    const ctx = canvas.getContext("2d");
-    if (ctx) {
-      const gradient = ctx.createLinearGradient(0, 0, 512, 320);
-      gradient.addColorStop(0, "#0115DF");
-      gradient.addColorStop(1, "#041540");
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, 512, 320);
-    }
-    const t = new THREE.CanvasTexture(canvas);
-    t.colorSpace = THREE.SRGBColorSpace;
-    return t;
-  }, [videoEl]);
-
-  useEffect(() => {
-    // Apply video texture to screen mesh
-    let bestMesh: THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]> | null = null;
-    let bestArea = 0;
-    let bestPriority = -1;
-
-    scene.traverse((obj) => {
-      if ((obj as THREE.Mesh).isMesh) {
-        const mesh = obj as THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>;
-        const name = mesh.name.toLowerCase();
-        
-        // Try to find screen by common names
-        if (
-          name.includes("screen") ||
-          name.includes("display") ||
-          name.includes("monitor") ||
-          name.includes("glass")
-        ) {
-          const geometry = mesh.geometry;
-          geometry.computeBoundingBox();
-          const bounds = geometry.boundingBox;
-          const size = new THREE.Vector3();
-
-          if (bounds) {
-            bounds.getSize(size);
-            const dims = [size.x, size.y, size.z].sort((a, b) => b - a);
-            const area = dims[0] * dims[1];
-            const isGlass = name.includes("glass");
-            const priority = isGlass ? 0 : 1;
-
-            if (priority > bestPriority || (priority === bestPriority && area > bestArea)) {
-              bestPriority = priority;
-              bestArea = area;
-              bestMesh = mesh;
-            }
-          }
-        }
-      }
-    });
-
-    if (bestMesh) {
-      const geometry = (bestMesh as THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>).geometry;
-      geometry.computeBoundingBox();
-      const bounds = geometry.boundingBox;
-      const size = new THREE.Vector3();
-
-      if (bounds) {
-        bounds.getSize(size);
-      }
-
-      const videoWidth = videoEl?.videoWidth ?? 0;
-      const videoHeight = videoEl?.videoHeight ?? 0;
-      const uv = geometry.attributes.uv;
-
-      if (videoWidth > 0 && videoHeight > 0 && uv && uv.count > 0) {
-        let uMin = Infinity;
-        let uMax = -Infinity;
-        let vMin = Infinity;
-        let vMax = -Infinity;
-
-        for (let i = 0; i < uv.count; i += 1) {
-          const u = uv.getX(i);
-          const v = uv.getY(i);
-          if (u < uMin) uMin = u;
-          if (u > uMax) uMax = u;
-          if (v < vMin) vMin = v;
-          if (v > vMax) vMax = v;
-        }
-
-        const uRange = uMax - uMin;
-        const vRange = vMax - vMin;
-        if (uRange > 0 && vRange > 0) {
-          const centerU = uMin + uRange / 2;
-          const centerV = vMin + vRange / 2;
-          const screenAspect = uRange / vRange;
-
-          const canvas = videoCanvasRef.current ?? document.createElement("canvas");
-          videoCanvasRef.current = canvas;
-          const canvasWidth = 2048;
-          const canvasHeight = Math.max(2, Math.round(canvasWidth / screenAspect));
-          canvas.width = canvasWidth;
-          canvas.height = canvasHeight;
-
-          let canvasTexture = videoCanvasTextureRef.current;
-          if (!canvasTexture) {
-            canvasTexture = new THREE.CanvasTexture(canvas);
-            canvasTexture.colorSpace = THREE.SRGBColorSpace;
-            canvasTexture.wrapS = THREE.ClampToEdgeWrapping;
-            canvasTexture.wrapT = THREE.ClampToEdgeWrapping;
-            canvasTexture.minFilter = THREE.LinearFilter;
-            canvasTexture.magFilter = THREE.LinearFilter;
-            videoCanvasTextureRef.current = canvasTexture;
-          }
-
-          canvasTexture.center.set(centerU, centerV);
-          canvasTexture.rotation = videoTexture.rotation;
-          const offsetU = -uMin / uRange + 0.05;
-          const offsetV = -vMin / vRange;
-          canvasTexture.repeat.set(1 / uRange, 1 / vRange);
-          canvasTexture.offset.set(offsetU, offsetV);
-
-          const ctx = canvas.getContext("2d");
-          if (ctx) {
-            const activeVideo = videoEl;
-            if (!activeVideo) {
-              return;
-            }
-
-            const renderFrame = () => {
-              ctx.setTransform(1, 0, 0, 1, 0, 0);
-              ctx.clearRect(0, 0, canvas.width, canvas.height);
-              ctx.fillStyle = "#000";
-              ctx.fillRect(0, 0, canvas.width, canvas.height);
-              ctx.imageSmoothingEnabled = true;
-
-              const videoAspect = videoWidth / videoHeight;
-              const padX = canvas.width * 0.18;
-              const innerW = Math.max(2, canvas.width - padX * 2);
-              const innerH = canvas.height;
-              let drawW = innerW;
-              let drawH = innerH;
-              if (videoAspect > screenAspect) {
-                drawW = innerW;
-                drawH = innerW / videoAspect;
-              } else {
-                drawH = innerH;
-                drawW = innerH * videoAspect;
-              }
-
-              const maxScale = Math.min(2, canvas.width / drawW, canvas.height / drawH);
-              drawW *= maxScale;
-              drawH *= maxScale;
-
-              const shiftX = canvas.width * 0.30;
-              let dx = padX - shiftX + (innerW - drawW) / 2;
-              let dy = (innerH - drawH) / 2;
-              dx = Math.max(0, Math.min(dx, canvas.width - drawW));
-              dy = Math.max(0, Math.min(dy, canvas.height - drawH));
-              ctx.save();
-              ctx.beginPath();
-              ctx.rect(0, 0, canvas.width, canvas.height);
-              ctx.clip();
-              ctx.drawImage(activeVideo, dx, dy, drawW, drawH);
-              ctx.restore();
-              canvasTexture.needsUpdate = true;
-              videoRafRef.current = requestAnimationFrame(renderFrame);
-            };
-
-            if (videoRafRef.current === null) {
-              videoRafRef.current = requestAnimationFrame(renderFrame);
-            }
-          }
-
-          (bestMesh as THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>).material = new THREE.MeshBasicMaterial({
-            map: canvasTexture,
-            toneMapped: false,
-          });
-        }
-      }
-
-      if (!videoCanvasTextureRef.current) {
-        (bestMesh as THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>).material = new THREE.MeshBasicMaterial({
-          map: videoTexture,
-          toneMapped: false,
-        });
-      }
-    }
-
-    if (!hasCalledOnLoaded.current) {
-      hasCalledOnLoaded.current = true;
-      setTimeout(() => onLoaded(), 100);
-    }
-  }, [scene, videoTexture, onLoaded]);
-
-  useEffect(() => () => {
-    if (videoRafRef.current !== null) {
-      cancelAnimationFrame(videoRafRef.current);
-      videoRafRef.current = null;
-    }
-  }, []);
-
-  const groupRef = useRef<THREE.Group>(null);
-  const globalMouse = useRef({ x: 0, y: 0 });
-  const baseRotation = useRef({ x: 0.1, y: -0.7 });
-
-  useEffect(() => {
-    const handlePointerMove = (e: PointerEvent) => {
-      globalMouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-      globalMouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
-    };
-
-    window.addEventListener("pointermove", handlePointerMove);
-    
-    if (groupRef.current) {
-      groupRef.current.rotation.x = 0.1;
-      groupRef.current.rotation.y = 0.5;
-      
-      gsap.to(groupRef.current.rotation, {
-        y: -0.7,
-        duration: 2.5,
-        ease: "power2.out",
-        delay: 0.2
-      });
-      
-      gsap.to(groupRef.current.position, {
-        y: 0.03,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: "sine.inOut"
-      });
-    }
-
-    return () => window.removeEventListener("pointermove", handlePointerMove);
-  }, []);
-
-  useFrame((state) => {
-    if (!groupRef.current) return;
-    
-    const targetX = baseRotation.current.x - (globalMouse.current.y * 0.15);
-    const targetY = baseRotation.current.y + (globalMouse.current.x * 0.2);
-    
-    groupRef.current.rotation.x = THREE.MathUtils.lerp(groupRef.current.rotation.x, targetX, 0.05);
-    groupRef.current.rotation.y = THREE.MathUtils.lerp(groupRef.current.rotation.y, targetY, 0.05);
-  });
-
-  return (
-    <group 
-      ref={groupRef}
-      scale={modelScale} 
-      onPointerOver={() => setHovered(true)}
-      onPointerOut={() => setHovered(false)}
-    >
-      <Center>
-        <primitive object={scene} />
-      </Center>
-    </group>
-  );
+  }
 }
 
-useGLTF.preload("/mac_edited.glb");
+const UNICORN_SDK_SRC =
+  "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.4/dist/unicornStudio.umd.js";
+
+const UNICORN_PROJECT_ID = "iqmKJVFD9SyCutTNbiGK";
 
 export function HeroScene() {
-  const [modelReady, setModelReady] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const [sceneScale, setSceneScale] = useState(1);
 
-  const handleLoaded = useCallback(() => setModelReady(true), []);
+  useEffect(() => {
+    let scriptEl: HTMLScriptElement | null = document.querySelector(
+      `script[src="${UNICORN_SDK_SRC}"]`,
+    );
 
-  const macModel = useMemo(() => (
-    <MacModel onLoaded={handleLoaded} />
-  ), [handleLoaded]);
+    const initScene = () => {
+      if (!window.UnicornStudio?.init) return;
+      window.UnicornStudio.init();
+    };
+
+    if (!scriptEl) {
+      scriptEl = document.createElement("script");
+      scriptEl.src = UNICORN_SDK_SRC;
+      scriptEl.async = true;
+      scriptEl.onload = initScene;
+      document.head.appendChild(scriptEl);
+    } else if (window.UnicornStudio) {
+      initScene();
+    } else {
+      scriptEl.addEventListener("load", initScene, { once: true });
+    }
+
+    return () => {
+      scriptEl?.removeEventListener("load", initScene);
+    };
+  }, []);
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const updateScale = () => {
+      const { width, height } = wrapper.getBoundingClientRect();
+      if (!width || !height) return;
+      const scale = Math.min(width / 1440, height / 900) * 1.5;
+      setSceneScale(scale);
+    };
+
+    updateScale();
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(wrapper);
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <div className="w-full h-full relative">
-      {/* 3D Canvas with Mac */}
-      <Canvas
-          camera={{ position: [0, 0.2, 4.5], fov: 45, near: 0.1, far: 100 }}
-          dpr={[1, 2]}
-          gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-        >
-          <OrbitControls
-            makeDefault
-            enablePan={false}
-            enableZoom={false}
-            enableDamping={true}
-            dampingFactor={0.05}
-            rotateSpeed={0.5}
-            minPolarAngle={Math.PI / 3}
-            maxPolarAngle={Math.PI / 1.5}
-          />
-        {/* Lighting */}
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[5, 5, 5]} intensity={1} />
-        <spotLight position={[0, 5, 3]} intensity={0.5} angle={0.5} penumbra={1} />
-        <pointLight position={[-3, 2, 2]} intensity={0.3} color="#0115DF" />
-        
-        {/* Mac Model */}
-        <Bounds fit observe={false} margin={1.2}>
-          {macModel}
-        </Bounds>
-        
-        {/* Soft blob shadow underneath Mac */}
-        <ContactShadows 
-          position={[0, -2.2, 0]} 
-          opacity={0.2} 
-          scale={5} 
-          blur={2} 
-          far={3}
-        />
-        
-        {/* Environment */}
-        <Environment preset="city" />
-      </Canvas>
+    <div
+      ref={wrapperRef}
+      className="relative w-full h-full flex items-center justify-center overflow-visible"
+    >
+      <div
+        data-us-project={UNICORN_PROJECT_ID}
+        className="unicorn-hero-scene"
+        style={{
+          width: 1440,
+          height: 900,
+          transform: `translate(-50%, -50%) scale(${sceneScale * 0.9})`,
+          transformOrigin: "center",
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+        }}
+      />
     </div>
   );
 }

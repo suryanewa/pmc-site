@@ -8,7 +8,7 @@ import {
 } from "motion/react";
 import type React from "react";
 import { useEffect, useMemo, useRef, useState } from "react";
-import TextType from '@/components/TextType';
+import { TextAnimate } from '@/components/ui/text-animate';
 
 const ANIMATION_DURATION = 15;
 const STAGGER_DELAY = 0.1;
@@ -99,21 +99,20 @@ export function LogoCloudAnimated({
           <div className="mb-4 font-bold text-2xl text-current lg:text-3xl">
             {title === "Our Network" ? (
               <>
-                <span className="text-[#0115DF]">/</span>
-                <TextType
-                  text="network"
-                  typingSpeed={50}
-                  initialDelay={100}
-                  loop={false}
-                  showCursor={true}
-                  hideCursorOnComplete={true}
-                  cursorCharacter="|"
+                <span className="text-[#41C9C1]">/</span>
+                <TextAnimate
+                  as="span"
+                  animation="slideLeft"
+                  by="character"
                   className="inline-block"
-                  startOnVisible={true}
-                />
+                >
+                  network
+                </TextAnimate>
               </>
             ) : (
-              title
+              <TextAnimate as="span" animation="slideLeft" by="character">
+                {title}
+              </TextAnimate>
             )}
           </div>
           {description && <p className="text-foreground/70 text-lg">{description}</p>}
@@ -154,9 +153,10 @@ export function LogoCloudAnimated({
                     transition={{ type: "spring", stiffness: SPRING_STIFFNESS }}
                     whileHover={{ scale: HOVER_SCALE, rotate: HOVER_ROTATE }}
                   >
-                    <img 
-                      src={logo.src} 
-                      alt={logo.name} 
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={logo.src}
+                      alt={logo.name}
                       className={`h-10 w-auto object-contain max-w-[120px] ${logo.className ?? ""}`}
                     />
                   </motion.div>
@@ -183,9 +183,10 @@ export function LogoCloudAnimated({
                     transition={{ type: "spring", stiffness: SPRING_STIFFNESS }}
                     whileHover={{ scale: HOVER_SCALE, rotate: HOVER_ROTATE }}
                   >
-                    <img 
-                      src={logo.src} 
-                      alt={logo.name} 
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={logo.src}
+                      alt={logo.name}
                       className={`h-10 w-auto object-contain max-w-[120px] ${logo.className ?? ""}`}
                     />
                   </motion.div>

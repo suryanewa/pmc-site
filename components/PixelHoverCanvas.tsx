@@ -141,7 +141,7 @@ export default function PixelHoverCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pixelsRef = useRef<Pixel[]>([]);
   const animationRef = useRef<ReturnType<typeof requestAnimationFrame> | null>(null);
-  const timePreviousRef = useRef(performance.now());
+  const timePreviousRef = useRef<number>(0);
 
   const initPixels = useCallback(() => {
     if (!containerRef.current || !canvasRef.current) return;
@@ -189,9 +189,12 @@ export default function PixelHoverCanvas({
     pixelsRef.current = pxs;
   }, [colors, gap, speed]);
 
-  const doAnimate = useCallback((action: PixelAction) => {
+  const doAnimate = useCallback(function doAnimate(action: PixelAction) {
     animationRef.current = requestAnimationFrame(() => doAnimate(action));
     const timeNow = performance.now();
+    if (timePreviousRef.current === 0) {
+      timePreviousRef.current = timeNow;
+    }
     const timePassed = timeNow - timePreviousRef.current;
     const timeInterval = 1000 / 60;
 
@@ -225,6 +228,7 @@ export default function PixelHoverCanvas({
     if (animationRef.current !== null) {
       cancelAnimationFrame(animationRef.current);
     }
+    timePreviousRef.current = performance.now();
     animationRef.current = requestAnimationFrame(() => doAnimate(action));
   }, [doAnimate]);
 

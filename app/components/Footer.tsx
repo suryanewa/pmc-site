@@ -1,107 +1,132 @@
-'use client';
-
+import Image from 'next/image';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
 
-// Consistent text-based logo - uses Gotham font
 function Logo() {
   return (
-    <div className="flex items-baseline">
-      <span className="text-xl font-medium tracking-tight text-[#041540]" style={{ fontFamily: 'var(--font-gotham-medium)' }}>
-        eeg
-      </span>
-      <span className="text-xl font-medium tracking-tight text-[#0115DF]" style={{ fontFamily: 'var(--font-gotham-medium)' }}>
-        /
-      </span>
+    <div className="flex items-center">
+      <Image
+        src="/pmc-logo.svg"
+        alt="PMC logo"
+        width={30}
+        height={14}
+        className="h-6 w-auto"
+      />
     </div>
   );
 }
 
-export function Footer({ variant = 'default' }: { variant?: 'default' | 'light' }) {
-  const currentYear = new Date().getFullYear();
-
+export function Footer() {
   return (
-    <footer className="bg-[#F7F3EE] border-t border-[#041540]/10 relative z-10">
+    <footer className="bg-black border-t border-[#3F3F3F]/60 relative z-10">
       <div className="max-w-[1400px] mx-auto px-6 md:px-16 lg:px-24 py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
-          {/* Programs */}
-          <div>
-            <h4 className="text-xs tracking-[0.15em] uppercase text-[#041540]/50 mb-4">Programs</h4>
-            <div className="flex flex-col gap-3">
+        <div className="grid gap-12 md:grid-cols-6">
+          <div className="space-y-4 md:col-span-2">
+            <Link href="/" className="inline-flex items-center hover:opacity-70 transition-opacity duration-300">
+              <Logo />
+            </Link>
+            <p className="text-sm leading-relaxed text-[#DBDBDB]/60 max-w-none">
+              NYU&apos;s fastest-growing club empowering students to succeed as Product Managers in any industry.
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-xs tracking-[0.15em] uppercase text-[#DBDBDB]/50">Events</h3>
+            <ul className="space-y-3 text-sm">
               {[
-                { name: 'startup', color: '#AD1DE0' },
-                { name: 'investing', color: '#2DB67D' },
-                { name: 'eir', color: '#F0C75B' }
-              ].map((program) => (
-                <Link 
-                  key={program.name}
-                  href={`/programs/${program.name}`} 
-                  className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block"
-                >
-                  <span style={{ color: program.color }}>/</span>{program.name}
-                </Link>
+                { label: 'Speakers', href: '/events/speakers' },
+                { label: 'Office Visits', href: '/events/office-visits' },
+                { label: 'Case Comp', href: '/events/case-comp' },
+              ].map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-[#DBDBDB]/70 hover:text-[#DBDBDB] hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
-          {/* Community */}
-          <div>
-            <h4 className="text-xs tracking-[0.15em] uppercase text-[#041540]/50 mb-4">Community</h4>
-            <div className="flex flex-col gap-3">
-              <Link href="/people" className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block">
-                People
-              </Link>
-              <Link href="/people#leadership-spring-26" className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block">
-                Leadership
-              </Link>
-            </div>
+          <div className="space-y-4">
+            <h3 className="text-xs tracking-[0.15em] uppercase text-[#DBDBDB]/50">Programs</h3>
+            <ul className="space-y-3 text-sm">
+              {[
+                { label: 'Product Team', href: '/programs/product-team' },
+                { label: 'Mentorship', href: '/programs/mentorship' },
+                { label: 'Grad Bootcamp', href: '/programs/grad-bootcamp' },
+              ].map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-[#DBDBDB]/70 hover:text-[#DBDBDB] hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* Connect */}
-          <div>
-            <h4 className="text-xs tracking-[0.15em] uppercase text-[#041540]/50 mb-4">Connect</h4>
-            <div className="flex flex-col gap-3">
-              <a href="https://www.linkedin.com/company/nyueeg/" target="_blank" rel="noopener noreferrer" className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block">
-                LinkedIn
-              </a>
-              <a href="https://x.com/nyueeg" target="_blank" rel="noopener noreferrer" className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block">
-                X / Twitter
-              </a>
-              <a href="https://www.instagram.com/nyu.eeg/" target="_blank" rel="noopener noreferrer" className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block">
-                Instagram
-              </a>
-            </div>
+          <div className="space-y-4">
+            <h3 className="text-xs tracking-[0.15em] uppercase text-[#DBDBDB]/50">Team</h3>
+            <ul className="space-y-3 text-sm">
+              {[
+                { label: 'E-Board', href: '/people/e-board' },
+                { label: 'Leads', href: '/people/leads' },
+                { label: 'Past Teams', href: '/people/past-teams' },
+              ].map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="text-[#DBDBDB]/70 hover:text-[#DBDBDB] hover:translate-x-1 transition-all duration-300 inline-block"
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* Contact */}
-          <div>
-            <h4 className="text-xs tracking-[0.15em] uppercase text-[#041540]/50 mb-4">Contact</h4>
-            <div className="flex flex-col gap-3">
-              <a href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform" target="_blank" rel="noopener noreferrer" className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block">
-                Get Coffee
-              </a>
-              <a href="mailto:eeg@stern.nyu.edu" className="text-sm text-[#041540]/70 hover:text-[#041540] hover:translate-x-1 transition-all duration-300 inline-block">
-                Email Us
-              </a>
-            </div>
+          <div className="space-y-4">
+            <h3 className="text-xs tracking-[0.15em] uppercase text-[#DBDBDB]/50">Connect</h3>
+            <ul className="space-y-3 text-sm">
+              <li>
+                <a
+                  href="mailto:pmc@stern.nyu.edu"
+                  className="text-[#DBDBDB]/70 hover:text-[#DBDBDB] hover:translate-x-1 transition-all duration-300 inline-block"
+                >
+                  Email
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[#DBDBDB]/70 hover:text-[#DBDBDB] hover:translate-x-1 transition-all duration-300 inline-block"
+                >
+                  Coffee Chat
+                </a>
+              </li>
+              <li>
+                <Link
+                  href="/#join-us"
+                  className="text-[#DBDBDB]/70 hover:text-[#DBDBDB] hover:translate-x-1 transition-all duration-300 inline-block"
+                >
+                  Newsletter
+                </Link>
+              </li>
+            </ul>
           </div>
         </div>
 
-        {/* Bottom row */}
-        <motion.div 
-          className="flex flex-col md:flex-row justify-between items-start md:items-center pt-8 border-t border-[#041540]/10 gap-4"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <Link href="/" className="hover:opacity-70 transition-opacity duration-300">
-            <Logo />
-          </Link>
-          <p className="text-xs text-[#041540]/40">
-            &copy; {currentYear} Entrepreneurship & Emerging Growth. NYU Stern.
-          </p>
-        </motion.div>
+        <div className="h-px bg-[#3F3F3F]/60 my-10" />
+
+        <div className="text-center text-xs text-[#DBDBDB]/40">
+          &copy; 2026 Product Management Club
+        </div>
       </div>
     </footer>
   );

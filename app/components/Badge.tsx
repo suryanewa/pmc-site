@@ -1,3 +1,6 @@
+import Image from "next/image";
+import type { CSSProperties } from "react";
+
 type BadgeVariant = 'purple' | 'green' | 'orange';
 
 interface BadgeProps {
@@ -6,14 +9,14 @@ interface BadgeProps {
   arrowPosition?: 'top' | 'bottom' | 'left' | 'right';
   arrowRotation?: number;
   className?: string;
-  style?: React.CSSProperties;
+  style?: CSSProperties;
   variant?: BadgeVariant;
 }
 
 const variantConfig: Record<BadgeVariant, { color: string; pointer: string }> = {
-  purple: { color: '#AD1DE0', pointer: '/pointer.svg' },
-  green: { color: '#2DB67D', pointer: '/pointer-green.svg' },
-  orange: { color: '#ECB22F', pointer: '/pointer-orange.svg' },
+  purple: { color: '#6966E3', pointer: '/pointer.svg' },
+  green: { color: '#5076DD', pointer: '/pointer.svg' },
+  orange: { color: '#41C9C1', pointer: '/pointer.svg' },
 };
 
 export function Badge({
@@ -44,9 +47,11 @@ export function Badge({
           {children}
         </span>
 
-        <img
+        <Image
           src={pointer}
           alt=""
+          width={32}
+          height={32}
           className={`absolute ${positionClasses[arrowPosition]}`}
           style={{ transform: `rotate(${arrowRotation}deg)` }}
         />

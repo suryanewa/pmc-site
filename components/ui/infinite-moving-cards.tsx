@@ -70,30 +70,33 @@ export const InfiniteMovingCards = ({
   }, [getDirection, getSpeed]);
 
   useEffect(() => {
-    addAnimation();
+    const raf = requestAnimationFrame(addAnimation);
+    return () => cancelAnimationFrame(raf);
   }, [addAnimation]);
 
   return (
     <div
       ref={containerRef}
       className={cn(
-        "scroller relative z-20 max-w-5xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]",
+        "scroller relative z-20 max-w-5xl overflow-hidden [mask-image:linear-gradient(to_right,transparent,#DBDBDB_10%,#DBDBDB_90%,transparent)]",
         className
       )}
     >
       <ul
         ref={scrollerRef}
         className={cn(
-          "flex min-w-full shrink-0 gap-12 py-2 w-max flex-nowrap",
+          "flex min-w-full shrink-0 gap-[var(--scroll-gap)] py-2 w-max flex-nowrap",
           start && "animate-scroll",
           pauseOnHover && "hover:[animation-play-state:paused]"
         )}
+        style={{ "--scroll-gap": "3rem" } as React.CSSProperties}
       >
         {items.map((item, idx) => (
           <li
             className="flex items-center justify-center h-[40px] relative shrink-0"
             key={item.name + idx}
           >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={item.image}
               alt={item.name}

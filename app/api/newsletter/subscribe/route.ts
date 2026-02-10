@@ -7,7 +7,7 @@ const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, source } = body;
+    const { email, firstName, lastName, source } = body;
 
     // Validate email exists
     if (!email || typeof email !== 'string') {
@@ -38,6 +38,8 @@ export async function POST(request: NextRequest) {
       .upsert(
         {
           email: normalizedEmail,
+          first_name: firstName?.trim() || null,
+          last_name: lastName?.trim() || null,
           source: source || null,
         },
         {
@@ -60,9 +62,13 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error('Newsletter subscribe error:', error);
-    return NextResponse.json(
-      { error: 'An unexpected error occurred' },
-      { status: 500 }
-    );
+
+    // Missing Supabase env vars (common in local/dev)
+    const message =
+      error instanceof Error && error.message.includes('Missing Supabase')
+        ? 'Newsletter service is not configured. Please add Supabase environment variables.'
+        : 'An unexpected error occurred';
+
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

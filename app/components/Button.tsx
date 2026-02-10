@@ -1,9 +1,7 @@
-import Link from 'next/link';
-import { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
-import PixelFillCanvas from './PixelFillCanvas';
+"use client";
 
-const MotionLink = motion(Link);
+import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 interface ButtonProps {
   children: React.ReactNode;
@@ -17,6 +15,7 @@ interface ButtonProps {
   textColor?: string;
   href?: string;
   rippleColor?: string;
+  animated?: boolean;
 }
 
 export function Button({
@@ -31,103 +30,79 @@ export function Button({
   textColor,
   href,
   rippleColor,
+  animated = true,
 }: ButtonProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0.5, y: 0.5 });
-  const buttonRef = useRef<HTMLElement>(null);
-
+  void rippleColor;
   const sizeStyles = {
-    default: 'h-[46px] text-base',
-    lg: 'h-[55px] text-lg',
+    default: {
+      outer: 'h-12',
+      inner: 'px-3 py-1 text-sm',
+    },
+    lg: {
+      outer: 'h-14',
+      inner: 'px-4 py-2 text-base',
+    },
   };
 
-  const isCustom = fillColor || borderColor;
-  const isOutlined = borderColor && !fillColor;
+  const baseStyles =
+    'group relative inline-flex overflow-hidden rounded-full !p-[1.5px] !border-0 focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 transition-transform duration-200 ease-out hover:scale-[1.04] active:scale-[0.97]';
 
-  const baseStyles = 'relative overflow-hidden font-medium px-8 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed group cursor-pointer transition-transform';
+  const disabledStyles = disabled ? 'opacity-50 pointer-events-none' : '';
 
-  const inlineStyles: React.CSSProperties = {};
+  const commonClassName = cn(
+    className,
+    baseStyles,
+    sizeStyles[size].outer,
+    disabledStyles
+  );
 
-  if (isCustom) {
-    if (isOutlined) {
-      inlineStyles.backgroundColor = 'transparent';
-      inlineStyles.borderWidth = '2px';
-      inlineStyles.borderStyle = 'solid';
-      inlineStyles.borderColor = borderColor;
-      inlineStyles.color = textColor || borderColor;
-    } else {
-      inlineStyles.backgroundColor = fillColor;
-      inlineStyles.color = textColor || 'white';
-      if (borderColor) {
-        inlineStyles.borderWidth = '2px';
-        inlineStyles.borderStyle = 'solid';
-        inlineStyles.borderColor = borderColor;
-      }
-    }
-  }
+  const innerClassName = cn(
+    'inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full font-medium text-white backdrop-blur-3xl transition-[background-color,box-shadow] duration-200 ease-out group-hover:shadow-[inset_0_0_20px_rgba(65,201,193,0.15)] group-active:bg-white/[0.06]',
+    !fillColor && 'bg-slate-950',
+    sizeStyles[size].inner
+  );
 
-  const defaultStyles = !isCustom
-    ? 'bg-[#041540] text-white hover:bg-[#0a2a6e] focus:ring-[#0115DF]'
-    : '';
+  const innerStyle = {
+    backgroundColor: fillColor || undefined,
+    color: textColor || undefined,
+  } as React.CSSProperties;
 
-  const handleMouseEnter = (e: React.MouseEvent) => {
-    if (buttonRef.current) {
-      const rect = buttonRef.current.getBoundingClientRect();
-      setMousePos({
-        x: (e.clientX - rect.left) / rect.width,
-        y: (e.clientY - rect.top) / rect.height,
-      });
-    }
-    setIsHovered(true);
-  };
+  const borderStyle = {
+    backgroundColor: borderColor || fillColor || '#41C9C1',
+  } as React.CSSProperties;
 
   const content = (
     <>
-      <PixelFillCanvas
-        active={isHovered}
-        origin={mousePos}
-        color={rippleColor || "#0115DF"}
-        gap={12}
-        speed={0.4}
-        className="z-0"
-      />
-      <span className={`relative z-10 transition-colors duration-300 ${isHovered ? 'text-white' : ''}`}>
+      {animated ? (
+        <span
+          className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#41C9C1_0%,#5076DD_50%,#41C9C1_100%)]"
+          aria-hidden="true"
+        />
+      ) : (
+        <span className="absolute inset-0" style={borderStyle} aria-hidden="true" />
+      )}
+      <span className={cn(innerClassName, "relative z-10")} style={innerStyle}>
         {children}
       </span>
     </>
   );
 
-  const commonProps = {
-    className: `${baseStyles} ${sizeStyles[size]} ${defaultStyles} ${className}`,
-    style: isCustom ? inlineStyles : undefined,
-    onMouseEnter: handleMouseEnter,
-    onMouseLeave: () => setIsHovered(false),
-    whileHover: { scale: 1.02 },
-    whileTap: { scale: 0.98 },
-  };
-
   if (href) {
     return (
-      <MotionLink 
-        href={href} 
-        onClick={onClick}
-        {...(commonProps as any)}
-        ref={buttonRef as any}
-      >
+      <Link href={href} onClick={onClick} className={commonClassName}>
         {content}
-      </MotionLink>
+      </Link>
     );
   }
 
   return (
-    <motion.button
-      {...commonProps}
+    <button
+      className={commonClassName}
       type={type}
       onClick={onClick}
       disabled={disabled}
-      ref={buttonRef as any}
     >
       {content}
-    </motion.button>
+    </button>
   );
 }

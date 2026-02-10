@@ -1,35 +1,95 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { useState, FormEvent } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef, FormEvent } from 'react';
+import { toast } from 'sonner';
+import { ArrowRight } from 'lucide-react';
 
 interface NewsletterProps {
   variant?: 'light' | 'dark';
-  source?: string; // Track where the signup came from (e.g., 'footer', 'hero', 'program-page')
+  source?: string;
+  accentColor?: string;
 }
 
 type SubmitStatus = 'idle' | 'loading' | 'success' | 'error';
 
-export function Newsletter({ variant = 'light', source = 'website' }: NewsletterProps) {
-  const isLight = variant === 'light';
-  const [isFocused, setIsFocused] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+const DEFAULT_ACCENT = '#41C9C1';
+const UNICORN_SDK_SRC =
+  'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js';
+const UNICORN_PROJECT_ID = 'Tad6hhK5mrDEPGmXIum8';
+
+declare global {
+  interface Window {
+    UnicornStudio?: {
+      init?: () => void;
+      isInitialized?: boolean;
+    };
+  }
+}
+
+export function Newsletter({ source = 'website', accentColor }: NewsletterProps) {
+  const accent = accentColor ?? DEFAULT_ACCENT;
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<SubmitStatus>('idle');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [isFocused, setIsFocused] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [sceneScale, setSceneScale] = useState(1);
+
+  useEffect(() => {
+    let scriptEl: HTMLScriptElement | null = document.querySelector(
+      `script[src="${UNICORN_SDK_SRC}"]`,
+    );
+
+    const initScene = () => {
+      if (!window.UnicornStudio?.init) return;
+      window.UnicornStudio.init();
+    };
+
+    if (!scriptEl) {
+      scriptEl = document.createElement('script');
+      scriptEl.src = UNICORN_SDK_SRC;
+      scriptEl.async = true;
+      scriptEl.onload = initScene;
+      document.head.appendChild(scriptEl);
+    } else if (window.UnicornStudio) {
+      initScene();
+    } else {
+      scriptEl.addEventListener('load', initScene, { once: true });
+    }
+
+    return () => {
+      scriptEl?.removeEventListener('load', initScene);
+    };
+  }, []);
+
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const updateScale = () => {
+      const { width, height } = wrapper.getBoundingClientRect();
+      if (!width || !height) return;
+      const scaleX = width / 1440;
+      const scaleY = height / 900;
+      const scale = Math.max(scaleX, scaleY);
+      setSceneScale(scale);
+    };
+
+    updateScale();
+    const observer = new ResizeObserver(updateScale);
+    observer.observe(wrapper);
+
+    return () => observer.disconnect();
+  }, []);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    if (!email.trim()) {
-      setStatus('error');
-      setErrorMessage('Please enter your email');
+    if (!email.trim() || !email.includes('@')) {
+      toast.error('Please enter a valid email address');
       return;
     }
 
     setStatus('loading');
-    setErrorMessage('');
-
     try {
       const response = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
@@ -37,94 +97,116 @@ export function Newsletter({ variant = 'light', source = 'website' }: Newsletter
         body: JSON.stringify({ email, source }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setStatus('error');
-        setErrorMessage(data.error || 'Failed to subscribe');
-        return;
-      }
+      if (!response.ok) throw new Error();
 
       setStatus('success');
       setEmail('');
+      toast.success('Welcome to the community!');
+      setTimeout(() => setStatus('idle'), 5000);
     } catch {
       setStatus('error');
-      setErrorMessage('Something went wrong. Please try again.');
+      toast.error('Something went wrong. Please try again.');
+      setTimeout(() => setStatus('idle'), 3000);
     }
   };
 
-  // Show success message
-  if (status === 'success') {
-    return (
-      <div className={`text-sm ${isLight ? 'text-[#041540]' : 'text-white'}`}>
-        Thanks for subscribing! We&apos;ll be in touch.
-      </div>
-    );
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-3">
-      <div className="flex flex-col sm:flex-row gap-3">
-        <motion.div
-          className="relative"
-          animate={{ scale: isFocused ? 1.01 : 1 }}
-          transition={{ duration: 0.2 }}
-        >
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setIsFocused(false)}
-            disabled={status === 'loading'}
-            className={`h-12 w-full sm:w-[280px] px-4 text-sm border transition-all duration-300 focus:outline-none disabled:opacity-50 ${
-              isLight
-                ? 'border-[#041540]/20 bg-white text-[#041540] placeholder:text-[#041540]/40 focus:border-[#041540]'
-                : 'border-white/20 bg-white/5 text-white placeholder:text-white/40 focus:border-white'
-            }`}
-          />
-          {/* Focus underline animation */}
-          <motion.div
-            className={`absolute bottom-0 left-0 h-[2px] ${isLight ? 'bg-[#0115DF]' : 'bg-white'}`}
-            initial={{ width: 0 }}
-            animate={{ width: isFocused ? '100%' : 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          />
-        </motion.div>
-
-        <motion.button
-          type="submit"
-          disabled={status === 'loading'}
-          className={`h-12 px-8 text-sm font-medium transition-all duration-300 relative overflow-hidden disabled:opacity-50 ${
-            isLight
-              ? 'bg-[#041540] text-white'
-              : 'bg-white text-[#041540]'
-          }`}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          whileHover={{ scale: status === 'loading' ? 1 : 1.02 }}
-          whileTap={{ scale: status === 'loading' ? 1 : 0.98 }}
-        >
-          {/* Hover background animation */}
-          <motion.div
-            className={`absolute inset-0 ${isLight ? 'bg-[#0115DF]' : 'bg-white/90'}`}
-            initial={{ x: '-100%' }}
-            animate={{ x: isHovered && status !== 'loading' ? 0 : '-100%' }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          />
-          <span className="relative z-10">
-            {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
-          </span>
-        </motion.button>
+    <div className="relative w-full max-w-7xl mx-auto py-48 px-8">
+      <div
+        className="absolute -inset-x-96 -inset-y-32 z-0 overflow-hidden rounded-[2rem]"
+        ref={wrapperRef}
+      >
+        <div
+          data-us-project={UNICORN_PROJECT_ID}
+          className="unicorn-newsletter-scene"
+          style={{
+            width: 1440,
+            height: 900,
+            transform: `translate(-50%, -50%) scale(${sceneScale})`,
+            transformOrigin: 'center',
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+          }}
+        />
       </div>
 
-      {/* Error message */}
-      {status === 'error' && errorMessage && (
-        <p className={`text-sm ${isLight ? 'text-red-600' : 'text-red-400'}`}>
-          {errorMessage}
-        </p>
-      )}
-    </form>
+      <div className="relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto">
+        <motion.h2
+          className="text-4xl md:text-5xl font-medium text-white mb-4 tracking-tight"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+        >
+          Subscribe to our newsletter
+        </motion.h2>
+
+        <motion.p
+          className="text-[#DBDBDB]/60 text-base md:text-lg mb-12 max-w-lg font-light"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1 }}
+        >
+          Stay updated with the latest news, events, and resources.
+        </motion.p>
+
+        <form onSubmit={handleSubmit} className="relative w-full max-w-xl group/form">
+          <div className="relative rounded-2xl p-[1.5px] overflow-hidden">
+            <span
+              className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#41C9C1_0%,#5076DD_50%,#41C9C1_100%)]"
+              aria-hidden="true"
+            />
+            <div
+              className={`
+              relative flex items-center rounded-2xl bg-black/80 backdrop-blur-md overflow-hidden
+              ${isFocused ? 'shadow-[0_0_30px_rgba(65,201,193,0.2)]' : ''}
+            `}
+            >
+            <input
+              type="email"
+              placeholder="Enter your email..."
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              disabled={status === 'loading'}
+              className="flex-1 bg-transparent px-8 py-5 text-white placeholder:text-white/20 outline-none w-full text-lg"
+            />
+
+            <div className="h-8 w-px bg-white/10" />
+
+            <button
+              type="submit"
+              disabled={status === 'loading'}
+              className="relative flex items-center gap-3 px-10 py-5 bg-transparent group/btn transition-all"
+            >
+              <div className="absolute inset-0 bg-[#41C9C1]/0 group-hover/btn:bg-[#41C9C1]/5 transition-colors duration-300" />
+
+              <span className="relative z-10 text-white font-medium group-hover/btn:text-[#41C9C1] transition-colors text-lg">
+                {status === 'loading' ? '...' : 'Subscribe'}
+              </span>
+              <ArrowRight
+                className={`relative z-10 size-5 text-white group-hover/btn:text-[#41C9C1] transition-all duration-300 ${status === 'loading' ? 'opacity-0' : 'group-hover/btn:translate-x-1'}`}
+              />
+            </button>
+            </div>
+          </div>
+        </form>
+
+        <AnimatePresence>
+          {status === 'success' && (
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="absolute -bottom-16 text-[#41C9C1] text-sm"
+            >
+              Successfully subscribed!
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
   );
 }

@@ -45,7 +45,7 @@ export const BentoGridItem = ({
       whileHover={{ scale: 1.02, y: -5 }}
       transition={{ duration: 0.2 }}
       className={cn(
-        "row-span-1 rounded-3xl group/bento hover:shadow-xl transition duration-200 shadow-input p-6 bg-white border border-transparent justify-between flex flex-col space-y-4 overflow-hidden relative",
+        "row-span-1 rounded-3xl group/bento hover:shadow-xl transition duration-200 shadow-input p-6 bg-[#3F3F3F] border border-transparent justify-between flex flex-col space-y-4 overflow-hidden relative",
         className
       )}
       style={{
@@ -67,18 +67,18 @@ export const BentoGridItem = ({
         {icon && (
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
-            style={{ backgroundColor: accentColor ? `${accentColor}20` : '#f3f4f6' }}
+            style={{ backgroundColor: accentColor ? `${accentColor}20` : 'rgba(63, 63, 63, 0.6)' }}
           >
             {icon}
           </div>
         )}
         <div
           className="font-bold text-xl mb-2 tracking-tight"
-          style={{ color: accentColor || '#041540' }}
+          style={{ color: accentColor || '#DBDBDB' }}
         >
           {title}
         </div>
-        <div className="text-sm text-neutral-600 leading-relaxed">
+        <div className="text-sm text-[#DBDBDB]/70 leading-relaxed">
           {description}
         </div>
       </div>

@@ -1,7 +1,8 @@
 'use client';
 
-import { motion, HTMLMotionProps } from 'framer-motion';
-import { ReactNode } from 'react';
+import { motion, HTMLMotionProps, useReducedMotion } from 'framer-motion';
+import type { HTMLAttributes, ReactNode } from 'react';
+import { useIsMobile } from '../../hooks/use-is-mobile';
 
 interface AnimationProps extends HTMLMotionProps<'div'> {
   children: ReactNode;
@@ -9,8 +10,24 @@ interface AnimationProps extends HTMLMotionProps<'div'> {
   delay?: number;
 }
 
+function useShouldReduceMotion() {
+  const isMobile = useIsMobile();
+  const reducedMotion = useReducedMotion();
+  return isMobile || reducedMotion;
+}
+
 // Fade in from below
 export function FadeUp({ children, className = '', delay = 0, ...props }: AnimationProps) {
+  const shouldReduceMotion = useShouldReduceMotion();
+  if (shouldReduceMotion) {
+    const divProps = props as HTMLAttributes<HTMLDivElement>;
+    return (
+      <div className={className} {...divProps}>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -27,6 +44,16 @@ export function FadeUp({ children, className = '', delay = 0, ...props }: Animat
 
 // Fade in from left
 export function FadeLeft({ children, className = '', delay = 0, ...props }: AnimationProps) {
+  const shouldReduceMotion = useShouldReduceMotion();
+  if (shouldReduceMotion) {
+    const divProps = props as HTMLAttributes<HTMLDivElement>;
+    return (
+      <div className={className} {...divProps}>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, x: -60 }}
@@ -43,6 +70,16 @@ export function FadeLeft({ children, className = '', delay = 0, ...props }: Anim
 
 // Fade in from right
 export function FadeRight({ children, className = '', delay = 0, ...props }: AnimationProps) {
+  const shouldReduceMotion = useShouldReduceMotion();
+  if (shouldReduceMotion) {
+    const divProps = props as HTMLAttributes<HTMLDivElement>;
+    return (
+      <div className={className} {...divProps}>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 60 }}
@@ -59,6 +96,16 @@ export function FadeRight({ children, className = '', delay = 0, ...props }: Ani
 
 // Simple fade in
 export function FadeIn({ children, className = '', delay = 0, ...props }: AnimationProps) {
+  const shouldReduceMotion = useShouldReduceMotion();
+  if (shouldReduceMotion) {
+    const divProps = props as HTMLAttributes<HTMLDivElement>;
+    return (
+      <div className={className} {...divProps}>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -75,6 +122,16 @@ export function FadeIn({ children, className = '', delay = 0, ...props }: Animat
 
 // Scale up fade in
 export function ScaleUp({ children, className = '', delay = 0, ...props }: AnimationProps) {
+  const shouldReduceMotion = useShouldReduceMotion();
+  if (shouldReduceMotion) {
+    const divProps = props as HTMLAttributes<HTMLDivElement>;
+    return (
+      <div className={className} {...divProps}>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.9 }}
@@ -97,6 +154,16 @@ interface StaggerProps extends HTMLMotionProps<'div'> {
 }
 
 export function StaggerContainer({ children, className = '', staggerDelay = 0.1, ...props }: StaggerProps) {
+  const shouldReduceMotion = useShouldReduceMotion();
+  if (shouldReduceMotion) {
+    const divProps = props as HTMLAttributes<HTMLDivElement>;
+    return (
+      <div className={className} {...divProps}>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <motion.div
       initial="hidden"
@@ -120,6 +187,16 @@ export function StaggerContainer({ children, className = '', staggerDelay = 0.1,
 
 // Child item for stagger container
 export function StaggerItem({ children, className = '', ...props }: Omit<AnimationProps, 'delay'>) {
+  const shouldReduceMotion = useShouldReduceMotion();
+  if (shouldReduceMotion) {
+    const divProps = props as HTMLAttributes<HTMLDivElement>;
+    return (
+      <div className={className} {...divProps}>
+        {children}
+      </div>
+    );
+  }
+
   return (
     <motion.div
       variants={{

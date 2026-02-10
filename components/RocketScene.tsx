@@ -1,32 +1,98 @@
 "use client";
 
-import { useRef, Suspense, useMemo } from "react";
+import { useRef, Suspense, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 
 interface RocketProps {
   isHovered: boolean;
+  isActive: boolean;
 }
 
-function Rocket({ isHovered }: RocketProps) {
+function Rocket({ isHovered, isActive }: RocketProps) {
   const { scene } = useGLTF("/models/rocket.gltf");
   const rocketRef = useRef<THREE.Group>(null);
   const materialsRef = useRef<THREE.MeshStandardMaterial[]>([]);
   const currentSpeedRef = useRef(0.001);
   const currentBounceRef = useRef(10);
+  const isHoveredRef = useRef(isHovered);
+  const isActiveRef = useRef(isActive);
+  const lastHoverRef = useRef(isHovered);
+  const idleStartRef = useRef<number | null>(null);
+  const basePositionRef = useRef<THREE.Vector3 | null>(null);
+  const introStartRef = useRef<number | null>(null);
+  const hasEnteredRef = useRef(false);
+  const introDuration = 5.5;
+
+  useEffect(() => {
+    if (!isActive) return;
+    introStartRef.current = null;
+    hasEnteredRef.current = false;
+  }, [isActive]);
+
+  useEffect(() => {
+    isHoveredRef.current = isHovered;
+  }, [isHovered]);
+
+  useEffect(() => {
+    isActiveRef.current = isActive;
+  }, [isActive]);
 
   useFrame((state) => {
     if (rocketRef.current) {
-      const targetSpeed = isHovered ? 0.1 : 0.005;
-      const targetBounce = isHovered ? 40 : 0;
-      
-      currentSpeedRef.current = THREE.MathUtils.lerp(currentSpeedRef.current, targetSpeed, 0.05);
-      currentBounceRef.current = THREE.MathUtils.lerp(currentBounceRef.current, targetBounce, 0.05);
-      
-      rocketRef.current.rotation.y += currentSpeedRef.current;
-      const t = (state.clock.elapsedTime % 2) / 2;
-      rocketRef.current.position.y = currentBounceRef.current * Math.sin(Math.PI * 2 * t);
+      if (isActiveRef.current && !hasEnteredRef.current) {
+        if (introStartRef.current === null) {
+          introStartRef.current = state.clock.elapsedTime;
+        }
+        const progress = Math.min(
+          (state.clock.elapsedTime - introStartRef.current) / introDuration,
+          1
+        );
+        const eased = 1 - Math.pow(1 - progress, 3);
+        const wobble = 1 - eased;
+        const x = THREE.MathUtils.lerp(-240, 0, eased) + Math.sin(eased * Math.PI * 6) * 40 * wobble;
+        const y = THREE.MathUtils.lerp(-180, 0, eased) + Math.cos(eased * Math.PI * 4) * 25 * wobble;
+        const z = THREE.MathUtils.lerp(200, 0, eased);
+
+        rocketRef.current.position.set(x, y, z);
+        rocketRef.current.rotation.z = Math.sin(eased * Math.PI * 6) * 0.2 * wobble;
+
+        if (progress >= 1) {
+          hasEnteredRef.current = true;
+          idleStartRef.current = state.clock.elapsedTime;
+          basePositionRef.current = rocketRef.current.position.clone();
+          const hoveredAtFinish = isHoveredRef.current;
+          currentSpeedRef.current = hoveredAtFinish ? 0.1 : 0.005;
+          currentBounceRef.current = hoveredAtFinish ? 40 : 0;
+          lastHoverRef.current = hoveredAtFinish;
+        }
+      } else if (!hasEnteredRef.current) {
+        rocketRef.current.position.set(-240, -180, 200);
+      }
+
+      if (hasEnteredRef.current) {
+        const isHoveredNow = isHoveredRef.current;
+        const targetSpeed = isHoveredNow ? 0.1 : 0.005;
+        const targetBounce = isHoveredNow ? 40 : 0;
+        const hoverChanged = isHoveredNow !== lastHoverRef.current;
+        lastHoverRef.current = isHoveredNow;
+
+        if (hoverChanged && isHoveredNow) {
+          currentSpeedRef.current = targetSpeed;
+          currentBounceRef.current = targetBounce;
+        } else {
+          const lerpFactor = isHoveredNow ? 0.12 : 0.06;
+          currentSpeedRef.current = THREE.MathUtils.lerp(currentSpeedRef.current, targetSpeed, lerpFactor);
+          currentBounceRef.current = THREE.MathUtils.lerp(currentBounceRef.current, targetBounce, lerpFactor);
+        }
+
+        rocketRef.current.rotation.y += currentSpeedRef.current;
+        const idleStart = idleStartRef.current ?? state.clock.elapsedTime;
+        const t = ((state.clock.elapsedTime - idleStart) % 2) / 2;
+        const baseY = basePositionRef.current?.y ?? 0;
+        rocketRef.current.position.y = baseY + currentBounceRef.current * Math.sin(Math.PI * 2 * t);
+      }
     }
 
     materialsRef.current.forEach((material) => {
@@ -39,14 +105,14 @@ function Rocket({ isHovered }: RocketProps) {
     });
   });
 
-  const clonedScene = useMemo(() => {
+  const { clonedScene, materials } = useMemo(() => {
     const cloned = scene.clone();
-    materialsRef.current = [];
+    const foundMaterials: THREE.MeshStandardMaterial[] = [];
     
     cloned.traverse((child) => {
       if (child instanceof THREE.Mesh && child.material) {
-        const materials = Array.isArray(child.material) ? child.material : [child.material];
-        materials.forEach((mat) => {
+        const childMaterials = Array.isArray(child.material) ? child.material : [child.material];
+        childMaterials.forEach((mat) => {
           const material = mat as THREE.MeshStandardMaterial;
           const matName = material.name || '';
           
@@ -57,14 +123,21 @@ function Rocket({ isHovered }: RocketProps) {
           }
           
           if (matName === 'Material.001' || matName === 'Material.002' || matName === 'Material.003') {
-            materialsRef.current.push(material);
+            foundMaterials.push(material);
           }
         });
       }
     });
     
-    return cloned;
+    return { clonedScene: cloned, materials: foundMaterials };
   }, [scene]);
+
+  useEffect(() => {
+    materialsRef.current = materials;
+    return () => {
+      materialsRef.current = [];
+    };
+  }, [materials]);
 
   return (
     <primitive
@@ -127,12 +200,22 @@ function Lights({ isHovered }: LightsProps) {
 interface RocketSceneProps {
   className?: string;
   isHovered?: boolean;
+  isActive?: boolean;
 }
 
-export default function RocketScene({ className = "", isHovered = false }: RocketSceneProps) {
+export default function RocketScene({ className = "", isHovered = false, isActive = false }: RocketSceneProps) {
+  const fadeDuration = 5.5;
+
   return (
     <div className={`absolute inset-0 overflow-hidden ${className}`}>
-      <div className="absolute inset-0" style={{ transform: 'translateY(40%)' }}>
+      <div
+        className="absolute inset-0"
+        style={{
+          transform: 'translateY(40%)',
+          opacity: isActive ? 1 : 0,
+          animation: isActive ? `rocket-fade ${fadeDuration}s ease-out both` : 'none',
+        }}
+      >
         <Canvas
           camera={{
             fov: 60,
@@ -146,10 +229,26 @@ export default function RocketScene({ className = "", isHovered = false }: Rocke
         >
           <Lights isHovered={isHovered} />
           <Suspense fallback={null}>
-            <Rocket isHovered={isHovered} />
+            <Rocket isHovered={isHovered} isActive={isActive} />
           </Suspense>
         </Canvas>
       </div>
+
+      <style jsx>{`
+        @keyframes rocket-fade {
+          0% {
+            opacity: 0;
+          }
+          60% {
+            opacity: 0.8;
+          }
+          100% {
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   );
 }
+
+useGLTF.preload("/models/rocket.gltf");

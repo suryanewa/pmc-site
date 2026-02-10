@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useIsMobile } from "../../hooks/use-is-mobile";
 
 export function HeroWarpCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -175,22 +177,26 @@ export function HeroWarpCanvas() {
     init();
 
     window.addEventListener("resize", handleResize);
-    hero.addEventListener("pointerdown", invert, { passive: true });
-    hero.addEventListener("pointerup", invert, { passive: true });
-    hero.addEventListener("pointerenter", handlePointerMove, { passive: true });
-    hero.addEventListener("pointermove", handlePointerMove, { passive: true });
-    hero.addEventListener("pointerleave", handlePointerLeave);
+    if (!isMobile) {
+      hero.addEventListener("pointerdown", invert, { passive: true });
+      hero.addEventListener("pointerup", invert, { passive: true });
+      hero.addEventListener("pointerenter", handlePointerMove, { passive: true });
+      hero.addEventListener("pointermove", handlePointerMove, { passive: true });
+      hero.addEventListener("pointerleave", handlePointerLeave);
+    }
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("resize", handleResize);
-      hero.removeEventListener("pointerdown", invert);
-      hero.removeEventListener("pointerup", invert);
-      hero.removeEventListener("pointerenter", handlePointerMove);
-      hero.removeEventListener("pointermove", handlePointerMove);
-      hero.removeEventListener("pointerleave", handlePointerLeave);
+      if (!isMobile) {
+        hero.removeEventListener("pointerdown", invert);
+        hero.removeEventListener("pointerup", invert);
+        hero.removeEventListener("pointerenter", handlePointerMove);
+        hero.removeEventListener("pointermove", handlePointerMove);
+        hero.removeEventListener("pointerleave", handlePointerLeave);
+      }
     };
-  }, []);
+  }, [isMobile]);
 
   return (
     <div className="absolute inset-0 z-0">

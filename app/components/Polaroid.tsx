@@ -19,12 +19,12 @@ export function Polaroid({
 }: PolaroidProps) {
   return (
     <motion.div
-      className={`bg-white p-2.5 shadow-[0_4px_20px_rgba(0,0,0,0.08)] ${className}`}
+      className={`bg-[#3F3F3F] p-2.5 shadow-[0_4px_20px_rgba(0,0,0,0.35)] ${className}`}
       initial={{ rotate: rotation }}
       whileHover={{ scale: 1.02, zIndex: 50, rotate: rotation * 0.5 }}
       transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
     >
-      <div className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]">
+      <div className="w-full aspect-[4/3] overflow-hidden bg-[#3F3F3F]">
         <motion.img
           src={src}
           alt={alt}
@@ -34,7 +34,7 @@ export function Polaroid({
         />
       </div>
       {caption && (
-        <p className="mt-2 text-center text-xs tracking-wide text-[#041540]/50 font-mono">
+        <p className="mt-2 text-center text-xs tracking-wide text-[#DBDBDB]/60 font-mono">
           {caption}
         </p>
       )}

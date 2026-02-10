@@ -100,6 +100,23 @@ const addDefaultVariants = (variants: Variants) => ({
   visible: { ...defaultItemVariants.visible, ...variants.visible },
 });
 
+const MOTION_ELEMENTS = {
+  div: motion.div,
+  span: motion.span,
+  section: motion.section,
+  ul: motion.ul,
+  li: motion.li,
+  p: motion.p,
+  a: motion.a,
+  button: motion.button,
+  h1: motion.h1,
+  h2: motion.h2,
+  h3: motion.h3,
+  h4: motion.h4,
+  h5: motion.h5,
+  h6: motion.h6,
+} as const;
+
 function AnimatedGroup({
   children,
   className,
@@ -115,9 +132,14 @@ function AnimatedGroup({
   const containerVariants = variants?.container || selectedVariants.container;
   const itemVariants = variants?.item || selectedVariants.item;
 
-  const MotionComponent = motion(as);
-
-  const MotionChild = motion(asChild);
+  const MotionComponent =
+    typeof as === "string" && as in MOTION_ELEMENTS
+      ? MOTION_ELEMENTS[as as keyof typeof MOTION_ELEMENTS]
+      : motion.div;
+  const MotionChild =
+    typeof asChild === "string" && asChild in MOTION_ELEMENTS
+      ? MOTION_ELEMENTS[asChild as keyof typeof MOTION_ELEMENTS]
+      : motion.div;
 
   return (
     <MotionComponent
@@ -136,4 +158,3 @@ function AnimatedGroup({
 }
 
 export { AnimatedGroup };
-

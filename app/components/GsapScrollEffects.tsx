@@ -3,8 +3,11 @@
 import { useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useIsMobile } from "../../hooks/use-is-mobile";
 
 export function GsapScrollEffects() {
+  const isMobile = useIsMobile();
+
   useLayoutEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -12,7 +15,7 @@ export function GsapScrollEffects() {
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || isMobile) return;
 
     gsap.registerPlugin(ScrollTrigger);
 
@@ -38,7 +41,7 @@ export function GsapScrollEffects() {
     });
 
     return () => ctx.revert();
-  }, []);
+  }, [isMobile]);
 
   return null;
 }

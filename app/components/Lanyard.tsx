@@ -1,7 +1,6 @@
-/* eslint-disable react/no-unknown-property */
 'use client';
 import { useEffect, useRef, useState, useMemo } from 'react';
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
+import { Canvas, extend, useFrame, useThree, type ThreeEvent } from '@react-three/fiber';
 import { useGLTF, useTexture, Environment, Lightformer } from '@react-three/drei';
 import {
   BallCollider,
@@ -10,9 +9,10 @@ import {
   RigidBody,
   useRopeJoint,
   useSphericalJoint,
-  RigidBodyProps
+  type RapierRigidBody,
+  type RigidBodyProps
 } from '@react-three/rapier';
-import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
+import { MeshLineGeometry, MeshLineMaterial, type MeshLineMaterialParameters } from 'meshline';
 import * as THREE from 'three';
 
 const cardGLB = '/assets/lanyard/card.glb';
@@ -33,42 +33,48 @@ export default function Lanyard({
   fov = 20,
   transparent = true
 }: LanyardProps) {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <div className="relative z-0 w-full h-full flex justify-center items-center transform scale-100 origin-center min-h-[500px]">
+    <div
+      className={`relative z-0 w-full h-full flex justify-center items-center transform scale-100 origin-center min-h-[500px] ${
+        isHovered ? 'lanyard-hovered' : ''
+      }`}
+    >
       <Canvas
         camera={{ position, fov }}
         gl={{ alpha: transparent }}
         onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}
       >
         <ambientLight intensity={Math.PI} />
-        <Physics gravity={gravity as any} timeStep={1 / 60}>
-          <Band />
+        <Physics gravity={gravity} timeStep={1 / 60}>
+          <Band onHover={setIsHovered} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
             intensity={2}
-            color="white"
+            color="#DBDBDB"
             position={[0, -1, 5]}
             rotation={[0, 0, Math.PI / 3]}
             scale={[100, 0.1, 1]}
           />
           <Lightformer
             intensity={3}
-            color="white"
+            color="#DBDBDB"
             position={[-1, -1, 1]}
             rotation={[0, 0, Math.PI / 3]}
             scale={[100, 0.1, 1]}
           />
           <Lightformer
             intensity={3}
-            color="white"
+            color="#DBDBDB"
             position={[1, 1, 1]}
             rotation={[0, 0, Math.PI / 3]}
             scale={[100, 0.1, 1]}
           />
           <Lightformer
             intensity={10}
-            color="white"
+            color="#DBDBDB"
             position={[-10, 0, 14]}
             rotation={[0, Math.PI / 2, Math.PI / 3]}
             scale={[100, 10, 1]}
@@ -79,25 +85,33 @@ export default function Lanyard({
   );
 }
 
-function Band({ maxSpeed = 50, minSpeed = 10 }) {
+function Band({
+  maxSpeed = 50,
+  minSpeed = 10,
+  onHover
+}: {
+  maxSpeed?: number;
+  minSpeed?: number;
+  onHover?: (hovered: boolean) => void;
+}) {
   const { size } = useThree();
-  const band = useRef<any>(null);
-  const fixed = useRef<any>(null);
-  const j1 = useRef<any>(null);
-  const j2 = useRef<any>(null);
-  const j3 = useRef<any>(null);
-  const card = useRef<any>(null);
+  const band = useRef<THREE.Mesh<MeshLineGeometry, MeshLineMaterial> | null>(null);
+  const fixed = useRef<RapierRigidBody>(null!);
+  const j1 = useRef<RapierRigidBody>(null!);
+  const j2 = useRef<RapierRigidBody>(null!);
+  const j3 = useRef<RapierRigidBody>(null!);
+  const card = useRef<RapierRigidBody>(null!);
   const pointerDownTime = useRef(0);
   const shouldFlip = useRef(false);
+  const lerpedPositions = useRef(new WeakMap<RapierRigidBody, THREE.Vector3>());
 
   const vec = new THREE.Vector3();
   const ang = new THREE.Vector3();
-  const rot = new THREE.Vector3();
   const dir = new THREE.Vector3();
   const q = new THREE.Quaternion();
   const euler = new THREE.Euler();
 
-  const segmentProps: any = {
+  const segmentProps: RigidBodyProps = {
     type: 'dynamic',
     canSleep: true,
     colliders: false,
@@ -105,17 +119,31 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     linearDamping: 2
   };
 
-  const { nodes, materials } = useGLTF(cardGLB) as any;
+  const { nodes, materials } = useGLTF(cardGLB) as unknown as {
+    nodes: Record<string, THREE.Mesh>;
+    materials: Record<string, THREE.MeshStandardMaterial | THREE.MeshPhysicalMaterial>;
+  };
   const texture = useTexture(lanyardPng);
-  const [curve] = useState(
-    () =>
-      new THREE.CatmullRomCurve3([
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3(),
-        new THREE.Vector3()
-      ])
-  );
+  const curveRef = useRef<THREE.CatmullRomCurve3 | null>(null);
+  if (curveRef.current == null) {
+    const initialCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3(),
+      new THREE.Vector3()
+    ]);
+    initialCurve.curveType = 'chordal';
+    curveRef.current = initialCurve;
+  }
+  const curve = curveRef.current;
+  const lanyardTexture = useMemo(() => {
+    // Don't mutate the hook-returned texture; clone and configure instead.
+    const clonedTexture = texture.clone();
+    clonedTexture.wrapS = THREE.RepeatWrapping;
+    clonedTexture.wrapT = THREE.RepeatWrapping;
+    clonedTexture.needsUpdate = true;
+    return clonedTexture;
+  }, [texture]);
   const [dragged, drag] = useState<false | THREE.Vector3>(false);
   const [hovered, hover] = useState(false);
 
@@ -127,14 +155,21 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
     [0, 1.45, 0]
   ]);
 
+  const customGrabCursor = "url('/cursors/move.png') 23 23, grab";
+  const customGrabbingCursor = "url('/cursors/move.png') 23 23, grabbing";
+
   useEffect(() => {
     if (hovered) {
-      document.body.style.cursor = dragged ? 'grabbing' : 'grab';
+      document.body.style.cursor = dragged ? customGrabbingCursor : customGrabCursor;
       return () => {
-        document.body.style.cursor = 'auto';
+        document.body.style.cursor = '';
       };
     }
   }, [hovered, dragged]);
+
+  useEffect(() => {
+    onHover?.(hovered);
+  }, [hovered, onHover]);
 
   useFrame((state, delta) => {
     if (dragged && typeof dragged !== 'boolean') {
@@ -157,17 +192,18 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
 
     if (fixed.current && j1.current && j2.current && j3.current && band.current) {
       [j1, j2, j3].forEach(ref => {
-        if (!ref.current.lerped) ref.current.lerped = new THREE.Vector3().copy(ref.current.translation());
-        const clampedDistance = Math.max(0.1, Math.min(1, ref.current.lerped.distanceTo(ref.current.translation())));
-        ref.current.lerped.lerp(
-          ref.current.translation(),
-          delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed))
-        );
+        const body = ref.current;
+        if (!body) return;
+        const current = body.translation();
+        const prev = lerpedPositions.current.get(body) ?? new THREE.Vector3().copy(current);
+        const clampedDistance = Math.max(0.1, Math.min(1, prev.distanceTo(current)));
+        prev.lerp(current, delta * (minSpeed + clampedDistance * (maxSpeed - minSpeed)));
+        lerpedPositions.current.set(body, prev);
       });
 
-      curve.points[0].copy(j3.current.lerped);
-      curve.points[1].copy(j2.current.lerped);
-      curve.points[2].copy(j1.current.lerped);
+      curve.points[0].copy(lerpedPositions.current.get(j3.current) ?? j3.current.translation());
+      curve.points[1].copy(lerpedPositions.current.get(j2.current) ?? j2.current.translation());
+      curve.points[2].copy(lerpedPositions.current.get(j1.current) ?? j1.current.translation());
       curve.points[3].copy(fixed.current.translation());
       
       band.current.geometry.setPoints(curve.getPoints(32));
@@ -177,25 +213,24 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
       q.set(curRot.x, curRot.y, curRot.z, curRot.w);
       euler.setFromQuaternion(q);
       const targetY = Math.round(euler.y / Math.PI) * Math.PI;
-      card.current.setAngvel({ x: ang.x, y: ang.y - (euler.y - targetY) * 0.25, z: ang.z });
+      card.current.setAngvel({ x: ang.x, y: ang.y - (euler.y - targetY) * 0.25, z: ang.z }, true);
     }
   });
 
-  curve.curveType = 'chordal';
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-
   const meshLineGeom = useMemo(() => new MeshLineGeometry(), []);
   const meshLineMat = useMemo(() => {
-    return new MeshLineMaterial({
-      color: 'white',
-      depthTest: true,
+    const params: MeshLineMaterialParameters = {
+      color: '#DBDBDB',
       resolution: new THREE.Vector2(size.width, size.height),
-      useMap: true,
-      map: texture,
+      useMap: 1,
+      map: lanyardTexture,
       repeat: new THREE.Vector2(-4, 1),
       lineWidth: 1
-    } as any);
-  }, [texture, size]);
+    };
+    const material = new MeshLineMaterial(params);
+    material.depthTest = true;
+    return material;
+  }, [lanyardTexture, size.height, size.width]);
 
   return (
     <>
@@ -222,15 +257,21 @@ function Band({ maxSpeed = 50, minSpeed = 10 }) {
             position={[0, -1.2, -0.05]}
             onPointerOver={() => hover(true)}
             onPointerOut={() => hover(false)}
-            onPointerUp={(e: any) => {
-              e.target.releasePointerCapture(e.pointerId);
+            onPointerUp={(e: ThreeEvent<PointerEvent>) => {
+              const target = e.target as unknown as {
+                releasePointerCapture: (pointerId: number) => void;
+              };
+              target.releasePointerCapture(e.pointerId);
               drag(false);
               if (Date.now() - pointerDownTime.current < 200) {
                 shouldFlip.current = true;
               }
             }}
-            onPointerDown={(e: any) => {
-              e.target.setPointerCapture(e.pointerId);
+            onPointerDown={(e: ThreeEvent<PointerEvent>) => {
+              const target = e.target as unknown as {
+                setPointerCapture: (pointerId: number) => void;
+              };
+              target.setPointerCapture(e.pointerId);
               pointerDownTime.current = Date.now();
               drag(new THREE.Vector3().copy(e.point).sub(vec.copy(card.current.translation())));
             }}

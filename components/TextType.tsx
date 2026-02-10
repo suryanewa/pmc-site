@@ -1,6 +1,6 @@
 'use client';
 
-import { ElementType, useEffect, useRef, useState, createElement, useMemo, useCallback } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { gsap } from 'gsap';
 
 interface TextTypeProps {
@@ -11,7 +11,7 @@ interface TextTypeProps {
   cursorBlinkDuration?: number;
   cursorClassName?: string;
   text: string | string[];
-  as?: ElementType;
+  as?: "div" | "span";
   typingSpeed?: number;
   initialDelay?: number;
   pauseDuration?: number;
@@ -54,7 +54,7 @@ const TextType = ({
   const [isVisible, setIsVisible] = useState(!startOnVisible);
   const [isDone, setIsDone] = useState(false);
   const cursorRef = useRef<HTMLSpanElement>(null);
-  const containerRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement | HTMLSpanElement>(null);
 
   const textArray = useMemo(() => (Array.isArray(text) ? text : [text]), [text]);
 
@@ -172,29 +172,48 @@ const TextType = ({
     isVisible,
     reverseMode,
     variableSpeed,
+    getRandomSpeed,
     onSentenceComplete
   ]);
 
   const shouldShowCursor = showCursor && !((hideCursorWhileTyping && (currentCharIndex < textArray[currentTextIndex].length || isDeleting)) || (hideCursorOnComplete && isDone));
 
-  return createElement(
-    Component,
-    {
-      ref: containerRef,
-      className: `inline-block whitespace-pre-wrap tracking-tight ${className}`,
-      ...props
-    },
-    <span className="inline" style={{ color: getCurrentTextColor() || 'inherit' }}>
-      {displayedText}
-    </span>,
-    shouldShowCursor && (
-      <span
-        ref={cursorRef}
-        className={`ml-1 inline-block opacity-100 ${cursorClassName}`}
-      >
-        {cursorCharacter}
+  const commonProps = {
+    className: `inline-block whitespace-pre-wrap tracking-tight ${className}`,
+    ...props,
+  };
+
+  const content = (
+    <>
+      <span className="inline" style={{ color: getCurrentTextColor() || "inherit" }}>
+        {displayedText}
       </span>
-    )
+      {shouldShowCursor && (
+        <span ref={cursorRef} className={`ml-1 inline-block opacity-100 ${cursorClassName}`}>
+          {cursorCharacter}
+        </span>
+      )}
+    </>
+  );
+
+  if (Component === "span") {
+    return (
+      <span
+        ref={containerRef as unknown as React.Ref<HTMLSpanElement>}
+        {...(commonProps as React.HTMLAttributes<HTMLSpanElement>)}
+      >
+        {content}
+      </span>
+    );
+  }
+
+  return (
+    <div
+      ref={containerRef as unknown as React.Ref<HTMLDivElement>}
+      {...(commonProps as React.HTMLAttributes<HTMLDivElement>)}
+    >
+      {content}
+    </div>
   );
 };
 

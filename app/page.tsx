@@ -1,18 +1,26 @@
 'use client';
 
-import { motion, useInView, animate, useMotionValue, useTransform, AnimatePresence, useSpring } from 'framer-motion';
-import { Suspense, useEffect, useRef, useState, useCallback } from 'react';
+import { motion, useInView, animate, useMotionValue, useTransform, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import dynamic from 'next/dynamic';
-import { Linkedin, Instagram } from 'lucide-react';
+import Link from 'next/link';
 import { Button } from './components/Button';
-import { Newsletter } from './components/Newsletter';
+import { JoinUsSection } from './components/JoinUsSection';
+import { FAQSection } from './components/FAQSection';
 import { FadeUp } from './components/ScrollAnimations';
 import { HeroWarpCanvas } from './components/HeroWarpCanvas';
-import Link from "next/link";
 import { LogoCloudAnimated } from "@/components/smoothui/logo-cloud-1";
-import TiltedCard from "@/components/TiltedCard";
-import TextType from '@/components/TextType';
-import ConfettiCanvas, { ConfettiCanvasHandle } from '@/components/ConfettiCanvas';
+import { TextAnimate } from '@/components/ui/text-animate';
+import { useIsMobile } from '../hooks/use-is-mobile';
+
+declare global {
+  interface Window {
+    UnicornStudio?: {
+      init?: () => void;
+      isInitialized?: boolean;
+    };
+  }
+}
 
 const HeroScene = dynamic(
   () => import('./components/HeroScene').then((mod) => ({ default: mod.HeroScene })),
@@ -22,75 +30,27 @@ const HeroScene = dynamic(
   }
 );
 
-const RocketScene = dynamic(
-  () => import('@/components/RocketScene'),
-  {
-    ssr: false,
-    loading: () => <div className="w-full h-full" />,
-  }
-);
-
-const Lanyard = dynamic(
-  () => import('./components/Lanyard'),
-  {
-    ssr: false,
-    loading: () => <div className="w-full h-full" />,
-  }
-);
-
-const PlantsScene = dynamic(
-  () => import('@/components/PlantsScene'),
-  {
-    ssr: false,
-    loading: () => <div className="w-full h-full" />,
-  }
-);
-
-const CandleScene = dynamic(
-  () => import('@/components/CandleScene'),
-  {
-    ssr: false,
-    loading: () => <div className="w-full h-full" />,
-  }
-);
-
-function SocialIcon({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
-  return (
-    <motion.a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={label}
-      className="size-9 flex items-center justify-center text-[#041540]/60 hover:text-[#041540] transition-colors duration-300"
-      whileHover={{ scale: 1.1, y: -2 }}
-      whileTap={{ scale: 0.95 }}
-    >
-      {children}
-    </motion.a>
-  );
-}
-
 // Programs data
 const programs = [
   {
     id: 'startup',
-    title: '/startup',
-    description: 'A 9-week, build-from-zero accelerator. You\'ll interview users to validate a real market gap, design and ship a product, and ultimately take it to market.',
-    color: '#AD1DE0',
+    title: 'Product Team',
+    description: '',
+    color: '#5076DD',
     href: '/programs/startup',
   },
   {
     id: 'investing',
-    title: '/investing',
-    description: 'An intensive 9-week program focused on how real investors evaluate startups. Break down deals, analyze companies, and build investment theses.',
-    color: '#2DB67D',
+    title: 'Mentorship',
+    description: '',
+    color: '#6966E3',
     href: '/programs/investing',
   },
   {
     id: 'eir',
-    title: '/eir',
-    description: 'A selective program for NYU founders who are actively building. Get 1-on-1 mentorship and direct access to venture capitalists.',
-    color: '#F0C75B',
+    title: 'Grad Bootcamp',
+    description: '',
+    color: '#41C9C1',
     href: '/programs/eir',
   },
 ];
@@ -108,6 +68,9 @@ function AnimatedStat({
   onComplete: () => void 
 }) {
   const [showLabel, setShowLabel] = useState(false);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
+  const shouldReduceMotion = isMobile || prefersReducedMotion;
   const count = useMotionValue(0);
   const rounded = useTransform(count, latest => Math.round(latest));
   
@@ -115,38 +78,56 @@ function AnimatedStat({
   const suffix = number.replace(/\d/g, '');
 
   useEffect(() => {
-    if (active) {
-      animate(count, numericValue, {
-        duration: 1.4,
-        ease: [0.16, 1, 0.3, 1],
-        onComplete: () => {
-          setShowLabel(true);
-        }
-      });
+    if (!active) return;
+
+    if (shouldReduceMotion) {
+      count.set(numericValue);
+      const rafId = requestAnimationFrame(() => setShowLabel(true));
+      return () => cancelAnimationFrame(rafId);
     }
-  }, [active, numericValue, count]);
+
+    const controls = animate(count, numericValue, {
+      duration: 1.4,
+      ease: [0.16, 1, 0.3, 1],
+      onComplete: () => {
+        setShowLabel(true);
+      }
+    });
+
+    return () => {
+      controls.stop();
+    };
+  }, [active, numericValue, count, shouldReduceMotion]);
 
   return (
     <div className="flex flex-col">
       <motion.div 
-        initial={{ opacity: 0 }}
+        initial={shouldReduceMotion ? false : { opacity: 0 }}
         animate={{ opacity: active ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-        className="text-4xl md:text-5xl font-medium text-[#041540] tracking-tight"
-        whileHover={{ scale: 1.05 }}
+        transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+        className="text-4xl md:text-5xl font-medium text-[#DBDBDB] tracking-tight"
+        whileHover={shouldReduceMotion ? undefined : { scale: 1.05 }}
       >
-        <motion.span>{rounded}</motion.span>
-        <span>{suffix}</span>
+        {shouldReduceMotion ? (
+          <>
+            <span>{number}</span>
+          </>
+        ) : (
+          <>
+            <motion.span>{rounded}</motion.span>
+            <span>{suffix}</span>
+          </>
+        )}
       </motion.div>
       <div className="min-h-[1.5rem]">
         <AnimatePresence>
           {showLabel && (
             <motion.div
-              initial={{ opacity: 0, y: 5 }}
+              initial={shouldReduceMotion ? false : { opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: shouldReduceMotion ? 0 : 0.4, ease: [0.22, 1, 0.36, 1] }}
               onAnimationComplete={onComplete}
-              className="text-sm text-[#041540]/50 mt-1"
+              className="text-sm text-[#DBDBDB]/60 mt-1"
             >
               {label}
             </motion.div>
@@ -157,482 +138,94 @@ function AnimatedStat({
   );
 }
 
-function StatsGrid({ sectionRef }: { sectionRef: React.RefObject<HTMLElement | null> }) {
-  const [activeIndex, setActiveIndex] = useState(-1);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const confettiRef = useRef<ConfettiCanvasHandle>(null);
-  const isInView = useInView(containerRef, { once: true, amount: 0.5, margin: "-100px" });
-
-  useEffect(() => {
-    if (isInView && activeIndex === -1) {
-      setActiveIndex(0);
-    }
-  }, [isInView, activeIndex]);
-
-  const handleFinalComplete = () => {
-    if (containerRef.current && confettiRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const x = rect.left + rect.width / 2;
-      const y = rect.top + rect.height / 2;
-      confettiRef.current.burst(x, y);
-    }
-  };
-
-  return (
-    <>
-      <ConfettiCanvas ref={confettiRef} containerRef={sectionRef} />
-      <div ref={containerRef} className="grid grid-cols-3 gap-8 pt-8 border-t border-[#041540]/10">
-        <AnimatedStat 
-          number="20+" 
-          label="Years Active" 
-          active={activeIndex >= 0} 
-          onComplete={() => setActiveIndex(prev => prev === 0 ? 1 : prev)} 
-        />
-        <AnimatedStat 
-          number="100+" 
-          label="Alumni Network" 
-          active={activeIndex >= 1} 
-          onComplete={() => setActiveIndex(prev => prev === 1 ? 2 : prev)} 
-        />
-        <AnimatedStat 
-          number="250+" 
-          label="Speaker Events" 
-          active={activeIndex >= 2} 
-          onComplete={handleFinalComplete} 
-        />
-      </div>
-    </>
-  );
-}
-
-function PushPin({ color = "#0115DF", active = false, size = 14 }: { color?: string; active?: boolean; size?: number }) {
-  const displayColor = active ? color : "#A0A0A0";
-  
-  return (
-    <div 
-      className="absolute left-1/2 -translate-x-1/2 z-20 pointer-events-none"
-      style={{ top: size === 14 ? "2px" : "0px" }}
-    >
-      <svg width={size} height={size} viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.4)]">
-        <defs>
-          <radialGradient id={`pinGradient-${size}`} cx="40%" cy="40%" r="50%" fx="30%" fy="30%">
-            <stop offset="0%" stopColor="white" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="black" stopOpacity="0.2" />
-          </radialGradient>
-          <radialGradient id={`topSurface-${size}`} cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor={color} stopOpacity="0.9" />
-            <stop offset="100%" stopColor={color} />
-          </radialGradient>
-        </defs>
-        
-        <motion.circle 
-          cx="14" cy="16" r="7" 
-          animate={{ fill: displayColor }}
-          fillOpacity="0.8" 
-          transition={{ duration: 0.3 }}
-        />
-        <circle cx="14" cy="16" r="7" fill={`url(#pinGradient-${size})`} />
-        
-        <motion.circle 
-          cx="14" cy="12" r="10" 
-          animate={{ fill: displayColor }}
-          transition={{ duration: 0.3 }}
-        />
-        <circle cx="14" cy="12" r="10" fill={`url(#pinGradient-${size})`} />
-        
-        <circle cx="11" cy="9" r="2.5" fill="white" fillOpacity="0.35" />
-      </svg>
-    </div>
-  );
-}
-
-function SpeakerPolaroidItem({ 
-  p, 
-  topIndex, 
-  setTopIndex,
-  onSelect 
-}: { 
-  p: any; 
-  topIndex: number | null; 
-  setTopIndex: (id: number) => void;
-  onSelect: () => void;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  const rotateX = useSpring(0, { damping: 30, stiffness: 100, mass: 2 });
-  const rotateY = useSpring(0, { damping: 30, stiffness: 100, mass: 2 });
-  const scale = useSpring(1, { damping: 30, stiffness: 100, mass: 2 });
-  const imgScale = useSpring(1, { damping: 30, stiffness: 100, mass: 2 });
-  const [isDragging, setIsDragging] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current || isDragging) return;
-    const rect = ref.current.getBoundingClientRect();
-    const offsetX = e.clientX - rect.left - rect.width / 2;
-    const offsetY = e.clientY - rect.top - rect.height / 2;
-    
-    rotateX.set((offsetY / (rect.height / 2)) * -25);
-    rotateY.set((offsetX / (rect.width / 2)) * 25);
-  };
-
-  const handleMouseEnter = () => {
-    if (!isDragging) {
-      scale.set(1.1);
-      setIsHovered(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (!isDragging) {
-      scale.set(1);
-      imgScale.set(1);
-      rotateX.set(0);
-      rotateY.set(0);
-      setIsHovered(false);
-    }
-  };
-
-  const entryVariants = {
-    hidden: { 
-      x: p.left ? "120%" : p.right ? "-120%" : 0, 
-      y: p.top ? "120%" : p.bottom ? "-120%" : 0,
-      rotate: 0,
-      opacity: 0,
-      scale: 0.5
-    },
-    visible: { 
-      x: 0, 
-      y: 0, 
-      rotate: p.rotate,
-      opacity: 1,
-      scale: 1,
-      transition: {
-        type: "spring" as const,
-        damping: 20,
-        stiffness: 80,
-        delay: p.delay + 0.5,
-        duration: 1.2
-      }
-    }
-  };
-
-  return (
-    <div
-      data-gsap="parallax"
-      data-speed={p.speed}
-      className="absolute"
-      style={{
-        left: p.left,
-        top: p.top,
-        right: p.right,
-        bottom: p.bottom,
-        zIndex: topIndex === p.id ? 100 : 10 + p.id,
-      }}
-    >
-      <motion.div
-        ref={ref}
-        drag
-        dragConstraints={{ left: -300, right: 300, top: -300, bottom: 300 }}
-        dragTransition={{ power: 0.005, timeConstant: 50 }}
-        onDragStart={() => {
-          setTopIndex(p.id);
-          setIsDragging(true);
-          scale.set(1.2);
-          rotateX.set(0);
-          rotateY.set(0);
-        }}
-        onDragEnd={() => {
-          setIsDragging(false);
-          scale.set(1.1);
-        }}
-        onTap={() => {
-          if (!isDragging) onSelect();
-        }}
-        onMouseMove={handleMouseMove}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-        variants={entryVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: "-50px" }}
-        className="w-[240px] md:w-[280px] cursor-pointer select-none [perspective:800px] will-change-transform"
-        style={{
-          rotateX,
-          rotateY,
-          scale
-        }}
-      >
-        <div className={`bg-white p-2.5 transition-shadow duration-300 ${
-          isDragging 
-            ? "shadow-[0_30px_60px_rgba(0,0,0,0.15)]" 
-            : "shadow-[0_4px_20px_rgba(0,0,0,0.08)]"
-        } [transform-style:preserve-3d] relative will-change-transform`}>
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 [transform:translateZ(40px)]">
-            <PushPin active={isHovered || isDragging} />
-          </div>
-          <div 
-            className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]"
-            onMouseEnter={() => !isDragging && imgScale.set(1.08)}
-            onMouseLeave={() => !isDragging && imgScale.set(1)}
-          >
-            <motion.img
-              src={p.src}
-              alt={p.alt}
-              draggable={false}
-              className="w-full h-full object-cover select-none"
-              style={{ scale: imgScale }}
-            />
-          </div>
-          <p className="mt-2 text-center text-xs tracking-wide text-[#041540]/50 font-mono pointer-events-none">
-            {p.caption}
-          </p>
-        </div>
-      </motion.div>
-    </div>
-  );
-}
-
-function SpeakerPolaroids() {
-  const [topIndex, setTopIndex] = useState<number | null>(null);
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-
-  const polaroids = [
-    { id: 0, src: "/lux.jpeg", alt: "Lux Capital", caption: "eeg/lux-capital", left: "0%", top: "0%", rotate: -3, speed: "0.08", delay: 0.2 },
-    { id: 1, src: "/zfellows.jpeg", alt: "Zfellows", caption: "eeg/zfellows", right: "5%", top: "8%", rotate: 2, speed: "0.14", delay: 0.35 },
-    { id: 2, src: "/beli.png", alt: "Beli", caption: "eeg/beli", left: "15%", top: "40%", rotate: 4, speed: "0.1", delay: 0.5 },
-    { id: 3, src: "/varun-rana.png", alt: "Varun Rana", caption: "eeg/varun-rana", right: "0%", bottom: "5%", rotate: -2, speed: "0.06", delay: 0.65 },
-  ];
-
-  const selectedPolaroid = polaroids.find(p => p.id === selectedId);
-
-  return (
-    <div className="relative min-h-[500px] lg:min-h-[600px]">
-      {polaroids.map((p) => (
-        <SpeakerPolaroidItem 
-          key={p.id} 
-          p={p} 
-          topIndex={topIndex} 
-          setTopIndex={setTopIndex} 
-          onSelect={() => setSelectedId(p.id)}
-        />
-      ))}
-
-      <AnimatePresence>
-        {selectedId !== null && selectedPolaroid && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ 
-              opacity: 0, 
-              pointerEvents: 'none',
-              transition: { duration: 0.2 } 
-            }}
-            onClick={() => setSelectedId(null)}
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-[#041540]/90 backdrop-blur-sm cursor-zoom-out p-6"
-          >
-            <motion.div
-              initial={{ scale: 0.8, y: 20, rotate: selectedPolaroid.rotate }}
-              animate={{ scale: 1, y: 0, rotate: 0 }}
-              exit={{ scale: 0.8, y: 20, rotate: selectedPolaroid.rotate }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="bg-white p-4 md:p-8 shadow-2xl w-full max-w-[700px] flex flex-col relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="w-full aspect-[4/3] overflow-hidden bg-[#F7F3EE]">
-                <img
-                  src={selectedPolaroid.src}
-                  alt={selectedPolaroid.alt}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <p className="mt-4 text-center text-base md:text-lg tracking-widest text-[#041540]/70 font-mono">
-                {selectedPolaroid.caption}
-              </p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
-
-function EventsSection({ eventsTopRef }: { eventsTopRef: React.RefObject<HTMLDivElement | null> }) {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  return (
-    <section ref={sectionRef} className="py-32 px-6 md:px-16 lg:px-24 bg-white relative z-10 overflow-hidden">
-      <div
-        ref={eventsTopRef}
-        className="absolute inset-x-0 top-0 h-px pointer-events-none"
-        aria-hidden="true"
-      />
-      <div className="max-w-[1400px] mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-          <div>
-            <FadeUp>
-              <div className="text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] text-[#041540] mb-8 whitespace-nowrap">
-                <span className="text-[#0115DF]">/</span>
-                <TextType
-                  text="events"
-                  typingSpeed={50}
-                  initialDelay={100}
-                  loop={false}
-                  showCursor={true}
-                  hideCursorOnComplete={true}
-                  cursorCharacter="|"
-                  className="inline"
-                  as="span"
-                  startOnVisible={true}
-                />
-              </div>
-              <div className="mb-4 font-bold text-2xl text-[#041540] lg:text-3xl text-center md:text-left whitespace-nowrap">
-                <span className="text-[#0115DF]">/</span>
-                <TextType
-                  text="speakers"
-                  typingSpeed={50}
-                  initialDelay={300}
-                  loop={false}
-                  showCursor={true}
-                  hideCursorOnComplete={true}
-                  cursorCharacter="|"
-                  className="inline"
-                  as="span"
-                  startOnVisible={true}
-                />
-              </div>
-            </FadeUp>
-
-            <FadeUp delay={0.1}>
-              <div className="space-y-6 mb-12">
-                <p className="text-lg text-[#041540]/70 leading-relaxed">
-                  We host our weekly speaker series on <span className="text-[#041540] font-medium">Thursdays @ 12:30 pm</span>. All members of the NYU community are welcome.
-                </p>
-                <p className="text-lg text-[#041540]/70 leading-relaxed">
-                  So far, we&apos;ve hosted over <span className="text-[#041540] font-medium">250 conversations</span> with founders, operators and investors—the best in their fields.
-                </p>
-              </div>
-            </FadeUp>
-
-            <StatsGrid sectionRef={sectionRef} />
-          </div>
-
-          <SpeakerPolaroids />
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function Home() {
   const programsTopRef = useRef<HTMLDivElement | null>(null);
-  const eventsTopRef = useRef<HTMLDivElement | null>(null);
-  const [isProgramsDark, setIsProgramsDark] = useState(false);
-  const isProgramsDarkRef = useRef(false);
   const themeTransition = "transition-colors duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)]";
-
-  useEffect(() => {
-    isProgramsDarkRef.current = isProgramsDark;
-  }, [isProgramsDark]);
-
-  useEffect(() => {
-    const navbar = document.querySelector<HTMLElement>("[data-navbar]");
-    let ticking = false;
-    let lastValue = isProgramsDarkRef.current;
-
-    const update = () => {
-      ticking = false;
-      const programsTop = programsTopRef.current;
-      const eventsTop = eventsTopRef.current;
-      if (navbar && programsTop && eventsTop) {
-        const navBottom = navbar.getBoundingClientRect().bottom;
-        const programsTopPos = programsTop.getBoundingClientRect().top;
-        const eventsTopPos = eventsTop.getBoundingClientRect().top;
-        const nextValue = programsTopPos <= navBottom && eventsTopPos > navBottom;
-
-        if (nextValue !== lastValue) {
-          lastValue = nextValue;
-          isProgramsDarkRef.current = nextValue;
-          setIsProgramsDark(nextValue);
-        }
-      }
-    };
-
-    const onScroll = () => {
-      if (ticking) return;
-      ticking = true;
-      window.requestAnimationFrame(update);
-    };
-
-    const resizeObserver = navbar ? new ResizeObserver(onScroll) : null;
-    resizeObserver?.observe(navbar as Element);
-
-    update();
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      resizeObserver?.disconnect();
-    };
-  }, []);
+  const isMobile = useIsMobile();
+  const prefersReducedMotion = useReducedMotion();
+  const shouldReduceHeroMotion = isMobile || prefersReducedMotion;
 
   useEffect(() => {
     const root = document.documentElement;
     root.style.setProperty(
       "--scroll-background",
-      isProgramsDark ? "#041540" : "#F7F3EE"
+      "#000000"
     );
 
     return () => {
-      root.style.setProperty("--scroll-background", "#F7F3EE");
+      root.style.setProperty("--scroll-background", "#000000");
     };
-  }, [isProgramsDark]);
+  }, []);
+
+  useEffect(() => {
+    const initUnicorn = () => {
+      if (window.UnicornStudio?.init) {
+        window.UnicornStudio.init();
+      }
+    };
+
+    initUnicorn();
+
+    const timer = setTimeout(initUnicorn, 500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="min-h-screen relative">
       <main>
         {/* Hero Section */}
-        <section className="min-h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 bg-[#F7F3EE] py-24 relative overflow-hidden">
+        <section className="min-h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 bg-black py-16 md:py-24 relative overflow-visible">
           <HeroWarpCanvas />
-          <div className="w-full max-w-[1400px] mx-auto relative z-10 grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,480px)] lg:gap-20">
-            <div className="max-w-[800px] text-left">
+          <div className="w-full max-w-[1400px] mx-auto relative z-10 grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+            <div className="max-w-[800px] text-left relative z-20">
               {/* Subtle label */}
               <motion.p
-                className="text-xs uppercase tracking-[0.2em] text-[#041540]/40 mb-6"
-                initial={{ opacity: 0 }}
+                className="text-xs uppercase tracking-[0.2em] text-[#DBDBDB]/50 mb-6"
+                initial={shouldReduceHeroMotion ? false : { opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: shouldReduceHeroMotion ? 0 : 0.8 }}
               >
-                NYU Stern · Est. 2003
+                
               </motion.p>
 
               {/* Main Headline */}
-              <motion.h1
-                className="text-[clamp(2.5rem,6vw,4.5rem)] font-medium leading-[1.05] tracking-[-0.03em] text-[#041540] mb-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.1 }}
-              >
-                The Home of NYU<br />
-                Founders & Investors
-              </motion.h1>
+              <h1 className="section-title text-[#DBDBDB] mb-6 tracking-[-0.03em]">
+                <TextAnimate
+                  as="span"
+                  animation="slideLeft"
+                  by="character"
+                  className="block whitespace-nowrap"
+                >
+                  Building the product
+                </TextAnimate>
+                <TextAnimate
+                  as="span"
+                  animation="slideLeft"
+                  by="character"
+                  delay={0.35}
+                  className="block"
+                >
+                  leaders of tomorrow.
+                </TextAnimate>
+              </h1>
 
               {/* Description */}
               <motion.p
-                className="text-lg text-[#041540]/50 leading-relaxed max-w-lg mb-10"
-                initial={{ opacity: 0, y: 15 }}
+                className="text-xl md:text-2xl text-[#DBDBDB]/75 leading-[1.6] mb-10"
+                initial={shouldReduceHeroMotion ? false : { opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                transition={{ duration: shouldReduceHeroMotion ? 0 : 0.6, delay: shouldReduceHeroMotion ? 0 : 0.2 }}
               >
-                Hands-on programs to build startups, develop venture fundamentals, and connect with industry leaders.
+                NYU's fastest-growing club empowering students to succeed as product managers in any industry
               </motion.p>
 
               {/* Two CTAs */}
               <motion.div
-                initial={{ opacity: 0, y: 15 }}
+                initial={shouldReduceHeroMotion ? false : { opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
+                transition={{ duration: shouldReduceHeroMotion ? 0 : 0.6, delay: shouldReduceHeroMotion ? 0 : 0.3 }}
               >
-                <div className="flex flex-wrap items-center gap-4">
+                <div className="flex flex-wrap items-center gap-8">
                   <Button
                     href="#programs"
                     className="px-8 py-4"
@@ -641,19 +234,26 @@ export default function Home() {
                   </Button>
                   <Button
                     href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform"
-                    borderColor="#041540"
-                    textColor="#041540"
+                    borderColor="#5076DD"
+                    textColor="#FFFFFF"
                     className="px-8 py-4"
+                    animated={false}
                   >
                     Coffee Chat
                   </Button>
+                  <Link
+                    href="#join-us"
+                    className="relative text-white after:absolute after:left-0 after:-bottom-1 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-white after:transition-transform after:duration-300 hover:after:scale-x-100"
+                  >
+                    Join Our Newsletter
+                  </Link>
                 </div>
               </motion.div>
             </div>
 
             {/* 3D Mac */}
             <div
-              className="relative w-full h-[320px] md:h-[420px] lg:h-[520px]"
+              className="relative z-0 hidden md:block w-full aspect-[16/10] justify-self-end overflow-visible"
               data-gsap="parallax"
               data-speed="0.08"
             >
@@ -664,16 +264,37 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="bg-[#F7F3EE] text-[#041540]">
-          <LogoCloudAnimated title="Our Network" description="" />
+        <section className="bg-black text-[#DBDBDB]">
+          <LogoCloudAnimated
+            title="Featured Speakers"
+            description=""
+            logos={[
+              { name: "Hinge", src: "/companies/hinge-logo.svg", url: "https://hinge.co", className: "brightness-0 invert opacity-80" },
+              { name: "Adobe", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/adobe.svg", url: "https://adobe.com", className: "brightness-0 invert opacity-80" },
+              { name: "Goldman Sachs", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/goldmansachs.svg", url: "https://goldmansachs.com", className: "brightness-0 invert opacity-80" },
+              { name: "Google", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/google.svg", url: "https://google.com", className: "brightness-0 invert opacity-80" },
+              { name: "Discord", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/discord.svg", url: "https://discord.com", className: "brightness-0 invert opacity-80" },
+              { name: "IBM", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/ibm.svg", url: "https://ibm.com", className: "brightness-0 invert opacity-80" },
+              { name: "JP Morgan", src: "/companies/chase-logo.svg", url: "https://jpmorganchase.com", className: "brightness-0 invert opacity-80" },
+              { name: "LinkedIn", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/linkedin.svg", url: "https://linkedin.com", className: "brightness-0 invert opacity-80" },
+              { name: "NBC Universal", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nbc.svg", url: "https://nbcuniversal.com", className: "brightness-0 invert opacity-80" },
+              { name: "Spotify", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/spotify.svg", url: "https://spotify.com", className: "brightness-0 invert opacity-80" },
+              { name: "Meta", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/meta.svg", url: "https://meta.com", className: "brightness-0 invert opacity-80" },
+              { name: "Mastercard", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/mastercard.svg", url: "https://mastercard.com", className: "brightness-0 invert opacity-80" },
+              { name: "Oracle", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/oracle.svg", url: "https://oracle.com", className: "brightness-0 invert opacity-80" },
+              { name: "Warner Bros", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/warnerbros.svg", url: "https://warnerbros.com", className: "brightness-0 invert opacity-80" },
+              { name: "SeatGeek", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/seatgeek.svg", url: "https://seatgeek.com", className: "brightness-0 invert opacity-80" },
+              { name: "Epic Games", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/epicgames.svg", url: "https://epicgames.com", className: "brightness-0 invert opacity-80" },
+              { name: "Microsoft", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/microsoft.svg", url: "https://microsoft.com", className: "brightness-0 invert opacity-80" },
+              { name: "American Express", src: "https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/americanexpress.svg", url: "https://americanexpress.com", className: "brightness-0 invert opacity-80" },
+            ]}
+          />
         </section>
 
         {/* Programs Section */}
         <section
           id="programs"
-          className={`relative py-32 px-6 md:px-16 lg:px-24 ${themeTransition} ${
-            isProgramsDark ? "text-[#F7F3EE]" : "text-[#041540]"
-          }`}
+          className={`relative overflow-visible py-32 px-6 md:px-16 lg:px-24 ${themeTransition} text-[#DBDBDB]`}
         >
           <div
             ref={programsTopRef}
@@ -682,260 +303,68 @@ export default function Home() {
           />
           <div className="max-w-[1400px] mx-auto">
             {/* Section Header */}
-            <div className="grid lg:grid-cols-2 gap-8 mb-20">
+            <div className="flex flex-col items-center text-center mb-20">
               <FadeUp>
-                <div
-                  className={`text-[clamp(2.5rem,5vw,4rem)] font-medium leading-[1.1] tracking-[-0.02em] whitespace-nowrap ${themeTransition} ${
-                    isProgramsDark ? "text-[#F7F3EE]" : "text-[#041540]"
-                  }`}
+                <TextAnimate
+                  as="h2"
+                  animation="slideLeft"
+                  by="character"
+                  className={`section-title whitespace-nowrap ${themeTransition} text-[#DBDBDB]`}
                 >
-                  <span className="text-[#0115DF]">/</span>
-                  <TextType
-                    text="programs"
-                    typingSpeed={50}
-                    initialDelay={100}
-                    loop={false}
-                    showCursor={true}
-                    hideCursorOnComplete={true}
-                    cursorCharacter="|"
-                    className="inline"
-                    as="span"
-                    startOnVisible={true}
-                  />
-                </div>
+                  Programs
+                </TextAnimate>
               </FadeUp>
               <FadeUp delay={0.1}>
                 <p
-                  className={`text-lg leading-relaxed lg:pt-4 ${themeTransition} ${
-                    isProgramsDark ? "text-[#F7F3EE]/70" : "text-[#041540]/60"
-                  }`}
+                  className={`text-lg leading-relaxed mt-4 max-w-2xl ${themeTransition} text-[#DBDBDB]/70`}
                 >
-                  Whether you&apos;re interested in startups, investing, or are already building, our semester-long programs bring students into NYU&apos;s startup, tech, and venture capital ecosystem.
+                  Get hands on with our programs and build practical skills through unforgettable experiences. Find your fit below!
                 </p>
               </FadeUp>
             </div>
 
             {/* Programs Cards */}
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 overflow-visible">
               {programs.map((program, index) => (
-                <FadeUp key={program.id} delay={0.1 * index}>
-                  <Link href={program.href} className="block">
-                    <TiltedCard
-                      altText={`EEG ${program.title} program`}
-                      captionText={program.title}
-                      containerHeight="540px"
-                      containerWidth="100%"
-                      imageHeight="540px"
-                      imageWidth="100%"
-                      rotateAmplitude={10}
-                      scaleOnHover={1.04}
-                      showMobileWarning={false}
-                      showTooltip={false}
-                      borderRadius={0}
-                      backgroundColor={`${program.color}20`}
-                      backgroundContent={
-                        program.id === 'eir' 
-                          ? (isHovered: boolean) => <RocketScene isHovered={isHovered} /> 
-                          : program.id === 'startup'
-                            ? (isHovered: boolean) => <PlantsScene isHovered={isHovered} />
-                            : program.id === 'investing'
-                              ? (isHovered: boolean) => <CandleScene isHovered={isHovered} />
-                              : undefined
+                <FadeUp key={program.id} delay={0.1 * index} className="h-full">
+                  <div className="relative h-full min-h-[320px] rounded-2xl bg-[#1E1E1E]/80 p-8 shadow-[0_20px_40px_rgba(0,0,0,0.18)] overflow-hidden">
+                    <div
+                      data-us-project={
+                        program.id === 'investing'
+                          ? 'M5cRPBWulgAdSjCuFemf'
+                          : program.id === 'eir'
+                            ? 'NEJJOUcoL3C4e87FYFaQ'
+                            : 'xG650J1WpXyfilT1Q6Bp'
                       }
-                      pixelEffect={{
-                        colors: isProgramsDark
-                          ? `${program.color},rgba(247,243,238,0.85),rgba(4,21,64,0.55)`
-                          : `${program.color},rgba(4,21,64,0.6),rgba(247,243,238,0.7)`,
-                        gap: 6,
-                        speed: 30,
-                        className: isProgramsDark
-                          ? "opacity-40 mix-blend-screen"
-                          : "opacity-35 mix-blend-multiply",
+                      className="absolute z-0"
+                      style={{
+                        width: 1440,
+                        height: 900,
+                        left: '50%',
+                        top: '50%',
+                        transform: 'translate(-50%, -50%) scale(0.8)',
                       }}
-                      displayOverlayContent
-                      overlayContent={
-                        <div
-                          className={`flex flex-col justify-start items-center text-center h-full w-full p-6 ${themeTransition} ${
-                            isProgramsDark
-                              ? "text-[#F7F3EE]"
-                              : "text-[#041540]"
-                          }`}
-                          style={{ paddingTop: '12%' }}
-                        >
-                          <h3
-                            className="text-2xl font-medium tracking-[-0.02em]"
-                            style={{ fontFamily: 'var(--font-gotham-medium)' }}
-                          >
-                            <span
-                              className={`${themeTransition} ${
-                                isProgramsDark ? "text-white" : "text-[#041540]"
-                              }`}
-                            >
-                              eeg
-                            </span>
-                            <span style={{ color: program.color }}>{program.title}</span>
-                          </h3>
-                          <p
-                            className={`mt-3 text-sm leading-relaxed ${themeTransition} ${
-                              isProgramsDark ? "text-[#F7F3EE]/70" : "text-[#041540]/60"
-                            }`}
-                          >
-                            {program.description}
-                          </p>
-                          <Button
-                            className="mt-5 !px-4 !py-2 text-xs uppercase tracking-[0.2em] !h-auto"
-                            borderColor={program.color}
-                            rippleColor={program.color}
-                            fillColor="transparent"
-                            textColor={isProgramsDark ? "white" : "#041540"}
-                          >
-                            Explore Program
-                            <span aria-hidden="true" className="ml-2">↗</span>
-                          </Button>
-                        </div>
-                      }
                     />
-                  </Link>
+                    <div className="relative z-10 flex h-full flex-col items-center justify-center text-center">
+                      <h3
+                        className="text-3xl font-medium tracking-[-0.02em]"
+                        style={{ fontFamily: 'var(--font-gotham-medium)', color: '#DBDBDB' }}
+                      >
+                        {program.title}
+                      </h3>
+                    </div>
+                  </div>
                 </FadeUp>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Events Section */}
-        <EventsSection eventsTopRef={eventsTopRef} />
-      
+        {/* CTA Section - /join-us */}
+        <JoinUsSection />
 
-        {/* CTA Section - Minimal Dark */}
-        <section className="py-32 px-6 md:px-16 lg:px-24 bg-[#041540] relative z-10">
-          {/* Subtle animated gradient */}
-          <motion.div
-            className="absolute inset-0 opacity-30 overflow-hidden"
-            animate={{
-              background: [
-                "radial-gradient(circle at 0% 0%, #0115DF20 0%, transparent 50%)",
-                "radial-gradient(circle at 100% 100%, #0115DF20 0%, transparent 50%)",
-                "radial-gradient(circle at 0% 0%, #0115DF20 0%, transparent 50%)",
-              ]
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          />
-          
-          <div className="max-w-[1400px] mx-auto relative z-10">
-            <div className="grid lg:grid-cols-12 gap-y-12 lg:gap-x-16 items-start">
-              <div className="col-span-12 lg:col-span-7 flex flex-col justify-center pt-12">
-                
-                <div className="mb-20 lg:mb-32">
-                  <FadeUp>
-                    <div className="text-[clamp(3.5rem,7vw,6rem)] font-medium leading-[0.9] tracking-[-0.04em] text-white mb-8">
-                      <span className="text-[#0115DF] mr-2">/</span>
-                      <TextType
-                        text="join-us"
-                        typingSpeed={50}
-                        initialDelay={100}
-                        loop={false}
-                        showCursor={true}
-                        hideCursorOnComplete={true}
-                        cursorCharacter="|"
-                        className="inline"
-                        as="span"
-                        startOnVisible={true}
-                      />
-                    </div>
-                  </FadeUp>
-                  
-                  <FadeUp delay={0.1}>
-                    <p className="text-xl md:text-2xl text-white/60 leading-relaxed max-w-2xl font-light">
-                      Get access to exclusive events, mentorship, and a network of ambitious students and industry leaders.
-                    </p>
-                  </FadeUp>
-                </div>
-
-                <div className="grid md:grid-cols-12 gap-12 items-end">
-                  <div className="md:col-span-7 lg:col-span-8">
-                    <FadeUp delay={0.2}>
-                      <div className="mb-8 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap flex items-center gap-2">
-                        <span className="text-[#0115DF]">/</span>
-                        <TextType
-                          text="newsletter"
-                          typingSpeed={50}
-                          initialDelay={300}
-                          loop={false}
-                          showCursor={true}
-                          hideCursorOnComplete={true}
-                          cursorCharacter="|"
-                          className="inline"
-                          as="span"
-                          startOnVisible={true}
-                        />
-                      </div>
-                      <Newsletter variant="dark" />
-                    </FadeUp>
-                  </div>
-
-                  <div className="md:col-span-5 lg:col-span-4">
-                    <FadeUp delay={0.3}>
-                      <div className="mb-8 font-bold text-2xl text-white lg:text-3xl text-left whitespace-nowrap flex items-center gap-2">
-                        <span className="text-[#0115DF]">/</span>
-                        <TextType
-                          text="socials"
-                          typingSpeed={50}
-                          initialDelay={300}
-                          loop={false}
-                          showCursor={true}
-                          hideCursorOnComplete={true}
-                          cursorCharacter="|"
-                          className="inline"
-                          as="span"
-                          startOnVisible={true}
-                        />
-                      </div>
-                      <div className="flex flex-wrap gap-4">
-                        <Button
-                          href="https://www.linkedin.com/company/nyueeg/"
-                          borderColor="rgba(255, 255, 255, 0.6)"
-                          textColor="rgba(255, 255, 255, 0.6)"
-                          rippleColor="#0115DF"
-                          className="!p-0 size-14 !border"
-                        >
-                          <Linkedin className="size-6" strokeWidth={1} />
-                        </Button>
-                        <Button
-                          href="https://x.com/nyueeg"
-                          borderColor="rgba(255, 255, 255, 0.6)"
-                          textColor="rgba(255, 255, 255, 0.6)"
-                          rippleColor="#0115DF"
-                          className="!p-0 size-14 !border"
-                        >
-                          <svg viewBox="0 0 24 24" aria-hidden="true" className="size-6" fill="currentColor">
-                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.134l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                          </svg>
-                        </Button>
-                        <Button
-                          href="https://www.instagram.com/nyu.eeg/"
-                          borderColor="rgba(255, 255, 255, 0.6)"
-                          textColor="rgba(255, 255, 255, 0.6)"
-                          rippleColor="#0115DF"
-                          className="!p-0 size-14 !border"
-                        >
-                          <Instagram className="size-6" strokeWidth={1} />
-                        </Button>
-                      </div>
-                    </FadeUp>
-                  </div>
-                </div>
-              </div>
-
-              <div className="hidden lg:block col-span-12 lg:col-span-5 relative h-[800px] -mt-32">
-                 <div className="absolute inset-0 w-full h-full scale-110 origin-top">
-                  <Suspense fallback={null}>
-                    <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
-                  </Suspense>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* FAQ Section */}
+        <FAQSection />
       </main>
     </div>
   );

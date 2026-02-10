@@ -125,7 +125,7 @@ export default function PixelFillCanvas({
     setMaxDistance(maxDist);
   }, [color, gap, speed, origin.x, origin.y]);
 
-  const animate = useCallback(() => {
+  const animate = useCallback(function animateFrame() {
     const ctx = canvasRef.current?.getContext("2d");
     const canvas = canvasRef.current;
     if (!ctx || !canvas) return;
@@ -152,7 +152,7 @@ export default function PixelFillCanvas({
     }
 
     if (!allIdle || (active && waveClock.current < maxDistance + 100) || (!active && waveClock.current > 0)) {
-      animationRef.current = requestAnimationFrame(animate);
+      animationRef.current = requestAnimationFrame(animateFrame);
     } else {
       animationRef.current = null;
     }

@@ -1,4 +1,10 @@
-import { Navbar } from '../../components/Navbar';
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Startup",
+  description:
+    "PMC Startup Team — a 9-week accelerator for idea validation, building, and distribution & growth.",
+};
 
 export default function StartupLayout({
   children,
@@ -7,13 +13,6 @@ export default function StartupLayout({
 }) {
   return (
     <>
-      <style>{`
-        /* Hide root navbar on startup page - we use our own */
-        body > nav:first-of-type {
-          display: none !important;
-        }
-      `}</style>
-      <Navbar variant="dark" logoSuffix="startup" logoSuffixColor="#AD1DE0" />
       {children}
     </>
   );

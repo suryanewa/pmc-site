@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import Link from 'next/link';
 import { Button } from './Button';
 
 interface ProgramCardProps {
@@ -21,7 +20,7 @@ export function ProgramCard({
 }: ProgramCardProps) {
   return (
     <motion.div
-      className="bg-white rounded-[20px] overflow-hidden flex flex-col"
+      className="bg-[#3F3F3F] rounded-[20px] overflow-hidden flex flex-col"
       whileHover={{ y: -6 }}
       transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
     >
@@ -30,14 +29,14 @@ export function ProgramCard({
         className="h-[112px] flex items-center justify-center"
         style={{ backgroundColor: accentColor }}
       >
-        <h3 className="text-[36px] font-bold text-white tracking-[-0.075em]">
+        <h3 className="text-[36px] font-bold text-[#DBDBDB] tracking-[-0.075em]">
           {title}
         </h3>
       </div>
 
       {/* Body */}
       <div className="p-8 flex flex-col flex-1">
-        <p className="text-[18px] font-medium text-black tracking-[-0.02em] leading-relaxed mb-8 flex-1">
+        <p className="text-[18px] font-medium text-[#DBDBDB]/80 tracking-[-0.02em] leading-relaxed mb-8 flex-1">
           {description}
         </p>
 

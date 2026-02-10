@@ -1,4 +1,10 @@
-import { Navbar } from '../../components/Navbar';
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Investing",
+  description:
+    "PMC Investing Team — learn how investors evaluate startups through deep dives, debates, and deal mechanics.",
+};
 
 export default function InvestingLayout({
   children,
@@ -7,13 +13,6 @@ export default function InvestingLayout({
 }) {
   return (
     <>
-      <style>{`
-        /* Hide root navbar on investing page - we use our own */
-        body > nav:first-of-type {
-          display: none !important;
-        }
-      `}</style>
-      <Navbar variant="dark" logoSuffix="investing" logoSuffixColor="#2DB67D" />
       {children}
     </>
   );

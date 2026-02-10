@@ -1,5 +1,18 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Gate (local + CI)
+
+Run before opening a PR (CI runs the same gate):
+
+```bash
+npm ci
+npm run lint
+npm run typecheck
+npm run check:assets
+npm run build
+npm audit --audit-level=high
+```
+
 ## Getting Started
 
 First, run the development server:

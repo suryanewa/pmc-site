@@ -9,7 +9,7 @@ export function ScrollBackground() {
       {/* Main animated background */}
       <motion.div
         className="fixed inset-0 -z-20 transition-colors duration-[500ms] ease-[cubic-bezier(0.22,1,0.36,1)]"
-        style={{ backgroundColor: "var(--scroll-background, #F7F3EE)" }}
+        style={{ backgroundColor: "var(--scroll-background, #000000)" }}
       />
       
       {/* Subtle noise texture overlay */}

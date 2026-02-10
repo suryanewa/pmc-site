@@ -58,9 +58,9 @@ export function Timeline({
               {/* Connector Line with Diamond */}
               <div className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center">
                 {/* Diamond (near card) */}
-                <div className="w-[6px] h-[6px] bg-white rotate-45" />
+                <div className="w-[6px] h-[6px] bg-[#DBDBDB] rotate-45" />
                 {/* Line (to timeline) */}
-                <div className="w-[46px] h-[2px] bg-white" />
+                <div className="w-[46px] h-[2px] bg-[#DBDBDB]" />
               </div>
               {/* Badges positioned relative to this card */}
               {phase.badges?.map((badge, idx) => (
@@ -84,7 +84,7 @@ export function Timeline({
         </div>
 
         {/* Timeline Line */}
-        <div className="bg-white" />
+        <div className="bg-[#DBDBDB]" />
 
         {/* Right Column */}
         <div className="flex flex-col justify-start space-y-[200px] pt-[40px] pb-[40px] translate-y-[180px] items-start">
@@ -98,9 +98,9 @@ export function Timeline({
               {/* Connector Line with Diamond */}
               <div className="absolute left-0 top-1/2 -translate-y-1/2 flex items-center flex-row-reverse">
                 {/* Diamond (near card) */}
-                <div className="w-[6px] h-[6px] bg-white rotate-45" />
+                <div className="w-[6px] h-[6px] bg-[#DBDBDB] rotate-45" />
                 {/* Line (to timeline) */}
-                <div className="w-[46px] h-[2px] bg-white" />
+                <div className="w-[46px] h-[2px] bg-[#DBDBDB]" />
               </div>
               {/* Badges positioned relative to this card */}
               {phase.badges?.map((badge, idx) => (

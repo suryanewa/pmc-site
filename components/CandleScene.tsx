@@ -5,39 +5,41 @@ import { useEffect, useState } from "react";
 interface CandleSceneProps {
   className?: string;
   isHovered?: boolean;
+  isActive?: boolean;
 }
 
-export default function CandleScene({ className = "", isHovered = false }: CandleSceneProps) {
+export default function CandleScene({ className = "", isHovered = false, isActive = false }: CandleSceneProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
+    if (!isActive || isLoaded) return;
     const timer = setTimeout(() => {
       setIsLoaded(true);
     }, 100);
     return () => clearTimeout(timer);
-  }, []);
+  }, [isActive, isLoaded]);
 
   const candleGradient = isHovered
-    ? "linear-gradient(#2DB67D, #25a06d, #1a7a52, #0f5a3a 50%, #082e1e)"
-    : "linear-gradient(#1a6b4a, #156045, #0f4a35, #0a3525 50%, #051a12)";
+    ? "linear-gradient(#41C9C1, #5076DD, #6966E3, #3F3F3F 50%, #000000)"
+    : "linear-gradient(#5076DD, #6966E3, #3F3F3F, #000000 50%, #000000)";
   
   const candleTopGradient = isHovered
-    ? "radial-gradient(#3dd68f, #1f8a5a 45%, #25a06d 80%)"
-    : "radial-gradient(#2a8060, #156045 45%, #1a6b4a 80%)";
+    ? "radial-gradient(#41C9C1, #5076DD 45%, #6966E3 80%)"
+    : "radial-gradient(#5076DD, #3F3F3F 45%, #000000 80%)";
   
-  const candleTopBorder = isHovered ? "#25a06d" : "#156045";
+  const candleTopBorder = isHovered ? "#41C9C1" : "#3F3F3F";
   
   const threadGradient = isHovered
-    ? "linear-gradient(#5de8a8, #2a6b4a, #1a3a2a, black, #7af5bc 90%)"
-    : "linear-gradient(#3a8a65, #1a4a35, #0f2a1a, black, #4ab085 90%)";
+    ? "linear-gradient(#41C9C1, #5076DD, #3F3F3F, black, #6966E3 90%)"
+    : "linear-gradient(#5076DD, #3F3F3F, #000000, black, #3F3F3F 90%)";
   
   const flameOpacity = isHovered ? 1 : 0.7;
-  const glowColor = isHovered ? "rgba(45, 182, 125, 0.8)" : "rgba(45, 182, 125, 0.4)";
+  const glowColor = isHovered ? "rgba(65, 201, 193, 0.8)" : "rgba(65, 201, 193, 0.4)";
   const glowShadow = isHovered
-    ? "0 -40px 30px 0 #2DB67D, 0 40px 50px 0 #2DB67D, inset 3px 0 2px 0 rgba(45, 182, 125, 0.6), inset -3px 0 2px 0 rgba(45, 182, 125, 0.6)"
-    : "0 -20px 15px 0 #1a6b4a, 0 20px 25px 0 #1a6b4a, inset 2px 0 1px 0 rgba(45, 182, 125, 0.3), inset -2px 0 1px 0 rgba(45, 182, 125, 0.3)";
+    ? "0 -40px 30px 0 #41C9C1, 0 40px 50px 0 #41C9C1, inset 3px 0 2px 0 rgba(65, 201, 193, 0.6), inset -3px 0 2px 0 rgba(65, 201, 193, 0.6)"
+    : "0 -20px 15px 0 #5076DD, 0 20px 25px 0 #5076DD, inset 2px 0 1px 0 rgba(65, 201, 193, 0.3), inset -2px 0 1px 0 rgba(65, 201, 193, 0.3)";
   
-  const blinkingGlowColor = isHovered ? "#2DB67D" : "#1a6b4a";
+  const blinkingGlowColor = isHovered ? "#41C9C1" : "#5076DD";
   const blinkingGlowBlur = isHovered ? "60px" : "40px";
 
   const flameAnimationDuration = isHovered ? "1.5s" : "6s";
@@ -54,6 +56,8 @@ export default function CandleScene({ className = "", isHovered = false }: Candl
     : 'calc(100% - 380px - 28px)';
   
   const threadHeight = isHovered ? 32 : 20;
+
+  const introDuration = 6.5;
 
   return (
     <div 
@@ -72,6 +76,8 @@ export default function CandleScene({ className = "", isHovered = false }: Candl
           height: '450px',
           position: 'relative',
           transform: 'scale(0.9)',
+          transformOrigin: 'bottom center',
+          animation: isLoaded ? `candle-generate ${introDuration}s ease-out both` : 'none',
         }}
       >
         <div 
@@ -185,7 +191,7 @@ export default function CandleScene({ className = "", isHovered = false }: Candl
             transform: 'translateX(-50%)',
             top: flameTop,
             borderRadius: '50% 50% 20% 20%',
-            background: 'linear-gradient(white 80%, transparent)',
+            background: 'linear-gradient(#DBDBDB 80%, transparent)',
             opacity: flameOpacity,
             animation: isLoaded 
               ? `moveFlame ${flameAnimationDuration} linear infinite, enlargeFlame ${enlargeAnimationDuration} linear infinite`
@@ -200,7 +206,7 @@ export default function CandleScene({ className = "", isHovered = false }: Candl
               width: '100%',
               height: '100%',
               borderRadius: '50% 50% 20% 20%',
-              boxShadow: `0 0 10px 0 rgba(45, 182, 125, 0.4), 0 -4px 3px 0 rgba(45, 182, 125, 0.7)`,
+              boxShadow: `0 0 10px 0 rgba(65, 201, 193, 0.4), 0 -4px 3px 0 rgba(65, 201, 193, 0.7)`,
             }}
           />
         </div>
@@ -233,6 +239,21 @@ export default function CandleScene({ className = "", isHovered = false }: Candl
         
         .not-loaded * {
           animation-play-state: paused !important;
+        }
+
+        @keyframes candle-generate {
+          0% {
+            opacity: 0;
+            transform: translateY(80px) scale(0.9, 0.2);
+          }
+          60% {
+            opacity: 1;
+            transform: translateY(0) scale(0.9, 1.05);
+          }
+          100% {
+            opacity: 1;
+            transform: translateY(0) scale(0.9, 1);
+          }
         }
       `}</style>
     </div>

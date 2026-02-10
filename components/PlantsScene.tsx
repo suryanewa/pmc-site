@@ -17,9 +17,9 @@ export default function PlantsScene({ className = "", isHovered = false }: Plant
     return () => clearTimeout(timer);
   }, []);
 
-  const primaryColor = isHovered ? "#AD1DE0" : "#5a1a6e";
-  const accentColor = isHovered ? "#E879F9" : "#3d1250";
-  const stemColor = isHovered ? "#7C3AED" : "#3d1a4d";
+  const primaryColor = isHovered ? "#41C9C1" : "#5076DD";
+  const accentColor = isHovered ? "#6966E3" : "#3F3F3F";
+  const stemColor = "#3F3F3F";
 
   return (
     <div 
@@ -337,7 +337,7 @@ function whiteCircleStyle(): React.CSSProperties {
     width: '9vmin',
     height: '4vmin',
     borderRadius: '50%',
-    backgroundColor: '#fff',
+    backgroundColor: '#DBDBDB',
   };
 }
 
@@ -345,7 +345,7 @@ function lineStyle(height: number, color: string, isLoaded: boolean, delay: numb
   return {
     height: `${height}vmin`,
     width: '1.5vmin',
-    backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent, rgba(255, 255, 255, 0.2)), linear-gradient(to top, transparent 10%, ${color}, ${color})`,
+    backgroundImage: `linear-gradient(to left, rgba(0, 0, 0, 0.2), transparent, rgba(219, 219, 219, 0.2)), linear-gradient(to top, transparent 10%, ${color}, ${color})`,
     boxShadow: 'inset 0 0 2px rgba(0, 0, 0, 0.5)',
     animation: isLoaded ? `grow-flower-tree 4s ${delay}s backwards` : 'none',
     transition: 'background-image 0.5s',
