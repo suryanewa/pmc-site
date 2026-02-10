@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Startup",
+  title: "Product Team",
   description:
-    "PMC Startup Team — a 9-week accelerator for idea validation, building, and distribution & growth.",
+    "PMC Product Team — a 10-week hands-on program to experience the full product management lifecycle, from ideation to production specifications.",
 };
 
 export default function StartupLayout({

@@ -33,25 +33,25 @@ const HeroScene = dynamic(
 // Programs data
 const programs = [
   {
-    id: 'startup',
+    id: 'product-team',
     title: 'Product Team',
     description: '',
     color: '#5076DD',
-    href: '/programs/startup',
+    href: '/programs/product-team',
   },
   {
-    id: 'investing',
+    id: 'mentorship',
     title: 'Mentorship',
     description: '',
     color: '#6966E3',
-    href: '/programs/investing',
+    href: '/programs/mentorship',
   },
   {
-    id: 'eir',
+    id: 'grad-bootcamp',
     title: 'Grad Bootcamp',
     description: '',
     color: '#41C9C1',
-    href: '/programs/eir',
+    href: '/programs/grad-bootcamp',
   },
 ];
 

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Investing",
+  title: "Mentorship",
   description:
-    "PMC Investing Team — learn how investors evaluate startups through deep dives, debates, and deal mechanics.",
+    "PMC Mentorship Program — one-on-one guidance from experienced PMs across two tracks: Intro and Advanced.",
 };
 
 export default function InvestingLayout({

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "EIR",
+  title: "Graduate PM Bootcamp",
   description:
-    "Entrepreneurs In Residence — PMC’s accelerator for NYU founders: tailored workshops, mentorship, and VC networking.",
+    "PMC Graduate PM Bootcamp — a 10-day intensive program for NYU graduate students to experience the full product management lifecycle.",
 };
 
 export default function EirLayout({

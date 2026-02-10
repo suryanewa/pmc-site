@@ -72,85 +72,85 @@ const DEFAULT_FAQ_ITEMS = [
 
 const STARTUP_FAQ_ITEMS = [
   {
-    question: 'Do I need a startup idea to apply?',
+    question: 'Do I need prior PM experience to apply?',
     answer:
-      'No. Many successful participants start without a specific idea. The program is designed to help you discover problems worth solving through user interviews and validation exercises. If you already have an idea, that works too—we\'ll help you validate and refine it.',
+      'Not at all! Product Team is designed for students who are new to product management. We\'re here to help you do real PM work from day one. All you need is curiosity about technology and a passion for solving user problems.',
   },
   {
-    question: 'What if I have no coding or design experience?',
+    question: 'What will I have at the end of the program?',
     answer:
-      'That\'s fine. We teach rapid prototyping using modern AI tools and no-code platforms. The focus is on validating problems and shipping quickly, not building perfect products. You\'ll learn the fundamentals as you go.',
+      'You\'ll have a complete product case study, high-fidelity prototypes, product roadmaps and launch strategies, and a solid portfolio piece for PM interviews. You\'ll also have experience presenting to industry PMs and receiving professional feedback.',
   },
   {
     question: 'How much time does the program require?',
     answer:
-      'Expect 8–12 hours per week during the 9-week program. This includes weekly sessions, office hours, user interviews, and building. We design it to work alongside a full course load.',
+      'Plan for about 6–7 hours per week during the 10-week program. This includes weekly sessions, user research activities, prototyping work, and presentations. It\'s designed to work alongside a full course load.',
   },
   {
-    question: 'What happens after the 9 weeks?',
+    question: 'What does the application process look like?',
     answer:
-      'You\'ll have a validated product, early users, and potentially revenue. Many teams continue building after the program, and we provide ongoing support, connections, and access to our network of founders and investors.',
+      'Our application has 2 rounds: a written application with questions about your PM interests and how you think about products, followed by an interview to get to know you and understand your problem-solving approach.',
   },
   {
-    question: 'Can I work with a team?',
+    question: 'Who can apply?',
     answer:
-      'Yes. You can apply as a solo founder or with a team. Many participants find co-founders during the program. We\'ll help facilitate team formation and ensure everyone has a clear role.',
+      'Product Team is open to first and second year undergraduate students. No prior PM experience is required—just bring your curiosity about technology and passion for creating impact.',
   },
 ];
 
 const INVESTING_FAQ_ITEMS = [
   {
-    question: 'Do I need finance or investing experience?',
+    question: 'What\'s the difference between Intro and Advanced tracks?',
     answer:
-      'No prior experience required. We teach you how to think like a VC from first principles. The program is designed for students who are curious about how startups are evaluated and want to develop sharp investment judgment.',
+      'Intro is for students early in their PM journey—you\'ll be paired with a PMC E-Board member to learn PM fundamentals. Advanced is for students actively recruiting—you\'ll be paired with a full-time Product Manager from industry for guidance on recruiting, interviewing, and career progression.',
   },
   {
-    question: 'What will I actually learn?',
+    question: 'How often do I meet with my mentor?',
     answer:
-      'You\'ll learn mental models for evaluating markets and companies, how to break down businesses from first principles, fund math and term sheets, deal sourcing, and how to build conviction and articulate investment theses. By the end, you\'ll analyze real startups like a VC.',
+      'You\'ll meet your assigned mentor at least once every two weeks at your own discretion, with at least one meeting in person. A guided syllabus tailored to your track helps you structure and maximize your meetings.',
   },
   {
-    question: 'How much time does the program require?',
+    question: 'What events are included?',
     answer:
-      'Expect 6–10 hours per week during the 9-week program. This includes weekly sessions, reading assignments, company deep dives, debates, and optional office hours. We design it to work alongside your coursework.',
+      'Mentees get exclusive access to mentorship-only events, including workshops, professional Q&A sessions, interview prep, office tours (like our Mastercard NYC visit), kickoff events, and a farewell celebration.',
   },
   {
-    question: 'Will this help me get a job in VC?',
+    question: 'What companies do Advanced mentors come from?',
     answer:
-      'Many alumni have gone on to work at top VC firms, but the program focuses on teaching you how to think like an investor, not just preparing you for interviews. You\'ll develop skills that are valuable whether you pursue VC, startup roles, or entrepreneurship.',
+      'Advanced track mentors are full-time Product Managers from companies like Google, JPMC, Mastercard, PwC, NYU Langone, and more. They bring real industry experience across a range of sectors.',
   },
   {
-    question: 'What\'s the format of the sessions?',
+    question: 'Is attendance at events required?',
     answer:
-      'Sessions combine lectures, case studies, debates, and hands-on exercises. You\'ll analyze real companies, practice deal analysis, and engage in structured discussions. The format is interactive and designed to build judgment through practice.',
+      'Yes. Mentees are required to attend mentorship-exclusive events, including networking sessions and professional workshops across the semester. This is how you get the most value from the program.',
   },
 ];
 
 const EIR_FAQ_ITEMS = [
   {
-    question: 'How is EIR different from /startup?',
+    question: 'Do I need prior PM experience to apply?',
     answer:
-      'EIR is tailored for founders who already have a startup or are actively building. Instead of a structured curriculum, you get personalized mentorship, need-based workshops, and direct access to VC partners based on your specific challenges. It\'s more flexible and founder-driven.',
+      'No! The Graduate PM Bootcamp is designed for students with 0–1 years of experience who are new to product management. We teach you real PM frameworks from the ground up—Design Thinking, Lean Startup, Agile, and more.',
   },
   {
-    question: 'What stage should my startup be at?',
+    question: 'How intensive is the program?',
     answer:
-      'EIR welcomes founders at various stages—from refining an idea to building an MVP to pushing toward revenue. The program adapts to where you are. What matters is that you\'re serious about building and ready to engage with mentorship.',
+      'The bootcamp runs 10 sessions between February 23 and March 27. Each session is 2.5 hours (6:00–8:30 PM), plus independent work on deliverables between sessions. It\'s intensive but designed to be manageable alongside your coursework.',
   },
   {
-    question: 'How selective is the program?',
+    question: 'What will I have when it\'s over?',
     answer:
-      'EIR is highly selective. We look for founders who demonstrate commitment, clarity about what they\'re building, and readiness to make the most of mentorship. The application includes written responses and an interview to ensure fit.',
+      'You\'ll walk away with a portfolio-ready PRD, user research summaries with journey maps, prioritized feature sets with OKRs, a working prototype or vibe-coded MVP, a complete presentation deck, and a resume-ready project for PM interviews.',
   },
   {
-    question: 'What kind of mentorship do I get?',
+    question: 'Who is this program for?',
     answer:
-      'You\'ll have access to VC partners, experienced founders, and industry experts through office hours, founder dinners, and workshops. Mentorship is tailored to your needs—whether that\'s product strategy, fundraising, go-to-market, or technical challenges.',
+      'The Graduate PM Bootcamp is for NYU graduate students with 0–1 years of experience in software engineering, marketing, or design who are curious about how products are built and passionate about solving user problems.',
   },
   {
-    question: 'Can I get funding through EIR?',
+    question: 'How do I apply?',
     answer:
-      'While EIR doesn\'t guarantee funding, many founders have raised capital through connections made in the program. You\'ll have opportunities to pitch to investors, and the program culminates in pitch events with VC exposure. The focus is on building a strong company first.',
+      'Applications open at the beginning of each semester. The process has 2 rounds: a written application about your PM interests and experience, followed by an interview. Subscribe to our newsletter or follow NYUPMC to know when applications go live.',
   },
 ];
 

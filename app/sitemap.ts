@@ -12,9 +12,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/people/past-teams", priority: 0.7 },
     { path: "/people/e-board", priority: 0.7 },
     { path: "/people/leads", priority: 0.7 },
-    { path: "/programs/startup", priority: 0.8 },
-    { path: "/programs/investing", priority: 0.8 },
-    { path: "/programs/eir", priority: 0.8 },
+    { path: "/programs/product-team", priority: 0.8 },
+    { path: "/programs/mentorship", priority: 0.8 },
+    { path: "/programs/grad-bootcamp", priority: 0.8 },
     { path: "/mac3d", priority: 0.4 },
   ];
 
