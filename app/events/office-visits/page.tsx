@@ -6,7 +6,7 @@ import { JoinUsSection } from '../../components/JoinUsSection';
 import { FAQSection } from '../../components/FAQSection';
 import { Button } from '../../components/Button';
 import { Chip } from '../../components/Chip';
-import TextType from '@/components/TextType';
+import { TextAnimate } from '@/components/ui/text-animate';
 import PixelHoverCanvas from '@/components/PixelHoverCanvas';
 import CountUp from '@/components/CountUp';
 
@@ -118,17 +118,9 @@ export default function OfficeVisitsPage() {
           <div className="flex flex-col items-center gap-6 max-w-3xl text-center">
             <FadeUp>
               <h1 className="section-title text-[#DBDBDB] text-center">
-                <TextType
-                  text="Office Tours"
-                  typingSpeed={45}
-                  initialDelay={400}
-                  loop={false}
-                  showCursor
-                  hideCursorOnComplete
-                  cursorCharacter="|"
-                  className="inline"
-                  as="span"
-                />
+                <TextAnimate as="span" animation="slideLeft" by="character" className="inline">
+                  Office Tours
+                </TextAnimate>
               </h1>
             </FadeUp>
 
@@ -182,18 +174,9 @@ export default function OfficeVisitsPage() {
                 />
                 <div className="relative z-10 p-8 md:p-12">
                   <h2 className="section-title text-[#DBDBDB] mb-8 text-center">
-                    <TextType
-                      text="Overview"
-                      typingSpeed={45}
-                      initialDelay={100}
-                      loop={false}
-                      showCursor
-                      hideCursorOnComplete
-                      cursorCharacter="|"
-                      className="inline"
-                      as="span"
-                      startOnVisible
-                    />
+                    <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                      Overview
+                    </TextAnimate>
                   </h2>
                   <p className="text-base md:text-lg text-[#DBDBDB]/80 leading-relaxed max-w-3xl mx-auto text-center">
                     There&apos;s only so much you can learn from slides and case
@@ -284,18 +267,9 @@ export default function OfficeVisitsPage() {
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-16">
-              <TextType
-                text="More Than a Visit"
-                typingSpeed={35}
-                initialDelay={100}
-                loop={false}
-                showCursor
-                hideCursorOnComplete
-                cursorCharacter="|"
-                className="inline"
-                as="span"
-                startOnVisible
-              />
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                More Than a Visit
+              </TextAnimate>
             </h2>
           </FadeUp>
 
@@ -332,18 +306,9 @@ export default function OfficeVisitsPage() {
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-4">
-              <TextType
-                text="Industries We Explore"
-                typingSpeed={35}
-                initialDelay={100}
-                loop={false}
-                showCursor
-                hideCursorOnComplete
-                cursorCharacter="|"
-                className="inline"
-                as="span"
-                startOnVisible
-              />
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                Industries We Explore
+              </TextAnimate>
             </h2>
             <p className="text-lg text-[#DBDBDB]/60 text-center mb-12 max-w-2xl mx-auto">
               We prioritize companies that are building interesting products,

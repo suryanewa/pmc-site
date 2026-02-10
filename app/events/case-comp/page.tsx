@@ -6,7 +6,7 @@ import { JoinUsSection } from '../../components/JoinUsSection';
 import { FAQSection } from '../../components/FAQSection';
 import { Button } from '../../components/Button';
 import { Chip } from '../../components/Chip';
-import TextType from '@/components/TextType';
+import { TextAnimate } from '@/components/ui/text-animate';
 import PixelHoverCanvas from '@/components/PixelHoverCanvas';
 import { Timeline } from '@/components/ui/timeline';
 
@@ -229,17 +229,9 @@ export default function CaseCompPage() {
           <div className="flex flex-col items-center gap-6 max-w-3xl text-center">
             <FadeUp>
               <h1 className="section-title text-[#DBDBDB] text-center">
-                <TextType
-                  text="Case Competition"
-                  typingSpeed={45}
-                  initialDelay={400}
-                  loop={false}
-                  showCursor
-                  hideCursorOnComplete
-                  cursorCharacter="|"
-                  className="inline"
-                  as="span"
-                />
+                <TextAnimate as="span" animation="slideLeft" by="character" className="inline">
+                  Case Competition
+                </TextAnimate>
               </h1>
             </FadeUp>
 
@@ -290,18 +282,9 @@ export default function CaseCompPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             <FadeUp>
               <h2 className="section-title text-[#DBDBDB] mb-8">
-                <TextType
-                  text="What Is Case Competition"
-                  typingSpeed={35}
-                  initialDelay={100}
-                  loop={false}
-                  showCursor
-                  hideCursorOnComplete
-                  cursorCharacter="|"
-                  className="inline"
-                  as="span"
-                  startOnVisible
-                />
+                <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                  What Is Case Competition
+                </TextAnimate>
               </h2>
               <p className="text-base md:text-lg text-[#DBDBDB]/70 leading-relaxed">
                 Case Competition is a product strategy challenge structured like
@@ -333,18 +316,9 @@ export default function CaseCompPage() {
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-16">
-              <TextType
-                text="How to Participate"
-                typingSpeed={35}
-                initialDelay={100}
-                loop={false}
-                showCursor
-                hideCursorOnComplete
-                cursorCharacter="|"
-                className="inline"
-                as="span"
-                startOnVisible
-              />
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                How to Participate
+              </TextAnimate>
             </h2>
           </FadeUp>
 
@@ -371,18 +345,9 @@ export default function CaseCompPage() {
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-16">
-              <TextType
-                text="What You Gain"
-                typingSpeed={35}
-                initialDelay={100}
-                loop={false}
-                showCursor
-                hideCursorOnComplete
-                cursorCharacter="|"
-                className="inline"
-                as="span"
-                startOnVisible
-              />
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                What You Gain
+              </TextAnimate>
             </h2>
           </FadeUp>
 
@@ -445,18 +410,9 @@ export default function CaseCompPage() {
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] mb-0 text-center">
-              <TextType
-                text="The Timeline"
-                typingSpeed={45}
-                initialDelay={100}
-                loop={false}
-                showCursor
-                hideCursorOnComplete
-                cursorCharacter="|"
-                className="inline"
-                as="span"
-                startOnVisible
-              />
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                The Timeline
+              </TextAnimate>
             </h2>
           </FadeUp>
           <FadeIn delay={0.2}>
@@ -472,18 +428,9 @@ export default function CaseCompPage() {
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-4">
-              <TextType
-                text="Sponsors & Partners"
-                typingSpeed={35}
-                initialDelay={100}
-                loop={false}
-                showCursor
-                hideCursorOnComplete
-                cursorCharacter="|"
-                className="inline"
-                as="span"
-                startOnVisible
-              />
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                Sponsors & Partners
+              </TextAnimate>
             </h2>
             <p className="text-lg text-[#DBDBDB]/60 text-center mb-16 max-w-2xl mx-auto">
               Our sponsors provide case challenges, judge panels, mentorship,
@@ -539,18 +486,9 @@ export default function CaseCompPage() {
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-4">
-              <TextType
-                text="Partner Schools"
-                typingSpeed={35}
-                initialDelay={100}
-                loop={false}
-                showCursor
-                hideCursorOnComplete
-                cursorCharacter="|"
-                className="inline"
-                as="span"
-                startOnVisible
-              />
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                Partner Schools
+              </TextAnimate>
             </h2>
             <p className="text-lg text-[#DBDBDB]/60 text-center mb-12 max-w-2xl mx-auto">
               Students from top universities across the country compete.

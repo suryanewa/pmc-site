@@ -5,7 +5,7 @@ import { FadeUp, FadeIn, StaggerContainer, StaggerItem } from '../../components/
 import { JoinUsSection } from '../../components/JoinUsSection';
 import { FAQSection } from '../../components/FAQSection';
 import { Button } from '../../components/Button';
-import TextType from '@/components/TextType';
+import { TextAnimate } from '@/components/ui/text-animate';
 import PixelHoverCanvas from '@/components/PixelHoverCanvas';
 import CountUp from '@/components/CountUp';
 import { LogoLoop } from '@/components/LogoLoop';
@@ -177,17 +177,9 @@ export default function SpeakersPage() {
           <div className="flex flex-col items-center gap-6 max-w-3xl text-center">
             <FadeUp>
               <h1 className="section-title text-[#DBDBDB] text-center">
-                <TextType
-                  text="Speaker Series"
-                  typingSpeed={45}
-                  initialDelay={400}
-                  loop={false}
-                  showCursor
-                  hideCursorOnComplete
-                  cursorCharacter="|"
-                  className="inline"
-                  as="span"
-                />
+                <TextAnimate as="span" animation="slideLeft" by="character" className="inline">
+                  Speaker Series
+                </TextAnimate>
               </h1>
             </FadeUp>
 
@@ -260,18 +252,9 @@ export default function SpeakersPage() {
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-16">
-              <TextType
-                text="Learn From the People Building the Future"
-                typingSpeed={35}
-                initialDelay={100}
-                loop={false}
-                showCursor
-                hideCursorOnComplete
-                cursorCharacter="|"
-                className="inline"
-                as="span"
-                startOnVisible
-              />
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                Learn From the People Building the Future
+              </TextAnimate>
             </h2>
           </FadeUp>
 
@@ -312,18 +295,9 @@ export default function SpeakersPage() {
         <div className="max-w-[1400px] mx-auto px-6 md:px-16 lg:px-24">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-4">
-              <TextType
-                text="Where Our Speakers Come From"
-                typingSpeed={35}
-                initialDelay={100}
-                loop={false}
-                showCursor
-                hideCursorOnComplete
-                cursorCharacter="|"
-                className="inline"
-                as="span"
-                startOnVisible
-              />
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                Where Our Speakers Come From
+              </TextAnimate>
             </h2>
             <p className="text-lg text-[#DBDBDB]/60 text-center mb-12 max-w-2xl mx-auto">
               We&apos;ve hosted leaders from startups to Fortune 500s.
@@ -348,18 +322,9 @@ export default function SpeakersPage() {
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-16">
-              <TextType
-                text="Why Students Keep Coming Back"
-                typingSpeed={35}
-                initialDelay={100}
-                loop={false}
-                showCursor
-                hideCursorOnComplete
-                cursorCharacter="|"
-                className="inline"
-                as="span"
-                startOnVisible
-              />
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                Why Students Keep Coming Back
+              </TextAnimate>
             </h2>
           </FadeUp>
 
@@ -393,18 +358,9 @@ export default function SpeakersPage() {
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-12">
-              <TextType
-                text="Join Us Thursday"
-                typingSpeed={45}
-                initialDelay={100}
-                loop={false}
-                showCursor
-                hideCursorOnComplete
-                cursorCharacter="|"
-                className="inline"
-                as="span"
-                startOnVisible
-              />
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                Join Us Thursday
+              </TextAnimate>
             </h2>
           </FadeUp>
 
