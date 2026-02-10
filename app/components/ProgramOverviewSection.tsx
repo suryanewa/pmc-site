@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { FadeUp } from "./ScrollAnimations";
-import TextType from "@/components/TextType";
+import { TextAnimate } from "@/components/ui/text-animate";
 import PixelHoverCanvas from "@/components/PixelHoverCanvas";
 
 interface ProgramOverviewSectionProps {
@@ -12,6 +12,9 @@ interface ProgramOverviewSectionProps {
   imageSrc?: string;
   imageAlt?: string;
   accentColor?: string;
+  whatToExpectIntro?: string;
+  timeCommitment?: string;
+  timeCommitmentLabel?: string;
 }
 
 export function ProgramOverviewSection({
@@ -21,6 +24,9 @@ export function ProgramOverviewSection({
   imageSrc = "/community/retreat-f2025.png", // Default fallback
   imageAlt = "Program overview image",
   accentColor = "#41C9C1",
+  whatToExpectIntro = "Students will finish with 5+ portfolio projects including:",
+  timeCommitment = "10-15 hrs / wk",
+  timeCommitmentLabel = "Time commitment:",
 }: ProgramOverviewSectionProps) {
   const [hoverTop, setHoverTop] = useState(false);
   const [hoverExpect, setHoverExpect] = useState(false);
@@ -35,7 +41,7 @@ export function ProgramOverviewSection({
   };
 
   return (
-    <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24 min-h-[50vh]">
+    <section className="relative z-10 px-6 md:px-16 lg:px-24 py-32 min-h-[50vh]">
       <div className="max-w-[1400px] mx-auto">
         <FadeUp>
           {/* Main Card Container */}
@@ -61,18 +67,9 @@ export function ProgramOverviewSection({
                 {/* Left Panel: Title & Description */}
                 <div className="p-8 md:p-12 flex flex-col justify-center">
                   <h2 className="section-title text-[#DBDBDB] mb-8 text-center">
-                    <TextType
-                      text="Overview"
-                      typingSpeed={45}
-                      initialDelay={100}
-                      loop={false}
-                      showCursor={true}
-                      hideCursorOnComplete={true}
-                      cursorCharacter="|"
-                      className="inline"
-                      as="span"
-                      startOnVisible={true}
-                    />
+                    <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                      Overview
+                    </TextAnimate>
                   </h2>
                   <div className="text-base md:text-lg text-[#DBDBDB]/80 leading-relaxed space-y-6">
                     {description}
@@ -113,7 +110,7 @@ export function ProgramOverviewSection({
                 />
                 <div className="relative z-10">
                   <h3 className="text-sm font-bold tracking-widest text-[#DBDBDB] uppercase mb-6">What to Expect</h3>
-                  <p className="text-base md:text-lg text-[#DBDBDB]/70 mb-6">Students will finish with 5+ portfolio projects including:</p>
+                  <p className="text-base md:text-lg text-[#DBDBDB]/70 mb-6">{whatToExpectIntro}</p>
                   <ul className="space-y-3 text-base md:text-lg">
                     {whatToExpect.map((item, index) => (
                       <li key={index} className="flex items-start gap-3 text-[#DBDBDB]/80">
@@ -149,9 +146,11 @@ export function ProgramOverviewSection({
                       </li>
                     ))}
                   </ul>
-                  <div className="mt-8 text-base md:text-lg text-[#DBDBDB]/60">
-                    Time commitment: <strong className="text-[#DBDBDB]">10-15 hrs / wk</strong> (varies)
-                  </div>
+                  {timeCommitment && (
+                    <div className="mt-8 text-base md:text-lg text-[#DBDBDB]/60">
+                      {timeCommitmentLabel} <strong className="text-[#DBDBDB]">{timeCommitment}</strong>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
