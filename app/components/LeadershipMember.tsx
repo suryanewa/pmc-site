@@ -61,6 +61,19 @@ export function LeadershipMember({
               transition={{ duration: 0.2, ease: 'easeOut' }}
             />
             <motion.div
+              className="pointer-events-none absolute bottom-0 left-0 h-[60%] w-full"
+              style={{
+                background:
+                  'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.25) 40%, rgba(0,0,0,0.7) 100%)',
+              }}
+              animate={isHovered ? 'visible' : 'hidden'}
+              variants={{
+                hidden: { opacity: 0 },
+                visible: { opacity: 1 },
+              }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+            />
+            <motion.div
               className="absolute bottom-0 left-0 right-0"
               animate={isHovered ? 'visible' : 'hidden'}
               variants={{
