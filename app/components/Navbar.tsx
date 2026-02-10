@@ -51,12 +51,6 @@ function Logo({ suffix, suffixColor, slashColor }: LogoProps) {
         <span className="flex items-baseline">
           <span
             className="text-[1.5rem] md:text-[1.75rem] font-medium tracking-tight"
-            style={{ fontFamily: 'var(--font-gotham-medium)', color: slashColor || '#41C9C1' }}
-          >
-            /
-          </span>
-          <span
-            className="text-[1.5rem] md:text-[1.75rem] font-medium tracking-tight"
             style={{ fontFamily: 'var(--font-gotham-medium)', color: suffixColor || '#41C9C1' }}
           >
             {suffix}

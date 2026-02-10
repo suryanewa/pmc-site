@@ -6,9 +6,9 @@ import { Navbar } from "./Navbar";
 
 const LIGHT_BLUE = "#41C9C1";
 const PROGRAMS = [
-  { slug: "product-team", color: "#5076DD" },
-  { slug: "mentorship", color: "#6966E3" },
-  { slug: "grad-bootcamp", color: "#41C9C1" },
+  { slug: "product-team", label: "Product Team", color: "#5076DD" },
+  { slug: "mentorship", label: "Mentorship", color: "#6966E3" },
+  { slug: "grad-bootcamp", label: "Grad Bootcamp", color: "#41C9C1" },
 ];
 const PEOPLE_ROUTES = ["leadership", "teams", "community"] as const;
 const PEOPLE_LABELS: Record<(typeof PEOPLE_ROUTES)[number], string> = {
@@ -27,7 +27,7 @@ const PEOPLE_LABELS: Record<(typeof PEOPLE_ROUTES)[number], string> = {
     return (
       <Navbar
         variant="dark"
-        logoSuffix={programMatch.slug}
+        logoSuffix={programMatch.label}
         logoSuffixColor={programMatch.color}
       />
     );
