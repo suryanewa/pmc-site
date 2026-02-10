@@ -1,5 +1,7 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+import { useState } from 'react';
 import { Timeline } from '@/components/ui/timeline';
 import { FadeUp, FadeIn } from '../../components/ScrollAnimations';
 import { Chip } from '../../components/Chip';
@@ -9,6 +11,9 @@ import { FAQSection } from '../../components/FAQSection';
 import { TextAnimate } from '@/components/ui/text-animate';
 import { ProgramOverviewSection } from '../../components/ProgramOverviewSection';
 import { ProgramApplicationSection } from '../../components/ProgramApplicationSection';
+import AsciiHoverEffect from '@/components/AsciiHoverEffect';
+
+const UnicornScene = dynamic(() => import('unicornstudio-react/next'), { ssr: false });
 
 const ACCENT = '#41C9C1';
 
@@ -166,10 +171,17 @@ const applicationSteps = [
 ];
 
 export default function GradBootcampPage() {
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+
   return (
     <div className="bg-black relative">
       <div className="absolute top-0 left-0 w-full h-[110vh] pointer-events-none">
-        <img src="/bill.png" alt="" className="w-full h-full object-cover opacity-20" />
+        <UnicornScene
+          projectId="EQvAvFB5IeSsVwWQyJuV"
+          sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
+          width="100%"
+          height="100%"
+        />
         <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-b from-transparent to-black" />
       </div>
 
@@ -186,21 +198,11 @@ export default function GradBootcampPage() {
             </FadeUp>
 
             <FadeUp delay={0.2}>
-              <p className="text-lg md:text-xl text-[#DBDBDB]/70 leading-[1.6] max-w-2xl md:mt-4 mb-8 md:mb-10">
-                A 10-day intensive program for a select cohort of 10–12 NYU graduate students to
-                experience the full product management lifecycle. From user research to
-                production-ready PRDs, you&apos;ll bring your product ideas to life.
-              </p>
-            </FadeUp>
-
-            <FadeUp delay={0.3}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
                 <div className="w-full sm:w-auto">
                   <Button
                     href="#application"
                     className="w-full sm:w-auto px-8 py-4"
-                    fillColor={ACCENT}
-                    textColor="#000000"
                   >
                     <span className="flex items-center justify-center gap-2">
                       Apply Now
@@ -277,16 +279,24 @@ export default function GradBootcampPage() {
               {deliverables.map((item) => (
                 <div
                   key={item.number}
-                  className="bg-black p-8 md:p-10 group hover:bg-[#3F3F3F]/10 transition-colors duration-300 cursor-default"
+                  className="relative overflow-hidden bg-black p-8 md:p-10 group hover:bg-[#3F3F3F]/10 transition-colors duration-300 cursor-default"
+                  onMouseEnter={() => setHoveredCard(`deliverable-${item.number}`)}
+                  onMouseLeave={() => setHoveredCard(null)}
                 >
+                  <AsciiHoverEffect
+                    active={hoveredCard === `deliverable-${item.number}`}
+                    colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
+                    fontSize={10}
+                    className="opacity-40 mix-blend-screen"
+                  />
                   <span
-                    className="block text-sm font-medium tracking-widest uppercase mb-4 transition-colors duration-300"
+                    className="relative z-10 block text-sm font-medium tracking-widest uppercase mb-4 transition-colors duration-300"
                     style={{ color: ACCENT }}
                   >
                     {item.number}
                   </span>
-                  <h4 className="text-lg font-medium text-[#DBDBDB] mb-3">{item.title}</h4>
-                  <p className="text-[#DBDBDB]/60 text-sm leading-relaxed">{item.description}</p>
+                  <h4 className="relative z-10 text-lg font-medium text-[#DBDBDB] mb-3">{item.title}</h4>
+                  <p className="relative z-10 text-[#DBDBDB]/60 text-sm leading-relaxed">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -343,7 +353,6 @@ export default function GradBootcampPage() {
       <div id="application">
         <ProgramApplicationSection
           accentColor={ACCENT}
-          programTitle="bootcamp"
           steps={applicationSteps}
           roundsText="Our application consists of 2 rounds."
           introText={
@@ -421,21 +430,41 @@ export default function GradBootcampPage() {
 
           <FadeIn delay={0.2}>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-px bg-[#3F3F3F]/30 max-w-2xl mx-auto">
-              <div className="bg-black p-8 md:p-10 text-center group hover:bg-[#3F3F3F]/10 transition-colors duration-300">
-                <h4 className="text-xl font-medium text-[#DBDBDB] mb-2">Sohan Joshi</h4>
+              <div
+                className="relative overflow-hidden bg-black p-8 md:p-10 text-center group hover:bg-[#3F3F3F]/10 transition-colors duration-300"
+                onMouseEnter={() => setHoveredCard('director-sohan')}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <AsciiHoverEffect
+                  active={hoveredCard === 'director-sohan'}
+                  colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
+                  fontSize={10}
+                  className="opacity-40 mix-blend-screen"
+                />
+                <h4 className="relative z-10 text-xl font-medium text-[#DBDBDB] mb-2">Sohan Joshi</h4>
                 <a
                   href="mailto:sohan.joshi@nyu.edu"
-                  className="text-sm transition-colors duration-300 hover:underline underline-offset-4"
+                  className="relative z-10 text-sm transition-colors duration-300 hover:underline underline-offset-4"
                   style={{ color: ACCENT }}
                 >
                   sohan.joshi@nyu.edu
                 </a>
               </div>
-              <div className="bg-black p-8 md:p-10 text-center group hover:bg-[#3F3F3F]/10 transition-colors duration-300">
-                <h4 className="text-xl font-medium text-[#DBDBDB] mb-2">Shreyam Borah</h4>
+              <div
+                className="relative overflow-hidden bg-black p-8 md:p-10 text-center group hover:bg-[#3F3F3F]/10 transition-colors duration-300"
+                onMouseEnter={() => setHoveredCard('director-shreyam')}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <AsciiHoverEffect
+                  active={hoveredCard === 'director-shreyam'}
+                  colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
+                  fontSize={10}
+                  className="opacity-40 mix-blend-screen"
+                />
+                <h4 className="relative z-10 text-xl font-medium text-[#DBDBDB] mb-2">Shreyam Borah</h4>
                 <a
                   href="mailto:sb10286@nyu.edu"
-                  className="text-sm transition-colors duration-300 hover:underline underline-offset-4"
+                  className="relative z-10 text-sm transition-colors duration-300 hover:underline underline-offset-4"
                   style={{ color: ACCENT }}
                 >
                   sb10286@nyu.edu

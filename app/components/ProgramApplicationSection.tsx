@@ -6,7 +6,6 @@ import { TextAnimate } from "@/components/ui/text-animate";
 
 interface ProgramApplicationSectionProps {
   accentColor?: string;
-  programTitle?: string;
   steps?: ProcessStep[];
   roundsText?: string;
   introText?: React.ReactNode;
@@ -63,7 +62,6 @@ function ProcessStepItem({
 
 export function ProgramApplicationSection({
   accentColor = "#41C9C1",
-  programTitle = "",
   steps,
   roundsText,
   introText,
@@ -74,40 +72,7 @@ export function ProgramApplicationSection({
     <section className="relative z-10 px-6 md:px-16 lg:px-24 py-32 border-t border-[#3F3F3F]/60">
       <div className="max-w-[1400px] mx-auto">
         <FadeUp>
-          <div className="grid gap-12 lg:gap-16 lg:grid-cols-[minmax(0,420px)_minmax(0,1fr)] items-center">
-            <div className="flex justify-center lg:justify-start">
-              <div
-                className="folded-application"
-                style={{ "--folded-accent": accentColor } as CSSProperties}
-              >
-                <div className="folded-application-inner">
-                  <div className="folded-application-logo">
-                    <span 
-                      className="text-[2.5rem] md:text-[3rem] font-medium tracking-tight text-[#DBDBDB]" 
-                      style={{ fontFamily: 'var(--font-gotham-medium)' }}
-                    >
-                      eeg
-                    </span>
-                    <span 
-                      className="text-[2.5rem] md:text-[3rem] font-medium tracking-tight" 
-                      style={{ fontFamily: 'var(--font-gotham-medium)', color: accentColor }}
-                    >
-                      /
-                    </span>
-                    {programTitle && (
-                      <span
-                        className="text-[2.5rem] md:text-[3rem] font-medium tracking-tight"
-                        style={{ fontFamily: 'var(--font-gotham-medium)', color: accentColor }}
-                      >
-                        {programTitle}
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="max-w-3xl lg:ml-auto">
+          <div className="max-w-3xl mx-auto">
               <h2 className="section-title text-[#DBDBDB] mb-8 text-center">
                 <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
                   Application
@@ -150,7 +115,6 @@ export function ProgramApplicationSection({
                   ))}
                 </div>
               </div>
-            </div>
           </div>
         </FadeUp>
       </div>

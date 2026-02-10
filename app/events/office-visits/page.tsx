@@ -1,13 +1,17 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
+
 import { FadeUp, StaggerContainer, StaggerItem } from '../../components/ScrollAnimations';
+
+const UnicornScene = dynamic(() => import('unicornstudio-react/next'), { ssr: false });
 import { JoinUsSection } from '../../components/JoinUsSection';
 import { FAQSection } from '../../components/FAQSection';
 import { Button } from '../../components/Button';
 import { Chip } from '../../components/Chip';
 import { TextAnimate } from '@/components/ui/text-animate';
-import PixelHoverCanvas from '@/components/PixelHoverCanvas';
+import AsciiHoverEffect from '@/components/AsciiHoverEffect';
 import CountUp from '@/components/CountUp';
 
 const whatYouSee = [
@@ -112,7 +116,16 @@ export default function OfficeVisitsPage() {
 
   return (
     <div className="bg-black relative">
-      {/* Hero */}
+      <div className="absolute top-0 left-0 w-full h-[110vh] pointer-events-none">
+        <UnicornScene
+          projectId="nfEXG2pQZ01qd0grcKXy"
+          sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
+          width="100%"
+          height="100%"
+        />
+        <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-b from-transparent to-black" />
+      </div>
+
       <section className="relative z-10 px-6 md:px-16 lg:px-24 pt-20 pb-16 md:py-24 min-h-[80vh] md:min-h-screen flex flex-col justify-center">
         <div className="max-w-[1400px] mx-auto w-full flex flex-col items-center">
           <div className="flex flex-col items-center gap-6 max-w-3xl text-center">
@@ -125,7 +138,7 @@ export default function OfficeVisitsPage() {
             </FadeUp>
 
             <FadeUp delay={0.2}>
-              <p className="text-base md:text-xl text-[#DBDBDB]/70 leading-relaxed max-w-2xl md:mt-4 mb-8 md:mb-10">
+              <p className="text-base md:text-xl text-[#DBDBDB]/70 leading-relaxed max-w-2xl">
                 Go inside the companies shaping how millions of people work,
                 communicate, and live. We take small groups to visit startups,
                 tech giants, and VC firms across NYC &mdash; so you can see what
@@ -135,18 +148,10 @@ export default function OfficeVisitsPage() {
 
             <FadeUp delay={0.3}>
               <Button
-                href="#join-us"
+                href="https://www.instagram.com/nyupmc/"
                 className="px-8 py-4"
-                fillColor="#5076DD"
-                textColor="#000000"
               >
-                <span className="flex items-center justify-center gap-2">
-                  Get on the List
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4">
-                    <path d="M5 12h14" />
-                    <path d="m12 5 7 7-7 7" />
-                  </svg>
-                </span>
+                Event Updates
               </Button>
             </FadeUp>
           </div>
@@ -164,13 +169,11 @@ export default function OfficeVisitsPage() {
                 onMouseEnter={() => setHoverOverview(true)}
                 onMouseLeave={() => setHoverOverview(false)}
               >
-                <PixelHoverCanvas
+                <AsciiHoverEffect
                   active={hoverOverview}
                   colors="#5076DD,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                  gap={6}
-                  speed={30}
+                  fontSize={10}
                   className="opacity-40 mix-blend-screen"
-                  radius={0}
                 />
                 <div className="relative z-10 p-8 md:p-12">
                   <h2 className="section-title text-[#DBDBDB] mb-8 text-center">
@@ -200,13 +203,11 @@ export default function OfficeVisitsPage() {
                   onMouseEnter={() => setHoverSee(true)}
                   onMouseLeave={() => setHoverSee(false)}
                 >
-                  <PixelHoverCanvas
+                  <AsciiHoverEffect
                     active={hoverSee}
                     colors="#5076DD,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    gap={6}
-                    speed={30}
+                    fontSize={10}
                     className="opacity-40 mix-blend-screen"
-                    radius={0}
                   />
                   <div className="relative z-10">
                     <h3 className="text-sm font-bold tracking-widest text-[#DBDBDB] uppercase mb-6">
@@ -229,13 +230,11 @@ export default function OfficeVisitsPage() {
                   onMouseEnter={() => setHoverHow(true)}
                   onMouseLeave={() => setHoverHow(false)}
                 >
-                  <PixelHoverCanvas
+                  <AsciiHoverEffect
                     active={hoverHow}
                     colors="#5076DD,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    gap={6}
-                    speed={30}
+                    fontSize={10}
                     className="opacity-40 mix-blend-screen"
-                    radius={0}
                   />
                   <div className="relative z-10">
                     <h3 className="text-sm font-bold tracking-widest text-[#DBDBDB] uppercase mb-6">
@@ -281,13 +280,11 @@ export default function OfficeVisitsPage() {
                   onMouseEnter={() => setHoveredBenefit(i)}
                   onMouseLeave={() => setHoveredBenefit(null)}
                 >
-                  <PixelHoverCanvas
+                  <AsciiHoverEffect
                     active={hoveredBenefit === i}
                     colors="#5076DD,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    gap={6}
-                    speed={30}
+                    fontSize={10}
                     className="opacity-40 mix-blend-screen"
-                    radius={0}
                   />
                   <div className="relative z-10">
                     <div className="w-10 h-10 mb-6 text-[#5076DD]">{b.icon}</div>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import {
   motion,
   useAnimationFrame,
@@ -153,11 +154,13 @@ export function LogoCloudAnimated({
                     transition={{ type: "spring", stiffness: SPRING_STIFFNESS }}
                     whileHover={{ scale: HOVER_SCALE, rotate: HOVER_ROTATE }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={logo.src}
                       alt={logo.name}
+                      width={120}
+                      height={40}
                       className={`h-10 w-auto object-contain max-w-[120px] ${logo.className ?? ""}`}
+                      unoptimized
                     />
                   </motion.div>
                 </motion.a>
@@ -183,11 +186,13 @@ export function LogoCloudAnimated({
                     transition={{ type: "spring", stiffness: SPRING_STIFFNESS }}
                     whileHover={{ scale: HOVER_SCALE, rotate: HOVER_ROTATE }}
                   >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={logo.src}
                       alt={logo.name}
+                      width={120}
+                      height={40}
                       className={`h-10 w-auto object-contain max-w-[120px] ${logo.className ?? ""}`}
+                      unoptimized
                     />
                   </motion.div>
                 </motion.a>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Button } from "./smoothbutton";
 import { cn } from "@/lib/utils";
 import { Menu, X } from "lucide-react";
@@ -48,14 +49,14 @@ export const HeroHeader = () => {
                   href="/"
                 >
                   <span className="sr-only">SmoothUI</span>
-                  {/* biome-ignore lint/performance/noImgElement: Rendering static brand asset from public folder */}
-                  <img
-                    alt="SmoothUI logo"
-                    className={cn("h-6 w-auto", "dark:filter", "dark:invert")}
-                    height={28}
+                  <Image
                     src="/logo-smoothui.svg"
+                    alt="SmoothUI logo"
                     width={140}
-                   />
+                    height={28}
+                    className={cn("h-6 w-auto", "dark:invert")}
+                    unoptimized
+                  />
                 </Link>
 
                 <button

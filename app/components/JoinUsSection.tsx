@@ -119,7 +119,7 @@ export function JoinUsSection({
                   by="character"
                   className="section-title text-[#DBDBDB] mb-8 text-center"
                 >
-                  Join Us
+                  Join PMC
                 </TextAnimate>
               </FadeUp>
 
@@ -129,65 +129,54 @@ export function JoinUsSection({
                   ambitious students and industry leaders.
                 </p>
               </FadeUp>
-            </div>
-
-            <div className="flex flex-col items-center gap-16">
-              <div
-                ref={newsletterRef}
-                className={`w-full max-w-xl transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${newsletterInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-              >
-                <Newsletter variant="dark" source={newsletterSource} accentColor={t.accent} />
-              </div>
 
               <div
                 ref={socialsRef}
-                className={`w-full max-w-xl transition-all duration-700 delay-100 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${socialsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+                className={`relative z-20 flex flex-wrap gap-5 justify-center mt-10 transition-all duration-700 delay-100 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${socialsInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
               >
-                <TextAnimate
-                  as="h3"
-                  animation="slideLeft"
-                  by="character"
-                  startOnView={false}
-                  className="mb-8 sub-section-title text-[#DBDBDB] text-center"
+                <Button
+                  href="https://www.linkedin.com/company/nyueeg/"
+                  borderColor={t.socialBorder}
+                  textColor="#FFFFFF"
+                  rippleColor={t.socialRipple}
+                  className="!p-0 !h-16 !w-16 !border"
                 >
-                  Socials
-                </TextAnimate>
-                <div className="flex flex-wrap gap-4 justify-center">
-                    <Button
-                      href="https://www.linkedin.com/company/nyueeg/"
-                      borderColor={t.socialBorder}
-                      textColor="#FFFFFF"
-                      rippleColor={t.socialRipple}
-                      className="!p-0 !h-14 !w-14 !border"
-                    >
-                      <Linkedin className="size-6" strokeWidth={1} />
-                    </Button>
-                    <Button
-                      href="https://x.com/nyueeg"
-                      borderColor={t.socialBorder}
-                      textColor="#FFFFFF"
-                      rippleColor={t.socialRipple}
-                      className="!p-0 !h-14 !w-14 !border"
-                    >
-                      <svg
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                        className="size-6"
-                        fill="currentColor"
-                      >
-                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.134l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                      </svg>
-                    </Button>
-                    <Button
-                      href="https://www.instagram.com/nyu.eeg/"
-                      borderColor={t.socialBorder}
-                      textColor="#FFFFFF"
-                      rippleColor={t.socialRipple}
-                      className="!p-0 !h-14 !w-14 !border"
-                    >
-                      <Instagram className="size-6" strokeWidth={1} />
-                    </Button>
-                  </div>
+                  <Linkedin className="size-7" strokeWidth={1} />
+                </Button>
+                <Button
+                  href="https://x.com/nyueeg"
+                  borderColor={t.socialBorder}
+                  textColor="#FFFFFF"
+                  rippleColor={t.socialRipple}
+                  className="!p-0 !h-16 !w-16 !border"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                    className="size-7"
+                    fill="currentColor"
+                  >
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.134l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </Button>
+                <Button
+                  href="https://www.instagram.com/nyu.eeg/"
+                  borderColor={t.socialBorder}
+                  textColor="#FFFFFF"
+                  rippleColor={t.socialRipple}
+                  className="!p-0 !h-16 !w-16 !border"
+                >
+                  <Instagram className="size-7" strokeWidth={1} />
+                </Button>
+              </div>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <div
+                ref={newsletterRef}
+                className={`relative z-10 w-full max-w-xl transition-all duration-700 ease-[cubic-bezier(0.25,0.1,0.25,1)] ${newsletterInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
+              >
+                <Newsletter variant="dark" source={newsletterSource} accentColor={t.accent} />
               </div>
             </div>
           </div>

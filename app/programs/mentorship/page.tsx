@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { FadeUp, FadeIn } from '../../components/ScrollAnimations';
 import { Chip } from '../../components/Chip';
@@ -7,7 +8,9 @@ import { Button } from '../../components/Button';
 import { JoinUsSection } from '../../components/JoinUsSection';
 import { FAQSection } from '../../components/FAQSection';
 import { TextAnimate } from '@/components/ui/text-animate';
-import PixelHoverCanvas from '@/components/PixelHoverCanvas';
+import AsciiHoverEffect from '@/components/AsciiHoverEffect';
+
+const UnicornScene = dynamic(() => import('unicornstudio-react/next'), { ssr: false });
 
 const ACCENT = '#6966E3';
 const ACCENT_SECONDARY = '#41C9C1';
@@ -39,18 +42,21 @@ export default function MentorshipPage() {
   const [hoverIntro, setHoverIntro] = useState(false);
   const [hoverAdvanced, setHoverAdvanced] = useState(false);
 
-  const pixelConfig = {
+  const asciiConfig = {
     colors: `${ACCENT},rgba(219,219,219,0.7),rgba(63,63,63,0.8)`,
-    gap: 6,
-    speed: 30,
+    fontSize: 10,
     className: 'opacity-40 mix-blend-screen',
-    radius: 0,
   };
 
   return (
     <div className="bg-black relative">
       <div className="absolute top-0 left-0 w-full h-[110vh] pointer-events-none">
-        <img src="/traitorous-8.png" alt="" className="w-full h-full object-cover opacity-20" />
+        <UnicornScene
+          projectId="Foe2Sv3x1BgVTbuc7Xv6"
+          sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
+          width="100%"
+          height="100%"
+        />
         <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-b from-transparent to-black" />
       </div>
 
@@ -67,22 +73,11 @@ export default function MentorshipPage() {
             </FadeUp>
 
             <FadeUp delay={0.2}>
-              <p className="text-lg md:text-xl text-[#DBDBDB]/70 leading-[1.6] max-w-2xl md:mt-4 mb-8 md:mb-10">
-                Connects you with an experienced student or professional mentor to guide you on
-                your PM journey. Through one-on-one meetings, exclusive workshops, office tours, and
-                more, you&apos;ll gain personalized support, industry insights, and valuable
-                connections to help you succeed.
-              </p>
-            </FadeUp>
-
-            <FadeUp delay={0.3}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
                 <div className="w-full sm:w-auto">
                   <Button
                     href="#tracks"
                     className="w-full sm:w-auto px-8 py-4"
-                    fillColor={ACCENT}
-                    textColor="#FFFFFF"
                   >
                     <span className="flex items-center justify-center gap-2">
                       Explore Tracks
@@ -124,13 +119,11 @@ export default function MentorshipPage() {
                 onMouseLeave={() => setHoverIntro(false)}
               >
                 <div className="absolute inset-0 z-0 overflow-hidden">
-                  <PixelHoverCanvas
+                  <AsciiHoverEffect
                     active={hoverIntro}
-                    colors={pixelConfig.colors}
-                    gap={pixelConfig.gap}
-                    speed={pixelConfig.speed}
+                    colors={asciiConfig.colors}
+                    fontSize={asciiConfig.fontSize}
                     className="opacity-40"
-                    radius={pixelConfig.radius}
                   />
                 </div>
                 <div className="relative z-10 p-8 md:p-12 lg:p-16">
@@ -167,13 +160,11 @@ export default function MentorshipPage() {
                 onMouseLeave={() => setHoverAdvanced(false)}
               >
                 <div className="absolute inset-0 z-0 overflow-hidden">
-                  <PixelHoverCanvas
+                  <AsciiHoverEffect
                     active={hoverAdvanced}
                     colors={`${ACCENT_SECONDARY},rgba(219,219,219,0.7),rgba(63,63,63,0.8)`}
-                    gap={pixelConfig.gap}
-                    speed={pixelConfig.speed}
+                    fontSize={asciiConfig.fontSize}
                     className="opacity-40"
-                    radius={pixelConfig.radius}
                   />
                 </div>
                 <div className="relative z-10 p-8 md:p-12 lg:p-16">

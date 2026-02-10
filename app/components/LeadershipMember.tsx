@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { ProgressiveBlur } from '@/components/motion-primitives/progressive-blur';
@@ -52,10 +53,12 @@ export function LeadershipMember({
       >
         {src ? (
           <>
-            <img
+            <Image
               src={src}
               alt={name}
-              className="absolute inset-0 w-full h-full object-cover"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
 
             {/* Top blur + darken */}

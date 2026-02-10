@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useState, useCallback } from "react";
 
@@ -96,11 +97,13 @@ export const InfiniteMovingCards = ({
             className="flex items-center justify-center h-[40px] relative shrink-0"
             key={item.name + idx}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={item.image}
               alt={item.name}
+              width={120}
+              height={28}
               className="h-[28px] w-auto object-contain grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
+              unoptimized
             />
           </li>
         ))}

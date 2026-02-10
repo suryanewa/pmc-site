@@ -1,7 +1,7 @@
 import type { SpringOptions } from 'motion/react';
 import { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'motion/react';
-import PixelHoverCanvas from '@/components/PixelHoverCanvas';
+import AsciiHoverEffect from '@/components/AsciiHoverEffect';
 import { useIsMobile } from '../hooks/use-is-mobile';
 
 interface TiltedCardProps {
@@ -24,8 +24,7 @@ interface TiltedCardProps {
   borderRadius?: number;
   pixelEffect?: {
     colors: string;
-    gap?: number;
-    speed?: number;
+    fontSize?: number;
     className?: string;
   };
 }
@@ -143,13 +142,11 @@ export default function TiltedCard({
         }}
       >
         {pixelEffect && !isMobile && (
-          <PixelHoverCanvas
+          <AsciiHoverEffect
             active={isHovered}
             colors={pixelEffect.colors}
-            gap={pixelEffect.gap}
-            speed={pixelEffect.speed}
+            fontSize={pixelEffect.fontSize}
             className={pixelEffect.className}
-            radius={borderRadius}
           />
         )}
         {backgroundContent && (

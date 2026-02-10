@@ -27,8 +27,6 @@ const PEOPLE_LABELS: Record<(typeof PEOPLE_ROUTES)[number], string> = {
     return (
       <Navbar
         variant="dark"
-        logoSuffix={programMatch.label}
-        logoSuffixColor={programMatch.color}
       />
     );
   }

@@ -1,14 +1,21 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { useState } from 'react';
+
 import { FadeUp, FadeIn, StaggerContainer, StaggerItem } from '../../components/ScrollAnimations';
+
+const UnicornScene = dynamic(() => import('unicornstudio-react/next'), { ssr: false });
 import { JoinUsSection } from '../../components/JoinUsSection';
 import { FAQSection } from '../../components/FAQSection';
 import { Button } from '../../components/Button';
 import { Chip } from '../../components/Chip';
 import { TextAnimate } from '@/components/ui/text-animate';
-import PixelHoverCanvas from '@/components/PixelHoverCanvas';
+import AsciiHoverEffect from '@/components/AsciiHoverEffect';
 import { Timeline } from '@/components/ui/timeline';
+import { LogoLoop } from '@/components/LogoLoop';
+import type { LogoItem } from '@/components/LogoLoop';
 
 const whatIsFeatures = [
   {
@@ -178,34 +185,43 @@ const timelineData = [
   },
 ];
 
-const casePartners = ['BrainStation', '28 Ventures', 'PitchBook', 'Perplexity'];
+interface CompanyLogo {
+  name: string;
+  logo: string | null;
+  invert?: boolean;
+}
 
-const networkJudges: { name: string; logo: string | null }[] = [
-  { name: 'Meta', logo: '/companies/meta.png' },
-  { name: 'Google', logo: null },
-  { name: 'Microsoft', logo: null },
-  { name: 'IBM', logo: null },
-  { name: 'Amazon', logo: '/companies/amazon.png' },
-  { name: 'Capital One', logo: null },
-  { name: 'Oracle', logo: null },
-  { name: 'GrubHub', logo: null },
-  { name: 'TikTok', logo: null },
-  { name: 'JP Morgan', logo: '/companies/jpm.jpeg' },
+const casePartners: CompanyLogo[] = [
+  { name: 'BrainStation', logo: '/companies/brainstation.png', invert: true },
+  { name: '28 Ventures', logo: '/companies/28-ventures.avif' },
+  { name: 'PitchBook', logo: '/companies/pitchbook.png', invert: true },
+  { name: 'Perplexity', logo: 'https://svgl.app/library/perplexity.svg' },
 ];
 
-const partnerSchools = [
-  'University of Pennsylvania',
-  'Columbia University',
-  'Brown University',
-  'Cornell University',
-  'Duke University',
-  'Georgetown University',
-  'University of Michigan',
-  'UCLA',
-  'UC Berkeley',
-  'Binghamton University',
-  'UIUC',
-  'NYU',
+const networkJudges: CompanyLogo[] = [
+  { name: 'Meta', logo: 'https://svgl.app/library/meta.svg' },
+  { name: 'Google', logo: 'https://svgl.app/library/google.svg' },
+  { name: 'Microsoft', logo: 'https://svgl.app/library/microsoft.svg' },
+  { name: 'IBM', logo: 'https://svgl.app/library/ibm.svg' },
+  { name: 'Amazon', logo: '/companies/amazon.png', invert: true },
+  { name: 'Capital One', logo: '/companies/capital-one.png', invert: true },
+  { name: 'Oracle', logo: '/companies/oracle.svg', invert: true },
+  { name: 'GrubHub', logo: '/companies/grubhub.svg', invert: true },
+  { name: 'TikTok', logo: 'https://svgl.app/library/tiktok-icon-light.svg' },
+  { name: 'JP Morgan', logo: '/companies/chase-logo.svg', invert: true },
+];
+
+const partnerSchools: LogoItem[] = [
+  { src: '/schools/upenn.png', alt: 'University of Pennsylvania' },
+  { src: '/schools/columbia.png', alt: 'Columbia University' },
+  { src: '/schools/brown.svg', alt: 'Brown University' },
+  { src: '/schools/cornell.svg.png', alt: 'Cornell University' },
+  { src: '/schools/duke.png', alt: 'Duke University' },
+  { src: '/schools/georgetown.avif', alt: 'Georgetown University' },
+  { src: '/schools/umich.png', alt: 'University of Michigan' },
+  { src: '/schools/ucla.svg', alt: 'UCLA' },
+  { src: '/schools/binghampton.jpg', alt: 'Binghamton University' },
+  { src: '/schools/uiuc.png', alt: 'UIUC' },
 ];
 
 const caseCompFAQs = [
@@ -219,11 +235,20 @@ const caseCompFAQs = [
 ];
 
 export default function CaseCompPage() {
-  const [hoveredBenefit, setHoveredBenefit] = useState<number | null>(null);
+  const [hoveredBenefit, setHoveredBenefit] = useState<number | string | null>(null);
 
   return (
     <div className="bg-black relative">
-      {/* Hero */}
+      <div className="absolute top-0 left-0 w-full h-[110vh] pointer-events-none">
+        <UnicornScene
+          projectId="nfEXG2pQZ01qd0grcKXy"
+          sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
+          width="100%"
+          height="100%"
+        />
+        <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-b from-transparent to-black" />
+      </div>
+
       <section className="relative z-10 px-6 md:px-16 lg:px-24 pt-20 pb-16 md:py-24 min-h-[80vh] md:min-h-screen flex flex-col justify-center">
         <div className="max-w-[1400px] mx-auto w-full flex flex-col items-center">
           <div className="flex flex-col items-center gap-6 max-w-3xl text-center">
@@ -236,7 +261,7 @@ export default function CaseCompPage() {
             </FadeUp>
 
             <FadeUp delay={0.2}>
-              <p className="text-base md:text-xl text-[#DBDBDB]/70 leading-relaxed max-w-2xl md:mt-4 mb-8 md:mb-10">
+              <p className="text-base md:text-xl text-[#DBDBDB]/70 leading-relaxed max-w-2xl">
                 The NYU National Product Case Competition. Over 48 intense hours,
                 students from top universities tackle a real product challenge,
                 build a strategic solution, and pitch to judges from Meta, Google,
@@ -245,45 +270,25 @@ export default function CaseCompPage() {
             </FadeUp>
 
             <FadeUp delay={0.3}>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-                <Button
-                  href="mailto:pmc@nyu.edu"
-                  className="w-full sm:w-auto px-8 py-4"
-                  fillColor="#6966E3"
-                  textColor="#FFFFFF"
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    Register Now
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="size-4">
-                      <path d="M5 12h14" />
-                      <path d="m12 5 7 7-7 7" />
-                    </svg>
-                  </span>
-                </Button>
-                <a
-                  href="#timeline"
-                  className="text-[#DBDBDB]/60 hover:text-[#6966E3] underline underline-offset-4 text-sm transition-colors duration-300 flex items-center gap-1"
-                >
-                  View Timeline
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 5v14" />
-                    <path d="m19 12-7 7-7-7" />
-                  </svg>
-                </a>
-              </div>
+              <Button
+                href="https://www.instagram.com/nyupmc/"
+                className="px-8 py-4"
+              >
+                Event Updates
+              </Button>
             </FadeUp>
           </div>
         </div>
       </section>
 
-      {/* What Is Case Competition — Split Section */}
+      {/* What Is Case Competition? — Split Section */}
       <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24">
         <div className="max-w-[1400px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             <FadeUp>
-              <h2 className="section-title text-[#DBDBDB] mb-8">
+              <h2 className="section-title text-[#DBDBDB] mb-8 text-balance">
                 <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
-                  What Is Case Competition
+                  What Is Case Competition?
                 </TextAnimate>
               </h2>
               <p className="text-base md:text-lg text-[#DBDBDB]/70 leading-relaxed">
@@ -300,9 +305,19 @@ export default function CaseCompPage() {
             <div className="space-y-4 lg:mt-16">
               {whatIsFeatures.map((f, i) => (
                 <FadeUp delay={0.1 + i * 0.1} key={i}>
-                  <div className="bg-[#3F3F3F]/20 border border-[#3F3F3F]/40 p-6 flex items-start gap-4">
-                    <div className="w-8 h-8 text-[#6966E3] shrink-0">{f.icon}</div>
-                    <p className="text-[#DBDBDB]/80 text-base">{f.text}</p>
+                  <div 
+                    className="relative overflow-hidden bg-[#3F3F3F]/20 border border-[#3F3F3F]/40 p-6 flex items-center gap-4 h-full cursor-default"
+                    onMouseEnter={() => setHoveredBenefit(i + 10)}
+                    onMouseLeave={() => setHoveredBenefit(null)}
+                  >
+                    <AsciiHoverEffect
+                      active={hoveredBenefit === i + 10}
+                      colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
+                      fontSize={10}
+                      className="opacity-40 mix-blend-screen"
+                    />
+                    <div className="w-8 h-8 text-[#6966E3] shrink-0 relative z-10">{f.icon}</div>
+                    <p className="text-[#DBDBDB]/80 text-base relative z-10">{f.text}</p>
                   </div>
                 </FadeUp>
               ))}
@@ -322,14 +337,24 @@ export default function CaseCompPage() {
             </h2>
           </FadeUp>
 
-          <div className="max-w-3xl mx-auto space-y-8">
+          <div className="max-w-3xl mx-auto space-y-4">
             {participateSteps.map((step, i) => (
               <FadeUp delay={i * 0.08} key={i}>
-                <div className="flex gap-6 group">
-                  <span className="flex items-center justify-center w-10 h-10 border border-[#3F3F3F]/60 text-[#DBDBDB] text-sm font-medium shrink-0 mt-0.5 transition-colors duration-300 group-hover:border-[#6966E3] group-hover:text-[#6966E3]">
+                <div 
+                  className="relative overflow-hidden flex gap-6 group p-6 cursor-default border border-[#3F3F3F]/40 bg-[#3F3F3F]/20"
+                  onMouseEnter={() => setHoveredBenefit(i + 20)}
+                  onMouseLeave={() => setHoveredBenefit(null)}
+                >
+                  <AsciiHoverEffect
+                    active={hoveredBenefit === i + 20}
+                    colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
+                    fontSize={10}
+                    className="opacity-40 mix-blend-screen"
+                  />
+                  <span className="relative z-10 flex items-center justify-center w-10 h-10 border border-[#3F3F3F]/60 text-[#DBDBDB] text-sm font-medium shrink-0 transition-colors duration-300 group-hover:border-[#6966E3] group-hover:text-[#6966E3]">
                     {step.number}
                   </span>
-                  <div>
+                  <div className="relative z-10">
                     <h4 className="text-lg text-[#DBDBDB] font-medium mb-1">{step.title}</h4>
                     <p className="text-[#DBDBDB]/60 text-base leading-relaxed">{step.description}</p>
                   </div>
@@ -359,13 +384,11 @@ export default function CaseCompPage() {
                   onMouseEnter={() => setHoveredBenefit(i)}
                   onMouseLeave={() => setHoveredBenefit(null)}
                 >
-                  <PixelHoverCanvas
+                  <AsciiHoverEffect
                     active={hoveredBenefit === i}
                     colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    gap={6}
-                    speed={30}
+                    fontSize={10}
                     className="opacity-40 mix-blend-screen"
-                    radius={0}
                   />
                   <div className="relative z-10">
                     <div className="w-10 h-10 mb-6 text-[#6966E3]">{b.icon}</div>
@@ -385,13 +408,11 @@ export default function CaseCompPage() {
                   onMouseEnter={() => setHoveredBenefit(i + 3)}
                   onMouseLeave={() => setHoveredBenefit(null)}
                 >
-                  <PixelHoverCanvas
+                  <AsciiHoverEffect
                     active={hoveredBenefit === i + 3}
                     colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    gap={6}
-                    speed={30}
+                    fontSize={10}
                     className="opacity-40 mix-blend-screen"
-                    radius={0}
                   />
                   <div className="relative z-10">
                     <div className="w-10 h-10 mb-6 text-[#6966E3]">{b.icon}</div>
@@ -423,19 +444,15 @@ export default function CaseCompPage() {
         </div>
       </section>
 
-      {/* Sponsors & Partners */}
+      {/* Past Partners */}
       <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24">
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
-            <h2 className="section-title text-[#DBDBDB] text-center mb-4">
+            <h2 className="section-title text-[#DBDBDB] text-center mb-16">
               <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
-                Sponsors & Partners
+                Past Partners
               </TextAnimate>
             </h2>
-            <p className="text-lg text-[#DBDBDB]/60 text-center mb-16 max-w-2xl mx-auto">
-              Our sponsors provide case challenges, judge panels, mentorship,
-              prizes, and recruiting pathways.
-            </p>
           </FadeUp>
 
           <FadeUp delay={0.1}>
@@ -443,12 +460,45 @@ export default function CaseCompPage() {
               Case Partners
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-              {casePartners.map((name) => (
+              {casePartners.map((partner, i) => (
                 <div
-                  key={name}
-                  className="flex items-center justify-center h-24 bg-[#3F3F3F]/20 border border-[#3F3F3F]/40 hover:border-[#6966E3] transition-colors duration-300 p-6"
+                  key={partner.name}
+                  className="relative overflow-hidden flex items-center justify-center h-24 bg-[#3F3F3F]/20 border border-[#3F3F3F]/40 hover:border-[#6966E3] transition-colors duration-300 p-6 cursor-default"
+                  onMouseEnter={() => setHoveredBenefit(`partner-${i}`)}
+                  onMouseLeave={() => setHoveredBenefit(null)}
                 >
-                  <span className="text-[#DBDBDB] text-sm font-medium">{name}</span>
+                  <AsciiHoverEffect
+                    active={hoveredBenefit === `partner-${i}`}
+                    colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
+                    fontSize={10}
+                    className="opacity-40 mix-blend-screen"
+                  />
+                  {partner.logo ? (
+                    partner.logo.startsWith('http') ? (
+                      <div className={`relative z-10 flex items-center justify-center ${['BrainStation', 'Perplexity', 'PitchBook'].includes(partner.name) ? 'w-36 h-12' : 'w-24 h-8'}`}>
+                        <img
+                          src={partner.logo}
+                          alt={partner.name}
+                          className={`w-auto h-auto object-contain brightness-0 invert ${['BrainStation', 'Perplexity', 'PitchBook'].includes(partner.name) ? 'max-h-12 max-w-36' : 'max-h-8 max-w-24'}`}
+                          style={{ filter: 'brightness(0) invert(1)' }}
+                        />
+                      </div>
+                    ) : (
+                      <div className={`relative z-10 flex items-center justify-center ${['BrainStation', 'Perplexity', 'PitchBook'].includes(partner.name) ? 'w-36 h-12' : 'w-24 h-8'}`}>
+                        <Image
+                          src={partner.logo}
+                          alt={partner.name}
+                          width={['BrainStation', 'Perplexity', 'PitchBook'].includes(partner.name) ? 180 : 120}
+                          height={['BrainStation', 'Perplexity', 'PitchBook'].includes(partner.name) ? 60 : 40}
+                          className={`w-auto h-auto object-contain ${['BrainStation', 'Perplexity', 'PitchBook'].includes(partner.name) ? 'max-h-12 max-w-36' : 'max-h-8 max-w-24'}`}
+                          style={partner.invert ? { filter: 'brightness(0) invert(1)' } : undefined}
+                          unoptimized
+                        />
+                      </div>
+                    )
+                  ) : (
+                    <span className="text-[#DBDBDB] text-sm font-medium relative z-10">{partner.name}</span>
+                  )}
                 </div>
               ))}
             </div>
@@ -459,21 +509,47 @@ export default function CaseCompPage() {
               Network &amp; Judges
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-              {networkJudges.map((company) => (
+              {networkJudges.map((company, i) => (
                 <div
                   key={company.name}
-                  className="flex items-center justify-center h-20 bg-[#3F3F3F]/20 border border-[#3F3F3F]/40 hover:border-[#6966E3] transition-colors duration-300 p-4"
+                  className="relative overflow-hidden flex items-center justify-center h-20 bg-[#3F3F3F]/20 border border-[#3F3F3F]/40 hover:border-[#6966E3] transition-colors duration-300 p-4 cursor-default"
+                  onMouseEnter={() => setHoveredBenefit(`judge-${i}`)}
+                  onMouseLeave={() => setHoveredBenefit(null)}
                 >
-                  {company.logo ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={company.logo}
-                      alt={company.name}
-                      className="max-h-8 w-auto object-contain brightness-0 invert"
-                    />
-                  ) : (
-                    <span className="text-[#DBDBDB] text-sm font-medium">{company.name}</span>
-                  )}
+                  <AsciiHoverEffect
+                    active={hoveredBenefit === `judge-${i}`}
+                    colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
+                    fontSize={10}
+                    className="opacity-40 mix-blend-screen"
+                  />
+                  <div className="relative z-10">
+                    {company.logo ? (
+                      company.logo.startsWith('http') ? (
+                        <div className="w-20 h-6 flex items-center justify-center">
+                          <img
+                            src={company.logo}
+                            alt={company.name}
+                            className="max-h-6 max-w-20 w-auto h-auto object-contain"
+                            style={{ filter: 'brightness(0) invert(1)' }}
+                          />
+                        </div>
+                      ) : (
+                        <div className={`flex items-center justify-center ${company.name === 'Amazon' ? 'w-24 h-9' : 'w-20 h-6'}`}>
+                          <Image
+                            src={company.logo}
+                            alt={company.name}
+                            width={company.name === 'Amazon' ? 150 : 100}
+                            height={company.name === 'Amazon' ? 48 : 32}
+                            className={`w-auto h-auto object-contain ${company.name === 'Amazon' ? 'max-h-9 max-w-24' : 'max-h-6 max-w-20'}`}
+                            style={company.invert ? { filter: 'brightness(0) invert(1)' } : undefined}
+                            unoptimized
+                          />
+                        </div>
+                      )
+                    ) : (
+                      <span className="text-[#DBDBDB] text-sm font-medium">{company.name}</span>
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
@@ -482,28 +558,27 @@ export default function CaseCompPage() {
       </section>
 
       {/* Partner Schools */}
-      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24">
-        <div className="max-w-[1400px] mx-auto">
+      <section className="relative z-10 py-24">
+        <div className="max-w-[1400px] mx-auto px-6 md:px-16 lg:px-24">
           <FadeUp>
-            <h2 className="section-title text-[#DBDBDB] text-center mb-4">
+            <h2 className="section-title text-[#DBDBDB] text-center mb-12">
               <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
                 Partner Schools
               </TextAnimate>
             </h2>
-            <p className="text-lg text-[#DBDBDB]/60 text-center mb-12 max-w-2xl mx-auto">
-              Students from top universities across the country compete.
-            </p>
           </FadeUp>
-          <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            {partnerSchools.map((school) => (
-              <StaggerItem key={school}>
-                <div className="bg-[#3F3F3F]/20 border border-[#3F3F3F]/40 p-4 text-center hover:border-[#6966E3] transition-colors duration-300">
-                  <span className="text-[#DBDBDB]/80 text-sm">{school}</span>
-                </div>
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
         </div>
+        <FadeIn delay={0.2}>
+          <LogoLoop
+            logos={partnerSchools}
+            speed={80}
+            logoHeight={128}
+            gap={48}
+            pauseOnHover
+            fadeOut
+            fadeOutColor="#000000"
+          />
+        </FadeIn>
       </section>
 
       <JoinUsSection variant="default" newsletterSource="case-comp" />

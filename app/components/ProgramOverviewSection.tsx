@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { FadeUp } from "./ScrollAnimations";
 import { TextAnimate } from "@/components/ui/text-animate";
-import PixelHoverCanvas from "@/components/PixelHoverCanvas";
+import AsciiHoverEffect from "@/components/AsciiHoverEffect";
 
 interface ProgramOverviewSectionProps {
   description: React.ReactNode;
@@ -32,12 +33,10 @@ export function ProgramOverviewSection({
   const [hoverExpect, setHoverExpect] = useState(false);
   const [hoverReqs, setHoverReqs] = useState(false);
 
-  const pixelEffectConfig = {
+  const asciiEffectConfig = {
     colors: `${accentColor},rgba(219,219,219,0.7),rgba(63,63,63,0.8)`,
-    gap: 6,
-    speed: 30,
+    fontSize: 10,
     className: "opacity-40 mix-blend-screen",
-    radius: 0,
   };
 
   return (
@@ -54,13 +53,11 @@ export function ProgramOverviewSection({
               onMouseLeave={() => setHoverTop(false)}
             >
               <div className="absolute inset-0 z-0 overflow-hidden">
-                <PixelHoverCanvas
+                <AsciiHoverEffect
                   active={hoverTop}
-                  colors={pixelEffectConfig.colors}
-                  gap={pixelEffectConfig.gap}
-                  speed={pixelEffectConfig.speed}
+                  colors={asciiEffectConfig.colors}
+                  fontSize={asciiEffectConfig.fontSize}
                   className="opacity-40"
-                  radius={pixelEffectConfig.radius}
                 />
               </div>
               <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 cursor-default">
@@ -79,10 +76,12 @@ export function ProgramOverviewSection({
                 {/* Right Panel: Image — in front of pixel layer */}
                 <div className="relative border-t lg:border-t-0 min-h-[300px] lg:min-h-full p-8 md:p-12 border-[#3F3F3F]/40">
                   <div className="relative w-full h-full overflow-hidden border border-[#3F3F3F]/40 bg-black">
-                    <img
-                      src={imageSrc}
-                      alt={imageAlt}
-                      className="w-full h-full object-cover cursor-default"
+                    <Image
+                      src={imageSrc || "/community/retreat-f2025.png"}
+                      alt={imageAlt || "Program overview image"}
+                      fill
+                      className="object-cover cursor-default"
+                      sizes="(max-width: 1024px) 100vw, 50vw"
                     />
                   </div>
                 </div>
@@ -100,13 +99,11 @@ export function ProgramOverviewSection({
                 onMouseEnter={() => setHoverExpect(true)}
                 onMouseLeave={() => setHoverExpect(false)}
               >
-                <PixelHoverCanvas
+                <AsciiHoverEffect
                   active={hoverExpect}
-                  colors={pixelEffectConfig.colors}
-                  gap={pixelEffectConfig.gap}
-                  speed={pixelEffectConfig.speed}
-                  className={pixelEffectConfig.className}
-                  radius={pixelEffectConfig.radius}
+                  colors={asciiEffectConfig.colors}
+                  fontSize={asciiEffectConfig.fontSize}
+                  className={asciiEffectConfig.className}
                 />
                 <div className="relative z-10">
                   <h3 className="text-sm font-bold tracking-widest text-[#DBDBDB] uppercase mb-6">What to Expect</h3>
@@ -128,13 +125,11 @@ export function ProgramOverviewSection({
                 onMouseEnter={() => setHoverReqs(true)}
                 onMouseLeave={() => setHoverReqs(false)}
               >
-                <PixelHoverCanvas
+                <AsciiHoverEffect
                   active={hoverReqs}
-                  colors={pixelEffectConfig.colors}
-                  gap={pixelEffectConfig.gap}
-                  speed={pixelEffectConfig.speed}
-                  className={pixelEffectConfig.className}
-                  radius={pixelEffectConfig.radius}
+                  colors={asciiEffectConfig.colors}
+                  fontSize={asciiEffectConfig.fontSize}
+                  className={asciiEffectConfig.className}
                 />
                 <div className="relative z-10">
                   <h3 className="text-sm font-bold tracking-widest text-[#DBDBDB] uppercase mb-6">Requirements</h3>

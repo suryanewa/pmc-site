@@ -1,15 +1,20 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useState } from 'react';
+
 import { FadeUp, FadeIn, StaggerContainer, StaggerItem } from '../../components/ScrollAnimations';
+
+const UnicornScene = dynamic(() => import('unicornstudio-react/next'), { ssr: false });
 import { JoinUsSection } from '../../components/JoinUsSection';
 import { FAQSection } from '../../components/FAQSection';
 import { Button } from '../../components/Button';
 import { TextAnimate } from '@/components/ui/text-animate';
-import PixelHoverCanvas from '@/components/PixelHoverCanvas';
+import AsciiHoverEffect from '@/components/AsciiHoverEffect';
 import CountUp from '@/components/CountUp';
-import { LogoLoop } from '@/components/LogoLoop';
-import type { LogoItem } from '@/components/LogoLoop';
+const LogoCloudAnimated = dynamic(
+  () => import('@/components/smoothui/logo-cloud-1').then((m) => ({ default: m.LogoCloudAnimated }))
+);
 
 /* ─── data ─────────────────────────────────────────────────────────── */
 
@@ -56,21 +61,25 @@ const benefits = [
   },
 ];
 
-const speakerCompanies: LogoItem[] = [
-  { src: '/companies/meta.png', alt: 'Meta' },
-  { src: '/companies/figma.svg', alt: 'Figma' },
-  { src: '/companies/anthropic.svg', alt: 'Anthropic' },
-  { src: '/companies/hinge-logo.svg', alt: 'Hinge' },
-  { src: '/companies/lux.svg', alt: 'Lux Capital' },
-  { src: '/companies/usv.svg', alt: 'USV' },
-  { src: '/companies/bessemer.png', alt: 'Bessemer' },
-  { src: '/companies/clay.png', alt: 'Clay' },
-  { src: '/companies/clear.png', alt: 'CLEAR' },
-  { src: '/companies/mine.svg', alt: 'Mine' },
-  { src: '/companies/venmo.png', alt: 'Venmo' },
-  { src: '/companies/resy.png', alt: 'Resy' },
-  { src: '/companies/ro.png', alt: 'Ro' },
-  { src: '/companies/de-shaw.png', alt: 'D.E. Shaw' },
+const logos = [
+  { name: 'Hinge', src: '/companies/hinge-logo.svg', url: 'https://hinge.co', className: 'brightness-0 invert opacity-80' },
+  { name: 'Adobe', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/adobe.svg', url: 'https://adobe.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'Goldman Sachs', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/goldmansachs.svg', url: 'https://goldmansachs.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'Google', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/google.svg', url: 'https://google.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'Discord', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/discord.svg', url: 'https://discord.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'IBM', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/ibm.svg', url: 'https://ibm.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'JP Morgan', src: '/companies/chase-logo.svg', url: 'https://jpmorganchase.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'LinkedIn', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/linkedin.svg', url: 'https://linkedin.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'NBC Universal', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/nbc.svg', url: 'https://nbcuniversal.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'Spotify', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/spotify.svg', url: 'https://spotify.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'Meta', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/meta.svg', url: 'https://meta.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'Mastercard', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/mastercard.svg', url: 'https://mastercard.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'Oracle', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/oracle.svg', url: 'https://oracle.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'Warner Bros', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/warnerbros.svg', url: 'https://warnerbros.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'SeatGeek', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/seatgeek.svg', url: 'https://seatgeek.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'Epic Games', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/epicgames.svg', url: 'https://epicgames.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'Microsoft', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/microsoft.svg', url: 'https://microsoft.com', className: 'brightness-0 invert opacity-80' },
+  { name: 'American Express', src: 'https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/americanexpress.svg', url: 'https://americanexpress.com', className: 'brightness-0 invert opacity-80' },
 ];
 
 const reasons = [
@@ -171,7 +180,16 @@ export default function SpeakersPage() {
 
   return (
     <div className="bg-black relative">
-      {/* ───── Hero ───── */}
+      <div className="absolute top-0 left-0 w-full h-[110vh] pointer-events-none">
+        <UnicornScene
+          projectId="nfEXG2pQZ01qd0grcKXy"
+          sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
+          width="100%"
+          height="100%"
+        />
+        <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-b from-transparent to-black" />
+      </div>
+
       <section className="relative z-10 px-6 md:px-16 lg:px-24 pt-20 pb-16 md:py-24 min-h-[80vh] md:min-h-screen flex flex-col justify-center">
         <div className="max-w-[1400px] mx-auto w-full flex flex-col items-center">
           <div className="flex flex-col items-center gap-6 max-w-3xl text-center">
@@ -184,7 +202,7 @@ export default function SpeakersPage() {
             </FadeUp>
 
             <FadeUp delay={0.2}>
-              <p className="text-base md:text-xl text-[#DBDBDB]/70 leading-relaxed max-w-2xl md:mt-4 mb-8 md:mb-10">
+              <p className="text-base md:text-xl text-[#DBDBDB]/70 leading-relaxed max-w-2xl">
                 Every Thursday at 6:00 PM, we bring product leaders from across
                 industries directly to NYU students. No fluff — real
                 conversations with the people building the future.
@@ -192,29 +210,12 @@ export default function SpeakersPage() {
             </FadeUp>
 
             <FadeUp delay={0.3}>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-                <Button
-                  href="https://www.instagram.com/nyupmc/"
-                  className="w-full sm:w-auto px-8 py-4"
-                  fillColor="#41C9C1"
-                  textColor="#000000"
-                >
-                  <span className="flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                    </svg>
-                    Follow on Instagram
-                  </span>
-                </Button>
-                <a
-                  href="#join-us"
-                  className="text-[#DBDBDB]/60 hover:text-[#41C9C1] underline underline-offset-4 text-sm transition-colors duration-300"
-                >
-                  or join our newsletter
-                </a>
-              </div>
+              <Button
+                href="https://www.instagram.com/nyupmc/"
+                className="px-8 py-4"
+              >
+                Event Updates
+              </Button>
             </FadeUp>
           </div>
         </div>
@@ -266,13 +267,11 @@ export default function SpeakersPage() {
                   onMouseEnter={() => setHoveredCard(i)}
                   onMouseLeave={() => setHoveredCard(null)}
                 >
-                  <PixelHoverCanvas
+                  <AsciiHoverEffect
                     active={hoveredCard === i}
                     colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    gap={6}
-                    speed={30}
+                    fontSize={10}
                     className="opacity-40 mix-blend-screen"
-                    radius={0}
                   />
                   <div className="relative z-10">
                     <div className="w-10 h-10 mb-6 text-[#41C9C1]">{b.icon}</div>
@@ -290,40 +289,18 @@ export default function SpeakersPage() {
         </div>
       </section>
 
-      {/* ───── Logo Marquee ───── */}
-      <section className="relative z-10 py-24">
-        <div className="max-w-[1400px] mx-auto px-6 md:px-16 lg:px-24">
-          <FadeUp>
-            <h2 className="section-title text-[#DBDBDB] text-center mb-4">
-              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
-                Where Our Speakers Come From
-              </TextAnimate>
-            </h2>
-            <p className="text-lg text-[#DBDBDB]/60 text-center mb-12 max-w-2xl mx-auto">
-              We&apos;ve hosted leaders from startups to Fortune 500s.
-            </p>
-          </FadeUp>
-        </div>
-        <FadeIn delay={0.2}>
-          <LogoLoop
-            logos={speakerCompanies}
-            speed={80}
-            logoHeight={32}
-            gap={48}
-            pauseOnHover
-            fadeOut
-            fadeOutColor="#000000"
-          />
-        </FadeIn>
+      {/* ───── Past Speakers ───── */}
+      <section className="bg-black text-[#DBDBDB]">
+        <LogoCloudAnimated title="Past Speakers" description="" logos={logos} />
       </section>
 
-      {/* ───── Why Students Keep Coming Back ───── */}
+      {/* ───── Why Attend? ───── */}
       <section className="relative z-10 px-6 md:px-16 lg:px-24 py-24">
         <div className="max-w-[1400px] mx-auto">
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-16">
               <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
-                Why Students Keep Coming Back
+                Why Attend?
               </TextAnimate>
             </h2>
           </FadeUp>
@@ -359,7 +336,7 @@ export default function SpeakersPage() {
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] text-center mb-12">
               <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
-                Join Us Thursday
+                Every Thursday
               </TextAnimate>
             </h2>
           </FadeUp>
@@ -370,13 +347,11 @@ export default function SpeakersPage() {
               onMouseEnter={() => setHoverLogistics(true)}
               onMouseLeave={() => setHoverLogistics(false)}
             >
-              <PixelHoverCanvas
+              <AsciiHoverEffect
                 active={hoverLogistics}
                 colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                gap={6}
-                speed={30}
+                fontSize={10}
                 className="opacity-40 mix-blend-screen"
-                radius={0}
               />
               <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
                 {logisticsItems.map((item, i) => (
