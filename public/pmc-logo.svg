@@ -1,0 +1,19 @@
+<svg width="30" height="14" viewBox="0 0 30 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_59_36)">
+<foreignObject x="-4" y="-4" width="22" height="22"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(2px);clip-path:url(#bgblur_1_59_36_clip_path);height:100%;width:100%"></div></foreignObject><circle data-figma-bg-blur-radius="4" cx="7" cy="7" r="6.5" stroke="#52C6BF"/>
+<foreignObject x="4" y="-4" width="22" height="22"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(2px);clip-path:url(#bgblur_2_59_36_clip_path);height:100%;width:100%"></div></foreignObject><circle data-figma-bg-blur-radius="4" cx="15" cy="7" r="6.5" stroke="#52C6BF"/>
+<foreignObject x="12" y="-4" width="22" height="22"><div xmlns="http://www.w3.org/1999/xhtml" style="backdrop-filter:blur(2px);clip-path:url(#bgblur_3_59_36_clip_path);height:100%;width:100%"></div></foreignObject><circle data-figma-bg-blur-radius="4" cx="23" cy="7" r="6.5" stroke="#52C6BF"/>
+<line x1="9.22361" y1="4.55279" x2="13.2236" y2="6.55279" stroke="#52C6BF"/>
+<line x1="17.2236" y1="4.55279" x2="21.2236" y2="6.55279" stroke="#52C6BF"/>
+<line x1="8.78364" y1="7.55281" x2="13.2556" y2="9.78926" stroke="#52C6BF"/>
+<line x1="16.2236" y1="7.55281" x2="20.6956" y2="9.78926" stroke="#52C6BF"/>
+</g>
+<defs>
+<clipPath id="bgblur_1_59_36_clip_path" transform="translate(4 4)"><circle cx="7" cy="7" r="6.5"/>
+</clipPath><clipPath id="bgblur_2_59_36_clip_path" transform="translate(-4 4)"><circle cx="15" cy="7" r="6.5"/>
+</clipPath><clipPath id="bgblur_3_59_36_clip_path" transform="translate(-12 4)"><circle cx="23" cy="7" r="6.5"/>
+</clipPath><clipPath id="clip0_59_36">
+<rect width="30" height="14" fill="white"/>
+</clipPath>
+</defs>
+</svg>

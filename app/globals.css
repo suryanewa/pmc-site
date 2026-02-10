@@ -1,0 +1,434 @@
+@import url("https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-satoshi);
+  --font-mono: var(--font-geist-mono);
+  --font-gotham-medium: var(--font-gotham-medium);
+  --font-gotham-bold: var(--font-gotham-bold);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+
+  @keyframes scroll {
+    to {
+      transform: translateX(calc(-50% - var(--scroll-gap, 0px) / 2));
+    }
+  }
+
+  @keyframes subtle-float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes route-fade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --radius-md: calc(var(--radius) - 2px);
+
+  --radius-lg: var(--radius);
+
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  --radius-3xl: calc(var(--radius) + 12px);
+
+  --radius-4xl: calc(var(--radius) + 16px)
+}
+
+/* Base HTML smooth scroll (fallback if Lenis fails) */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Lenis smooth scroll styles */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+:root {
+  --font-satoshi: "Satoshi", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  font-family: var(--font-satoshi);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.section-title,
+.sub-section-title {
+  font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
+}
+
+/* Section title design system – consistent across all pages */
+.section-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 500;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.sub-section-title {
+  font-size: clamp(1.5rem, 3vw, 1.75rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.route-fade {
+  animation: route-fade 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Gotham font utility classes */
+.font-gotham {
+  font-family: var(--font-gotham-medium), system-ui, sans-serif;
+}
+
+.font-gotham-bold {
+  font-family: var(--font-gotham-bold), system-ui, sans-serif;
+}
+
+/* Marquee animation */
+.animate-scroll {
+  animation: scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite;
+}
+
+/* Subtle float for decorative elements */
+.animate-subtle-float {
+  animation: subtle-float 8s ease-in-out infinite;
+}
+
+/* Unicorn Studio hero sizing */
+.unicorn-hero-scene {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.unicorn-hero-scene canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+/* Custom scrollbar - minimal */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3F3F3F;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #41C9C1;
+}
+
+/* Selection color */
+::selection {
+  background: #5076DD;
+  color: #DBDBDB;
+}
+
+/* Smooth transitions for all interactive elements */
+a, button {
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Hide scrollbar during preloader */
+body.loading {
+  overflow: hidden;
+}
+
+/* Focus visible styles for accessibility */
+:focus-visible {
+  outline: 2px solid #41C9C1;
+  outline-offset: 2px;
+}
+
+:root {
+  --radius: 0.625rem;
+  --scroll-background: #000000;
+  --background: #000000;
+  --foreground: #DBDBDB;
+  --card: #3F3F3F;
+  --card-foreground: #DBDBDB;
+  --popover: #3F3F3F;
+  --popover-foreground: #DBDBDB;
+  --primary: #41C9C1;
+  --primary-foreground: #000000;
+  --secondary: #3F3F3F;
+  --secondary-foreground: #DBDBDB;
+  --muted: #3F3F3F;
+  --muted-foreground: rgba(219, 219, 219, 0.7);
+  --accent: #41C9C1;
+  --accent-foreground: #000000;
+  --destructive: #6966E3;
+  --border: #3F3F3F;
+  --input: #3F3F3F;
+  --ring: #41C9C1;
+  --chart-1: #41C9C1;
+  --chart-2: #5076DD;
+  --chart-3: #6966E3;
+  --chart-4: #DBDBDB;
+  --chart-5: #3F3F3F;
+  --sidebar: #000000;
+  --sidebar-foreground: #DBDBDB;
+  --sidebar-primary: #41C9C1;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #3F3F3F;
+  --sidebar-accent-foreground: #DBDBDB;
+  --sidebar-border: #3F3F3F;
+  --sidebar-ring: #41C9C1;
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #DBDBDB;
+  --card: #3F3F3F;
+  --card-foreground: #DBDBDB;
+  --popover: #3F3F3F;
+  --popover-foreground: #DBDBDB;
+  --primary: #41C9C1;
+  --primary-foreground: #000000;
+  --secondary: #3F3F3F;
+  --secondary-foreground: #DBDBDB;
+  --muted: #3F3F3F;
+  --muted-foreground: rgba(219, 219, 219, 0.7);
+  --accent: #41C9C1;
+  --accent-foreground: #000000;
+  --destructive: #6966E3;
+  --border: #3F3F3F;
+  --input: #3F3F3F;
+  --ring: #41C9C1;
+  --chart-1: #41C9C1;
+  --chart-2: #5076DD;
+  --chart-3: #6966E3;
+  --chart-4: #DBDBDB;
+  --chart-5: #3F3F3F;
+  --sidebar: #000000;
+  --sidebar-foreground: #DBDBDB;
+  --sidebar-primary: #41C9C1;
+  --sidebar-primary-foreground: #000000;
+  --sidebar-accent: #3F3F3F;
+  --sidebar-accent-foreground: #DBDBDB;
+  --sidebar-border: #3F3F3F;
+  --sidebar-ring: #41C9C1;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+
+
+/* Snappier toast (sonner) – aligned with site easing and speed */
+[data-sonner-toaster] {
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+[data-sonner-toast] {
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    height 200ms cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 150ms ease;
+}
+[data-sonner-toast][data-styled="true"] {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+[data-sonner-toast][data-styled="true"][data-type="success"] [data-icon] {
+  color: #41C9C1;
+}
+[data-sonner-toast][data-styled="true"][data-type="error"] [data-icon] {
+  color: #6966E3;
+}
+[data-sonner-toaster][data-sonner-theme="dark"] {
+  --normal-bg: #3F3F3F;
+  --normal-text: #DBDBDB;
+  --normal-border: rgba(219, 219, 219, 0.15);
+}
+[data-sonner-toaster][data-sonner-theme="dark"] [data-sonner-toast][data-styled="true"] {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Newsletter inputs: accent-colored border only, no global focus outline */
+.newsletter-form input,
+.newsletter-form input:focus,
+.newsletter-form input:focus-visible {
+  outline: none !important;
+  outline-offset: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Folded paper application card */
+.folded-application {
+  position: relative;
+  width: min(100%, 420px);
+  transform: skewY(-5deg) translateY(8%) scale(0.8);
+  transition: box-shadow 350ms cubic-bezier(0.075, 0.82, 0.165, 1),
+    transform 350ms cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.folded-application::before,
+.folded-application::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  pointer-events: none;
+  background-color: #3F3F3F;
+  width: 25%;
+  height: 100%;
+  transition: background-color 350ms cubic-bezier(0.075, 0.82, 0.165, 1),
+    transform 350ms cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+.folded-application::before {
+  right: calc(100% - 1px);
+  transform-origin: 100% 100%;
+  transform: skewY(-35deg) scaleX(-1);
+  z-index: -1;
+}
+
+.folded-application::after {
+  left: calc(100% - 1px);
+  transform-origin: 0 0;
+  transform: skewY(-35deg) scaleX(-1);
+  z-index: 2;
+}
+
+.folded-application:hover,
+.folded-application:focus-within {
+  transform: skewY(-5deg) translateY(8%) scale(0.84);
+  box-shadow: 0 1.25rem 3rem rgba(0, 0, 0, 0.12);
+}
+
+.folded-application:hover::before,
+.folded-application:hover::after,
+.folded-application:focus-within::before,
+.folded-application:focus-within::after {
+  background-color: #DBDBDB;
+  transform: skewY(0);
+}
+
+.folded-application-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 6rem 2.5rem;
+  min-height: 480px;
+  background-color: #3F3F3F;
+  border-radius: 0.25rem;
+  z-index: 1;
+}
+
+.folded-application-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+  color: var(--folded-accent, #41C9C1);
+  text-align: center;
+}
+
+.folded-application-logo {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+}
+
+.folded-application-caption {
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.04rem;
+  text-transform: uppercase;
+  color: #DBDBDB;
+}
