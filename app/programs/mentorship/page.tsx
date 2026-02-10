@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { FadeUp, FadeIn } from '../../components/ScrollAnimations';
 import { Chip } from '../../components/Chip';
 import { Button } from '../../components/Button';
-import { ApplicationsCountdown } from '../../components/ApplicationsCountdown';
 import { JoinUsSection } from '../../components/JoinUsSection';
 import { FAQSection } from '../../components/FAQSection';
 import { TextAnimate } from '@/components/ui/text-animate';
@@ -78,9 +77,6 @@ export default function MentorshipPage() {
 
             <FadeUp delay={0.3}>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
-                <div className="w-full sm:w-auto flex justify-center">
-                  <ApplicationsCountdown accentColor={ACCENT} />
-                </div>
                 <div className="w-full sm:w-auto">
                   <Button
                     href="#tracks"
@@ -100,25 +96,6 @@ export default function MentorshipPage() {
               </div>
             </FadeUp>
           </div>
-        </div>
-      </section>
-
-      {/* Pixel art icons */}
-      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-8">
-        <div className="max-w-[1400px] mx-auto">
-          <FadeUp>
-            <div className="flex justify-center">
-              <div className="flex items-center justify-center gap-4 md:gap-8 lg:gap-10">
-                <img src="/Group.svg" alt="" className="size-16 md:size-20 lg:size-24" />
-                <img src="/Group-1.svg" alt="" className="size-16 md:size-20 lg:size-24" />
-                <img src="/Group-2.svg" alt="" className="size-16 md:size-20 lg:size-24" />
-                <img src="/Group-3.svg" alt="" className="size-16 md:size-20 lg:size-24" />
-                <img src="/Group-4.svg" alt="" className="hidden sm:block size-16 md:size-20 lg:size-24" />
-                <img src="/Group-5.svg" alt="" className="hidden sm:block size-16 md:size-20 lg:size-24" />
-                <img src="/Group-6.svg" alt="" className="hidden md:block size-16 md:size-20 lg:size-24" />
-              </div>
-            </div>
-          </FadeUp>
         </div>
       </section>
 
