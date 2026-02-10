@@ -15,6 +15,7 @@ const programLeads = [
         src: '/portraits/soumya-m.jpeg',
         name: 'Soumya M.',
         role: 'Senior Product Team Lead',
+        coffeeChatUrl: 'https://calendly.com/srm9678-stern/pmc-coffee-chats',
         description: 'Soumya is a junior studying Business, Technology, and Entrepreneurship with a minor in CS. She enjoys listening to music, cooking, and traveling to new places!',
       },
       {
@@ -22,12 +23,14 @@ const programLeads = [
         src: '/portraits/valerie-zou.jpg',
         name: 'Valerie Zou',
         role: 'Junior Product Team Lead',
+        coffeeChatUrl: 'https://calendly.com/vz2160-nyu/valerie-s-calendly',
       },
       {
         id: 3,
         src: '/portraits/prateek-nedungadi.jpg',
         name: 'Prateek Nedungadi',
         role: 'Product Team Coordinator',
+        coffeeChatUrl: 'https://calendly.com/prateek-nedungadi-stern/30min',
       },
     ],
   },
@@ -40,12 +43,14 @@ const programLeads = [
         src: '/portraits/jade-leong.jpeg',
         name: 'Jade Leong',
         role: 'Mentorship Lead',
+        coffeeChatUrl: 'https://calendly.com/jyl9618-nyu/30min',
       },
       {
         id: 5,
         src: '/portraits/ethan-lu.jpeg',
         name: 'Ethan Lu',
         role: 'Mentorship Lead',
+        coffeeChatUrl: 'https://calendly.com/rkl6999-nyu/30min',
       },
     ],
   },
@@ -58,12 +63,14 @@ const programLeads = [
         src: '/portraits/tarush-garg.jpg',
         name: 'Tarush Garg',
         role: 'Case Competition Lead',
+        coffeeChatUrl: 'https://calendly.com/tg2903-nyu/30min',
       },
       {
         id: 7,
         src: '/portraits/surya-newa.png',
         name: 'Surya Newa',
         role: 'Case Competition Lead',
+        coffeeChatUrl: 'https://cal.com/suryanewa/quick-chat',
       },
     ],
   },
@@ -94,10 +101,10 @@ export default function LeadsPage() {
           {programLeads.map((program, programIndex) => (
             <section key={program.program} className="pt-12 pb-20">
               <FadeUp>
-                <div className="flex items-center gap-4 mb-10">
+                <div className="flex items-center gap-6 mb-12">
                   <div className="h-px flex-1 bg-[#3F3F3F]" />
                   <span
-                    className="text-xs font-semibold uppercase tracking-[0.2em] whitespace-nowrap"
+                    className="text-sm md:text-base font-bold uppercase tracking-[0.25em] whitespace-nowrap"
                     style={{ color: program.color }}
                   >
                     {program.program}
@@ -115,6 +122,7 @@ export default function LeadsPage() {
                           src={member.src}
                           name={member.name}
                           role={member.role}
+                          coffeeChatUrl={member.coffeeChatUrl}
                           description={member.description}
                         />
                       </FadeUp>
@@ -129,6 +137,7 @@ export default function LeadsPage() {
                         src={member.src}
                         name={member.name}
                         role={member.role}
+                        coffeeChatUrl={member.coffeeChatUrl}
                         description={member.description}
                       />
                     </FadeUp>
