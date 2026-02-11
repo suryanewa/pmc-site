@@ -6,19 +6,30 @@ import {
   CursorProvider,
   Cursor,
 } from '@/components/animate-ui/primitives/animate/cursor';
+import { ArrowRight } from 'lucide-react';
 
 const INTERACTIVE_SELECTOR =
   'a,button,[role="button"],input,textarea,select,label,summary,[type="checkbox"],[type="radio"],[type="range"],.cursor-pointer';
 
+const PROGRAM_CARD_SELECTOR = '[data-program-card]';
+
 export function AnimatedCursor() {
   const [hasPointer, setHasPointer] = React.useState(false);
   const [isHovering, setIsHovering] = React.useState(false);
+  const [isOnProgramCard, setIsOnProgramCard] = React.useState(false);
   const hoverRef = React.useRef(false);
+  const programCardRef = React.useRef(false);
 
   const updateHoverState = React.useCallback((next: boolean) => {
     if (hoverRef.current === next) return;
     hoverRef.current = next;
     setIsHovering(next);
+  }, []);
+
+  const updateProgramCardState = React.useCallback((next: boolean) => {
+    if (programCardRef.current === next) return;
+    programCardRef.current = next;
+    setIsOnProgramCard(next);
   }, []);
 
   React.useEffect(() => {
@@ -34,13 +45,20 @@ export function AnimatedCursor() {
 
     const handleOver = (e: MouseEvent) => {
       const target = e.target as Element | null;
-      if (target?.closest(INTERACTIVE_SELECTOR)) {
+      if (target?.closest(PROGRAM_CARD_SELECTOR)) {
+        updateProgramCardState(true);
+        updateHoverState(false);
+      } else if (target?.closest(INTERACTIVE_SELECTOR)) {
+        updateProgramCardState(false);
         updateHoverState(true);
       }
     };
 
     const handleOut = (e: MouseEvent) => {
       const related = e.relatedTarget as Element | null;
+      if (!related?.closest(PROGRAM_CARD_SELECTOR)) {
+        updateProgramCardState(false);
+      }
       if (!related?.closest(INTERACTIVE_SELECTOR)) {
         updateHoverState(false);
       }
@@ -52,7 +70,7 @@ export function AnimatedCursor() {
       document.removeEventListener('mouseover', handleOver);
       document.removeEventListener('mouseout', handleOut);
     };
-  }, [hasPointer, updateHoverState]);
+  }, [hasPointer, updateHoverState, updateProgramCardState]);
 
   if (!hasPointer) return null;
 
@@ -60,7 +78,21 @@ export function AnimatedCursor() {
     <CursorProvider global>
       <Cursor>
         <AnimatePresence mode="wait" initial={false}>
-          {isHovering ? (
+          {isOnProgramCard ? (
+            <motion.div
+              key="program-arrow"
+              className="relative inline-flex h-10 w-10 shrink-0 overflow-hidden rounded-full p-[1.5px]"
+              initial={{ scale: 0.4, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.4, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            >
+              <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#41C9C1_0%,#5076DD_50%,#41C9C1_100%)]" aria-hidden="true" />
+              <span className="relative z-10 inline-flex h-full w-full items-center justify-center rounded-full bg-slate-950 text-white backdrop-blur-3xl">
+                <ArrowRight className="size-4" />
+              </span>
+            </motion.div>
+          ) : isHovering ? (
             <motion.div
               key="dot"
               className="rounded-full"

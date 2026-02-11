@@ -31,12 +31,9 @@ export function TeamMemberCard({ name, className = '' }: TeamMemberCardProps) {
 
       <div className="relative z-10 flex flex-col gap-1">
         <h3 className="text-xl md:text-2xl font-medium text-[#DBDBDB] tracking-[-0.02em] group-hover:text-[#41C9C1] transition-colors duration-300">
-          /{name.toLowerCase().replace(/\s+/g, '-')}
+          {name}
         </h3>
       </div>
-      
-      {/* Decorative accent line on hover */}
-      <div className="absolute bottom-0 left-0 z-10 w-full h-[2px] bg-[#41C9C1] scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
     </motion.div>
   );
 }

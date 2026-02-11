@@ -17,8 +17,6 @@ import { TextAnimate } from '@/components/ui/text-animate';
 import { JoinUsSection } from '../../components/JoinUsSection';
 
 const TEAM_DISPLAY_ORDER: Team[] = [
-  'startup',
-  'investing',
   'product-team',
   'mentorship-advanced',
   'mentorship-intro',
@@ -28,7 +26,6 @@ const TEAM_DISPLAY_ORDER: Team[] = [
 
 const PROGRAM_FILTER_ORDER: ProgramFilter[] = [
   'all',
-  'eir',
   'product-team',
   'mentorship',
   'grad-bootcamp',
@@ -113,7 +110,7 @@ export default function PastTeamsPage() {
         </div>
       </section>
 
-      <div className="md:sticky md:top-[72px] z-40 bg-black/95 backdrop-blur-sm border-b border-[#3F3F3F]/60 py-4 px-6 md:px-16 lg:px-24 transition-all duration-300">
+      <div className="z-40 bg-black/95 backdrop-blur-sm border-b border-[#3F3F3F]/60 py-4 px-6 md:px-16 lg:px-24 transition-all duration-300">
         <div className="max-w-[1400px] mx-auto flex flex-col gap-4">
           <div className="flex flex-col gap-3 md:hidden">
             <div className="flex flex-col gap-1">
