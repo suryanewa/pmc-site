@@ -104,26 +104,7 @@ const ConfettiCanvas = React.forwardRef<ConfettiCanvasHandle, ConfettiCanvasProp
   const confettiRef = useRef<Confetto[]>([]);
   const sequinsRef = useRef<Sequin[]>([]);
   const requestRef = useRef<number>(0);
-
-  const burst = useCallback((x: number, y: number) => {
-    if (!canvasRef.current) return;
-    const canvas = canvasRef.current;
-    
-    const containerRect = containerRef?.current?.getBoundingClientRect();
-    const relativeX = containerRect ? x - containerRect.left : x;
-    const relativeY = containerRect ? y - containerRect.top : y;
-    
-    for (let i = 0; i < confettiCount; i++) {
-      confettiRef.current.push(new Confetto(canvas.width, canvas.height, relativeX, relativeY));
-    }
-    for (let i = 0; i < sequinCount; i++) {
-      sequinsRef.current.push(new Sequin(canvas.width, canvas.height, relativeX, relativeY));
-    }
-  }, [containerRef]);
-
-  React.useImperativeHandle(ref, () => ({
-    burst,
-  }));
+  const isAnimatingRef = useRef(false);
 
   const render = useCallback(function render() {
     const canvas = canvasRef.current;
@@ -165,8 +146,41 @@ const ConfettiCanvas = React.forwardRef<ConfettiCanvasHandle, ConfettiCanvasProp
       }
     });
 
-    requestRef.current = requestAnimationFrame(render);
+    if (confettiRef.current.length > 0 || sequinsRef.current.length > 0) {
+      requestRef.current = requestAnimationFrame(render);
+      return;
+    }
+
+    isAnimatingRef.current = false;
+    requestRef.current = 0;
   }, []);
+
+  const startRenderLoop = useCallback(() => {
+    if (isAnimatingRef.current) return;
+    isAnimatingRef.current = true;
+    requestRef.current = requestAnimationFrame(render);
+  }, [render]);
+
+  const burst = useCallback((x: number, y: number) => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+
+    const containerRect = containerRef?.current?.getBoundingClientRect();
+    const relativeX = containerRect ? x - containerRect.left : x;
+    const relativeY = containerRect ? y - containerRect.top : y;
+
+    for (let i = 0; i < confettiCount; i++) {
+      confettiRef.current.push(new Confetto(canvas.width, canvas.height, relativeX, relativeY));
+    }
+    for (let i = 0; i < sequinCount; i++) {
+      sequinsRef.current.push(new Sequin(canvas.width, canvas.height, relativeX, relativeY));
+    }
+    startRenderLoop();
+  }, [containerRef, startRenderLoop]);
+
+  React.useImperativeHandle(ref, () => ({
+    burst,
+  }));
 
   useEffect(() => {
     const handleResize = () => {
@@ -184,13 +198,13 @@ const ConfettiCanvas = React.forwardRef<ConfettiCanvasHandle, ConfettiCanvasProp
 
     window.addEventListener('resize', handleResize);
     handleResize();
-    requestRef.current = requestAnimationFrame(render);
 
     return () => {
+      isAnimatingRef.current = false;
       window.removeEventListener('resize', handleResize);
       cancelAnimationFrame(requestRef.current);
     };
-  }, [render, containerRef]);
+  }, [containerRef]);
 
   const isContained = !!containerRef;
 

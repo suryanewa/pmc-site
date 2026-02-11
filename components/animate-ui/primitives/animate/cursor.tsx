@@ -6,6 +6,7 @@ import {
   useMotionValue,
   useSpring,
   AnimatePresence,
+  type MotionValue,
   type HTMLMotionProps,
   type SpringOptions,
 } from 'motion/react';
@@ -13,7 +14,8 @@ import {
 import { getStrictContext } from '@/lib/get-strict-context';
 
 type CursorContextType = {
-  cursorPos: { x: number; y: number };
+  cursorX: MotionValue<number>;
+  cursorY: MotionValue<number>;
   active: boolean;
   global: boolean;
   containerRef: React.RefObject<HTMLDivElement | null>;
@@ -29,11 +31,17 @@ type CursorProviderProps = {
 };
 
 function CursorProvider({ children, global = false }: CursorProviderProps) {
-  const [cursorPos, setCursorPos] = React.useState({ x: 0, y: 0 });
+  const cursorX = useMotionValue(0);
+  const cursorY = useMotionValue(0);
   const [active, setActive] = React.useState(false);
+  const activeRef = React.useRef(false);
 
   const containerRef = React.useRef<HTMLDivElement>(null);
   const cursorRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    activeRef.current = active;
+  }, [active]);
 
   React.useEffect(() => {
     const id = '__cursor_none_style__';
@@ -52,18 +60,26 @@ function CursorProvider({ children, global = false }: CursorProviderProps) {
 
     if (global) {
       const handlePointerMove = (e: PointerEvent) => {
-        setCursorPos({ x: e.clientX, y: e.clientY });
-        setActive(true);
+        cursorX.set(e.clientX);
+        cursorY.set(e.clientY);
+        if (!activeRef.current) {
+          activeRef.current = true;
+          setActive(true);
+        }
       };
 
       const handlePointerOut = (e: PointerEvent | MouseEvent) => {
         if (e instanceof PointerEvent && e.relatedTarget === null) {
+          activeRef.current = false;
           setActive(false);
         }
       };
 
       const handleVisibilityChange = () => {
-        if (document.visibilityState === 'hidden') setActive(false);
+        if (document.visibilityState === 'hidden') {
+          activeRef.current = false;
+          setActive(false);
+        }
       };
 
       window.addEventListener('pointermove', handlePointerMove, {
@@ -96,8 +112,12 @@ function CursorProvider({ children, global = false }: CursorProviderProps) {
 
       const handlePointerMove = (e: PointerEvent) => {
         const rect = parent.getBoundingClientRect();
-        setCursorPos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-        setActive(true);
+        cursorX.set(e.clientX - rect.left);
+        cursorY.set(e.clientY - rect.top);
+        if (!activeRef.current) {
+          activeRef.current = true;
+          setActive(true);
+        }
       };
 
       const handlePointerOut = (e: PointerEvent | MouseEvent) => {
@@ -105,6 +125,7 @@ function CursorProvider({ children, global = false }: CursorProviderProps) {
           e.relatedTarget === null ||
           !(parent as Node).contains(e.relatedTarget as Node)
         ) {
+          activeRef.current = false;
           setActive(false);
         }
       };
@@ -125,11 +146,11 @@ function CursorProvider({ children, global = false }: CursorProviderProps) {
     }
 
     return removeListeners;
-  }, [global]);
+  }, [global, cursorX, cursorY]);
 
   return (
     <LocalCursorProvider
-      value={{ cursorPos, active, global, containerRef, cursorRef }}
+      value={{ cursorX, cursorY, active, global, containerRef, cursorRef }}
     >
       {children}
     </LocalCursorProvider>
@@ -158,11 +179,8 @@ type CursorProps = HTMLMotionProps<'div'> & {
 };
 
 function Cursor({ ref, style, ...props }: CursorProps) {
-  const { cursorPos, active, containerRef, cursorRef, global } = useCursor();
+  const { cursorX, cursorY, active, containerRef, cursorRef, global } = useCursor();
   React.useImperativeHandle(ref, () => cursorRef.current as HTMLDivElement);
-
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
 
   React.useEffect(() => {
     const target = global
@@ -182,11 +200,6 @@ function Cursor({ ref, style, ...props }: CursorProps) {
     };
   }, [active, global, containerRef]);
 
-  React.useEffect(() => {
-    x.set(cursorPos.x);
-    y.set(cursorPos.y);
-  }, [cursorPos, x, y]);
-
   return (
     <AnimatePresence>
       {active && (
@@ -200,8 +213,8 @@ function Cursor({ ref, style, ...props }: CursorProps) {
             pointerEvents: 'none',
             zIndex: 9999,
             position: global ? 'fixed' : 'absolute',
-            top: y,
-            left: x,
+            top: cursorY,
+            left: cursorX,
             ...style,
           }}
           initial={{ scale: 0, opacity: 0 }}
@@ -236,7 +249,7 @@ function CursorFollow({
   transition = { stiffness: 500, damping: 50, bounce: 0 },
   ...props
 }: CursorFollowProps) {
-  const { cursorPos, active, cursorRef, global } = useCursor();
+  const { cursorX, cursorY, active, cursorRef, global } = useCursor();
   const cursorFollowRef = React.useRef<HTMLDivElement>(null);
   React.useImperativeHandle(
     ref,
@@ -323,14 +336,26 @@ function CursorFollow({
   }, [side, align, sideOffset, alignOffset]);
 
   React.useEffect(() => {
-    const offset = calculateOffset();
-    const cursorRect = cursorRef.current?.getBoundingClientRect();
-    const cursorWidth = cursorRect?.width ?? 20;
-    const cursorHeight = cursorRect?.height ?? 20;
+    const updatePosition = () => {
+      const offset = calculateOffset();
+      const cursorRect = cursorRef.current?.getBoundingClientRect();
+      const cursorWidth = cursorRect?.width ?? 20;
+      const cursorHeight = cursorRect?.height ?? 20;
 
-    x.set(cursorPos.x - offset.x + cursorWidth / 2);
-    y.set(cursorPos.y - offset.y + cursorHeight / 2);
-  }, [calculateOffset, cursorPos, cursorRef, x, y]);
+      x.set(cursorX.get() - offset.x + cursorWidth / 2);
+      y.set(cursorY.get() - offset.y + cursorHeight / 2);
+    };
+
+    updatePosition();
+
+    const unsubX = cursorX.on('change', updatePosition);
+    const unsubY = cursorY.on('change', updatePosition);
+
+    return () => {
+      unsubX();
+      unsubY();
+    };
+  }, [calculateOffset, cursorRef, cursorX, cursorY, x, y]);
 
   return (
     <AnimatePresence>

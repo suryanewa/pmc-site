@@ -34,23 +34,37 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     });
 
     lenisRef.current = lenis;
+    lenis.on("scroll", ScrollTrigger.update);
 
     // RAF loop
     let rafId: number | null = null;
     let isActive = true;
+    let isVisible = document.visibilityState === "visible";
+
+    const handleVisibilityChange = () => {
+      isVisible = document.visibilityState === "visible";
+      if (isVisible && isActive && rafId === null) {
+        rafId = requestAnimationFrame(raf);
+      }
+    };
 
     function raf(time: number) {
       if (!isActive) return;
+      if (!isVisible) {
+        rafId = null;
+        return;
+      }
       lenis.raf(time);
-      ScrollTrigger.update();
       rafId = requestAnimationFrame(raf);
     }
 
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     rafId = requestAnimationFrame(raf);
 
     // Cleanup
     return () => {
       isActive = false;
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (rafId !== null) cancelAnimationFrame(rafId);
       lenis.destroy();
       lenisRef.current = null;

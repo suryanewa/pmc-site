@@ -1,10 +1,10 @@
-import type { NextConfig } from "next";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import million from "million/compiler";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   turbopack: {
     root: projectRoot,
   },
@@ -22,4 +22,21 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+const millionConfig = {
+  auto: { rsc: true },
+  rsc: true,
+};
+
+const millionNextConfig = million.next(
+  {
+    appDir: true,
+  },
+  millionConfig,
+);
+
+const { appDir: _ignoredAppDir, ...millionRuntimeConfig } = millionNextConfig;
+
+export default {
+  ...nextConfig,
+  ...millionRuntimeConfig,
+};

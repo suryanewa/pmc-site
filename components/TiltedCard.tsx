@@ -1,5 +1,5 @@
 import type { SpringOptions } from 'motion/react';
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring } from 'motion/react';
 import AsciiHoverEffect from '@/components/AsciiHoverEffect';
 import { useIsMobile } from '../hooks/use-is-mobile';
@@ -72,11 +72,24 @@ export default function TiltedCard({
 
   const [lastY, setLastY] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const rectRef = useRef<DOMRect | null>(null);
+
+  const updateRect = useCallback(() => {
+    if (!ref.current) return;
+    rectRef.current = ref.current.getBoundingClientRect();
+  }, []);
+
+  useEffect(() => {
+    if (!ref.current || isMobile) return;
+    updateRect();
+    const observer = new ResizeObserver(updateRect);
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [isMobile, updateRect]);
 
   function handleMouse(e: React.MouseEvent<HTMLElement>) {
-    if (!ref.current) return;
-
-    const rect = ref.current.getBoundingClientRect();
+    const rect = rectRef.current;
+    if (!rect) return;
     const offsetX = e.clientX - rect.left - rect.width / 2;
     const offsetY = e.clientY - rect.top - rect.height / 2;
 
@@ -95,6 +108,7 @@ export default function TiltedCard({
   }
 
   function handleMouseEnter() {
+    updateRect();
     scale.set(scaleOnHover);
     imageScale.set(imageScaleOnHover);
     opacity.set(1);

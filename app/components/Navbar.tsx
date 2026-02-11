@@ -78,13 +78,27 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
   const isDark = variant === 'dark';
 
   useEffect(() => {
+    let rafId: number | null = null;
+    let lastScrolled = window.scrollY > 10;
+    setIsScrolled(lastScrolled);
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        const nextScrolled = window.scrollY > 10;
+        if (nextScrolled !== lastScrolled) {
+          lastScrolled = nextScrolled;
+          setIsScrolled(nextScrolled);
+        }
+      });
     };
 
-    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   // Close mobile menu on resize to desktop
@@ -290,7 +304,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
 
             <div className="hidden md:block flex-shrink-0">
               <Button
-                href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform"
+                href="/people/e-board"
                 className="px-5 py-2.5"
               >
                 Coffee Chat
@@ -428,7 +442,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
                   <div className="pt-2">
                     <div onClick={() => setIsMobileMenuOpen(false)}>
                       <Button
-                        href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform"
+                        href="/people/e-board"
                         className="px-6 py-3"
                       >
                         Coffee Chat

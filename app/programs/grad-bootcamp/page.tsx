@@ -1,6 +1,5 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Timeline } from '@/components/ui/timeline';
 import { FadeUp, FadeIn } from '../../components/ScrollAnimations';
@@ -12,8 +11,7 @@ import { TextAnimate } from '@/components/ui/text-animate';
 import { ProgramOverviewSection } from '../../components/ProgramOverviewSection';
 import { ProgramApplicationSection } from '../../components/ProgramApplicationSection';
 import AsciiHoverEffect from '@/components/AsciiHoverEffect';
-
-const UnicornScene = dynamic(() => import('unicornstudio-react/next'), { ssr: false });
+import { UnicornHeroBackground } from '../../components/UnicornHeroBackground';
 
 const ACCENT = '#41C9C1';
 
@@ -175,15 +173,7 @@ export default function GradBootcampPage() {
 
   return (
     <div className="bg-black relative">
-      <div className="absolute top-0 left-0 w-full h-[110vh] pointer-events-none">
-        <UnicornScene
-          projectId="EQvAvFB5IeSsVwWQyJuV"
-          sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
-          width="100%"
-          height="100%"
-        />
-        <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-b from-transparent to-black" />
-      </div>
+      <UnicornHeroBackground projectId="EQvAvFB5IeSsVwWQyJuV" />
 
       {/* Hero */}
       <section className="relative z-10 px-6 md:px-16 lg:px-24 pt-20 pb-16 md:py-24 min-h-screen flex flex-col justify-center">

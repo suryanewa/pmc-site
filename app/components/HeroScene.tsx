@@ -1,18 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-declare global {
-  interface Window {
-    UnicornStudio?: {
-      init?: () => void;
-      isInitialized?: boolean;
-    };
-  }
-}
-
-const UNICORN_SDK_SRC =
-  "https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.4/dist/unicornStudio.umd.js";
+import { initializeUnicornStudio } from "@/lib/unicorn-loader";
 
 const UNICORN_PROJECT_ID = "iqmKJVFD9SyCutTNbiGK";
 
@@ -21,48 +10,41 @@ export function HeroScene() {
   const [sceneScale, setSceneScale] = useState(1);
 
   useEffect(() => {
-    let scriptEl: HTMLScriptElement | null = document.querySelector(
-      `script[src="${UNICORN_SDK_SRC}"]`,
-    );
-
-    const initScene = () => {
-      if (!window.UnicornStudio?.init) return;
-      window.UnicornStudio.init();
-    };
-
-    if (!scriptEl) {
-      scriptEl = document.createElement("script");
-      scriptEl.src = UNICORN_SDK_SRC;
-      scriptEl.async = true;
-      scriptEl.onload = initScene;
-      document.head.appendChild(scriptEl);
-    } else if (window.UnicornStudio) {
-      initScene();
-    } else {
-      scriptEl.addEventListener("load", initScene, { once: true });
-    }
-
-    return () => {
-      scriptEl?.removeEventListener("load", initScene);
-    };
+    void initializeUnicornStudio();
   }, []);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
+    let rafId: number | null = null;
+    let lastScale = -1;
+
     const updateScale = () => {
       const { width, height } = wrapper.getBoundingClientRect();
       if (!width || !height) return;
       const scale = Math.min(width / 1440, height / 900) * 1.5;
+      if (scale === lastScale) return;
+      lastScale = scale;
       setSceneScale(scale);
     };
 
+    const scheduleScaleUpdate = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        updateScale();
+      });
+    };
+
     updateScale();
-    const observer = new ResizeObserver(updateScale);
+    const observer = new ResizeObserver(scheduleScaleUpdate);
     observer.observe(wrapper);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (

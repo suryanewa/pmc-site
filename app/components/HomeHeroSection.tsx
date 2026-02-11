@@ -8,15 +8,6 @@ import { Button } from './Button';
 import { TextAnimate } from '@/components/ui/text-animate';
 import { useIsMobile } from '../../hooks/use-is-mobile';
 
-declare global {
-  interface Window {
-    UnicornStudio?: {
-      init?: () => void;
-      isInitialized?: boolean;
-    };
-  }
-}
-
 const HeroScene = dynamic(
   () => import('./HeroScene').then((mod) => ({ default: mod.HeroScene })),
   {
@@ -129,19 +120,6 @@ export function HomeHeroSection() {
     };
   }, []);
 
-  useEffect(() => {
-    const initUnicorn = () => {
-      if (window.UnicornStudio?.init) {
-        window.UnicornStudio.init();
-      }
-    };
-
-    initUnicorn();
-
-    const timer = setTimeout(initUnicorn, 500);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <section className="min-h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 bg-black py-16 md:py-24 relative overflow-visible">
       <HeroWarpCanvas />
@@ -198,7 +176,7 @@ export function HomeHeroSection() {
                 Explore Programs
               </Button>
               <Button
-                href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform"
+                href="/people/e-board"
                 borderColor="#5076DD"
                 textColor="#FFFFFF"
                 className="px-8 py-4"
@@ -206,12 +184,14 @@ export function HomeHeroSection() {
               >
                 Coffee Chat
               </Button>
-              <Link
-                href="#join-us"
+              <a
+                href="https://linktr.us17.list-manage.com/subscribe?u=245830e19ea7d43db4cf58081&id=6bd6c94c01"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="relative text-white after:absolute after:left-0 after:-bottom-1 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-white after:transition-transform after:duration-300 hover:after:scale-x-100"
               >
                 Join Our Newsletter
-              </Link>
+              </a>
             </div>
           </motion.div>
         </div>

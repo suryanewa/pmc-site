@@ -27,7 +27,11 @@ export function HeroWarpCanvas() {
     let size = 0;
     let step = 0;
     let rafId: number | null = null;
+    let pointerRafId: number | null = null;
     let lastTime = 0;
+    let heroRect: DOMRect | null = null;
+    let canvasRect: DOMRect | null = null;
+    let pendingPointer: { x: number; y: number } | null = null;
 
     const colour = "rgba(4, 21, 64, 0.25)";
 
@@ -143,6 +147,7 @@ export function HeroWarpCanvas() {
       targetCenter = { ...currentCenter };
 
       smoothedMx = mx;
+      updateRects();
       createDither();
       rafId = requestAnimationFrame(warp);
     };
@@ -154,9 +159,16 @@ export function HeroWarpCanvas() {
     const hero = canvas.closest("section");
     if (!hero) return;
 
+    const updateRects = () => {
+      heroRect = hero.getBoundingClientRect();
+      canvasRect = canvas.getBoundingClientRect();
+    };
+
     const updateTarget = (clientX: number, clientY: number) => {
-      const heroRect = hero.getBoundingClientRect();
-      const canvasRect = canvas.getBoundingClientRect();
+      if (!heroRect || !canvasRect || canvasRect.width === 0 || canvasRect.height === 0) {
+        return;
+      }
+
       const scaleX = canvas.width / canvasRect.width;
       const scaleY = canvas.height / canvasRect.height;
 
@@ -178,16 +190,27 @@ export function HeroWarpCanvas() {
 
     const handlePointerMove = (event: PointerEvent) => {
       mx = event.clientX + 1;
-      updateTarget(event.clientX, event.clientY);
+      pendingPointer = { x: event.clientX, y: event.clientY };
+      if (pointerRafId !== null) return;
+
+      pointerRafId = requestAnimationFrame(() => {
+        pointerRafId = null;
+        updateRects();
+        if (!pendingPointer) return;
+        updateTarget(pendingPointer.x, pendingPointer.y);
+      });
     };
 
     const handlePointerLeave = () => {
+      pendingPointer = null;
       targetCenter.x = cols / 2;
       targetCenter.y = rows / 2;
     };
 
     const handleResize = () => {
       if (rafId) cancelAnimationFrame(rafId);
+      if (pointerRafId) cancelAnimationFrame(pointerRafId);
+      pointerRafId = null;
       init();
     };
 
@@ -205,6 +228,7 @@ export function HeroWarpCanvas() {
     return () => {
       visibilityObserver.disconnect();
       if (rafId) cancelAnimationFrame(rafId);
+      if (pointerRafId) cancelAnimationFrame(pointerRafId);
       window.removeEventListener("resize", handleResize);
       if (!isMobile) {
         hero.removeEventListener("pointerdown", invert);

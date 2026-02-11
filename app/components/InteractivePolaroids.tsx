@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion, useSpring } from 'motion/react';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useIsMobile } from '../../hooks/use-is-mobile';
 
 type PolaroidPosition = {
@@ -102,10 +102,24 @@ function PolaroidCard({
   const isMobile = useIsMobile();
   const prefersReducedMotion = useReducedMotion();
   const shouldReduceMotion = isMobile || prefersReducedMotion || disableDrag;
+  const rectRef = useRef<DOMRect | null>(null);
+
+  const updateRect = useCallback(() => {
+    if (!ref.current) return;
+    rectRef.current = ref.current.getBoundingClientRect();
+  }, []);
+
+  useEffect(() => {
+    if (!ref.current || shouldReduceMotion) return;
+    updateRect();
+    const observer = new ResizeObserver(updateRect);
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [shouldReduceMotion, updateRect]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!ref.current || isDragging) return;
-    const rect = ref.current.getBoundingClientRect();
+    const rect = rectRef.current;
+    if (!rect || isDragging) return;
     const offsetX = e.clientX - rect.left - rect.width / 2;
     const offsetY = e.clientY - rect.top - rect.height / 2;
 
@@ -115,6 +129,7 @@ function PolaroidCard({
 
   const handleMouseEnter = () => {
     if (!isDragging) {
+      updateRect();
       scale.set(1.08);
       setIsHovered(true);
     }

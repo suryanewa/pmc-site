@@ -94,29 +94,29 @@ export function Footer() {
             <ul className="space-y-3 text-sm">
               <li>
                 <a
-                  href="mailto:pmc@stern.nyu.edu"
+                  href="mailto:pmc@nyu.edu"
                   className="text-[#DBDBDB]/70 hover:text-[#DBDBDB] hover:translate-x-1 transition-all duration-300 inline-block"
                 >
                   Email
                 </a>
               </li>
               <li>
+                <Link
+                  href="/people/e-board"
+                  className="text-[#DBDBDB]/70 hover:text-[#DBDBDB] hover:translate-x-1 transition-all duration-300 inline-block"
+                >
+                  Coffee Chat
+                </Link>
+              </li>
+              <li>
                 <a
-                  href="https://docs.google.com/forms/d/e/1FAIpQLSdcQw779OxVgmhXaUkwDBqMBkfnJU6Dwms5m6tss6jD7ZGVPA/viewform"
+                  href="https://linktr.us17.list-manage.com/subscribe?u=245830e19ea7d43db4cf58081&id=6bd6c94c01"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#DBDBDB]/70 hover:text-[#DBDBDB] hover:translate-x-1 transition-all duration-300 inline-block"
                 >
-                  Coffee Chat
-                </a>
-              </li>
-              <li>
-                <Link
-                  href="/#join-us"
-                  className="text-[#DBDBDB]/70 hover:text-[#DBDBDB] hover:translate-x-1 transition-all duration-300 inline-block"
-                >
                   Newsletter
-                </Link>
+                </a>
               </li>
             </ul>
           </div>

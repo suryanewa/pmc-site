@@ -54,11 +54,21 @@ export const Timeline = ({
   const [titlePositions, setTitlePositions] = useState<number[]>([]);
 
   useEffect(() => {
-    if (ref.current) {
+    if (!ref.current) return;
+
+    const updateHeight = () => {
+      if (!ref.current) return;
       const rect = ref.current.getBoundingClientRect();
       setHeight(rect.height);
-    }
-  }, [ref]);
+    };
+
+    updateHeight();
+
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(ref.current);
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     // Calculate positions of each title relative to the timeline container
@@ -79,21 +89,28 @@ export const Timeline = ({
       }
     };
 
-    // Use requestAnimationFrame to ensure layout is complete
-    const timeoutId = setTimeout(calculatePositions, 100);
-    
-    // Recalculate on resize and scroll (for sticky positioning)
-    const handleRecalculate = () => {
-      requestAnimationFrame(calculatePositions);
+    let rafId: number | null = null;
+    let isScheduled = false;
+
+    const scheduleRecalculate = () => {
+      if (isScheduled) return;
+      isScheduled = true;
+      rafId = requestAnimationFrame(() => {
+        isScheduled = false;
+        calculatePositions();
+      });
     };
-    
-    window.addEventListener('resize', handleRecalculate);
-    window.addEventListener('scroll', handleRecalculate, { passive: true });
+
+    const timeoutId = window.setTimeout(scheduleRecalculate, 100);
+
+    window.addEventListener('resize', scheduleRecalculate);
+    window.addEventListener('scroll', scheduleRecalculate, { passive: true });
     
     return () => {
       clearTimeout(timeoutId);
-      window.removeEventListener('resize', handleRecalculate);
-      window.removeEventListener('scroll', handleRecalculate);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      window.removeEventListener('resize', scheduleRecalculate);
+      window.removeEventListener('scroll', scheduleRecalculate);
     };
   }, [height, data.length]);
 

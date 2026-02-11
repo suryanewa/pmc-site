@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useState, useEffect, useRef, FormEvent } from 'react';
 import { toast } from 'sonner';
 import { ArrowRight } from 'lucide-react';
+import { initializeUnicornStudio } from '@/lib/unicorn-loader';
 
 interface NewsletterProps {
   variant?: 'light' | 'dark';
@@ -14,18 +15,7 @@ interface NewsletterProps {
 type SubmitStatus = 'idle' | 'loading' | 'success' | 'error';
 
 const DEFAULT_ACCENT = '#41C9C1';
-const UNICORN_SDK_SRC =
-  'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js';
 const UNICORN_PROJECT_ID = 'Tad6hhK5mrDEPGmXIum8';
-
-declare global {
-  interface Window {
-    UnicornStudio?: {
-      init?: () => void;
-      isInitialized?: boolean;
-    };
-  }
-}
 
 export function Newsletter({ source = 'website', accentColor }: NewsletterProps) {
   const accent = accentColor ?? DEFAULT_ACCENT;
@@ -34,37 +24,32 @@ export function Newsletter({ source = 'website', accentColor }: NewsletterProps)
   const [isFocused, setIsFocused] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [sceneScale, setSceneScale] = useState(1);
+  const hasInitializedSceneRef = useRef(false);
 
   useEffect(() => {
-    let scriptEl: HTMLScriptElement | null = document.querySelector(
-      `script[src="${UNICORN_SDK_SRC}"]`,
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting || hasInitializedSceneRef.current) return;
+        hasInitializedSceneRef.current = true;
+        void initializeUnicornStudio();
+        observer.disconnect();
+      },
+      { threshold: 0.1, rootMargin: '200px' },
     );
 
-    const initScene = () => {
-      if (!window.UnicornStudio?.init) return;
-      window.UnicornStudio.init();
-    };
-
-    if (!scriptEl) {
-      scriptEl = document.createElement('script');
-      scriptEl.src = UNICORN_SDK_SRC;
-      scriptEl.async = true;
-      scriptEl.onload = initScene;
-      document.head.appendChild(scriptEl);
-    } else if (window.UnicornStudio) {
-      initScene();
-    } else {
-      scriptEl.addEventListener('load', initScene, { once: true });
-    }
-
-    return () => {
-      scriptEl?.removeEventListener('load', initScene);
-    };
+    observer.observe(wrapper);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
+
+    let rafId: number | null = null;
+    let lastScale = -1;
 
     const updateScale = () => {
       const { width, height } = wrapper.getBoundingClientRect();
@@ -72,14 +57,27 @@ export function Newsletter({ source = 'website', accentColor }: NewsletterProps)
       const scaleX = width / 1440;
       const scaleY = height / 900;
       const scale = Math.max(scaleX, scaleY);
+      if (scale === lastScale) return;
+      lastScale = scale;
       setSceneScale(scale);
     };
 
+    const scheduleScaleUpdate = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        updateScale();
+      });
+    };
+
     updateScale();
-    const observer = new ResizeObserver(updateScale);
+    const observer = new ResizeObserver(scheduleScaleUpdate);
     observer.observe(wrapper);
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const handleSubmit = async (e: FormEvent) => {

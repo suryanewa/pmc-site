@@ -52,23 +52,31 @@ export function ApplicationsCountdown({ accentColor = "#41C9C1" }: { accentColor
 
   const [timeLeft, setTimeLeft] = useState(() => calculateTimeLeft());
 
-  // Measure both widths continuously and update immediately when index changes
   useEffect(() => {
     const measureWidths = () => {
       if (dateRef.current) {
-        setDateWidth(dateRef.current.offsetWidth);
+        const nextDateWidth = dateRef.current.offsetWidth;
+        setDateWidth((prev) => (prev === nextDateWidth ? prev : nextDateWidth));
       }
       if (countdownRef.current) {
-        setCountdownWidth(countdownRef.current.offsetWidth);
+        const nextCountdownWidth = countdownRef.current.offsetWidth;
+        setCountdownWidth((prev) => (prev === nextCountdownWidth ? prev : nextCountdownWidth));
       }
     };
-    
-    // Measure after render
-    const timeout = setTimeout(measureWidths, 0);
+
     measureWidths();
-    
-    return () => clearTimeout(timeout);
-  }, [timeLeft]);
+
+    const observer = new ResizeObserver(measureWidths);
+    if (dateRef.current) observer.observe(dateRef.current);
+    if (countdownRef.current) observer.observe(countdownRef.current);
+
+    window.addEventListener('resize', measureWidths, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measureWidths);
+    };
+  }, []);
 
   // Update width immediately when index changes using pre-measured widths
   useEffect(() => {

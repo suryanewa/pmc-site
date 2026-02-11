@@ -6,13 +6,13 @@ import { useState } from 'react';
 
 import { FadeUp, FadeIn, StaggerContainer, StaggerItem } from '../../components/ScrollAnimations';
 
-const UnicornScene = dynamic(() => import('unicornstudio-react/next'), { ssr: false });
 import { JoinUsSection } from '../../components/JoinUsSection';
 import { FAQSection } from '../../components/FAQSection';
 import { Button } from '../../components/Button';
 import { TextAnimate } from '@/components/ui/text-animate';
 import AsciiHoverEffect from '@/components/AsciiHoverEffect';
 import CountUp from '@/components/CountUp';
+import { UnicornHeroBackground } from '../../components/UnicornHeroBackground';
 const LogoCloudAnimated = dynamic(
   () => import('@/components/smoothui/logo-cloud-1').then((m) => ({ default: m.LogoCloudAnimated }))
 );
@@ -181,15 +181,7 @@ export default function SpeakersPage() {
 
   return (
     <div className="bg-black relative">
-      <div className="absolute top-0 left-0 w-full h-[110vh] pointer-events-none">
-        <UnicornScene
-          projectId="nfEXG2pQZ01qd0grcKXy"
-          sdkUrl="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.0.5/dist/unicornStudio.umd.js"
-          width="100%"
-          height="100%"
-        />
-        <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-b from-transparent to-black" />
-      </div>
+      <UnicornHeroBackground projectId="nfEXG2pQZ01qd0grcKXy" />
 
       <section className="relative z-10 px-6 md:px-16 lg:px-24 pt-20 pb-16 md:py-24 min-h-[80vh] md:min-h-screen flex flex-col justify-center">
         <div className="max-w-[1400px] mx-auto w-full flex flex-col items-center">

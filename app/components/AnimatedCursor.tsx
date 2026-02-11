@@ -13,6 +13,13 @@ const INTERACTIVE_SELECTOR =
 export function AnimatedCursor() {
   const [hasPointer, setHasPointer] = React.useState(false);
   const [isHovering, setIsHovering] = React.useState(false);
+  const hoverRef = React.useRef(false);
+
+  const updateHoverState = React.useCallback((next: boolean) => {
+    if (hoverRef.current === next) return;
+    hoverRef.current = next;
+    setIsHovering(next);
+  }, []);
 
   React.useEffect(() => {
     const mq = window.matchMedia('(pointer: fine)');
@@ -28,14 +35,14 @@ export function AnimatedCursor() {
     const handleOver = (e: MouseEvent) => {
       const target = e.target as Element | null;
       if (target?.closest(INTERACTIVE_SELECTOR)) {
-        setIsHovering(true);
+        updateHoverState(true);
       }
     };
 
     const handleOut = (e: MouseEvent) => {
       const related = e.relatedTarget as Element | null;
       if (!related?.closest(INTERACTIVE_SELECTOR)) {
-        setIsHovering(false);
+        updateHoverState(false);
       }
     };
 
@@ -45,7 +52,7 @@ export function AnimatedCursor() {
       document.removeEventListener('mouseover', handleOver);
       document.removeEventListener('mouseout', handleOut);
     };
-  }, [hasPointer]);
+  }, [hasPointer, updateHoverState]);
 
   if (!hasPointer) return null;
 

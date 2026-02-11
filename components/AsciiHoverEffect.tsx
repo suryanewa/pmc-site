@@ -48,6 +48,7 @@ export default function AsciiHoverEffect({
   const activeRef = useRef(active);
   const mouseRef = useRef({ x: -9999, y: -9999 });
   const rippleRadiusRef = useRef(0);
+  const rectRef = useRef<DOMRect | null>(null);
 
   useEffect(() => {
     const wasActive = activeRef.current;
@@ -57,18 +58,46 @@ export default function AsciiHoverEffect({
     }
   }, [active]);
 
+  const updateRect = useCallback(() => {
+    if (!containerRef.current) return;
+    rectRef.current = containerRef.current.getBoundingClientRect();
+  }, []);
+
   useEffect(() => {
+    if (!active) return;
+
+    let rafId: number | null = null;
+
+    updateRect();
+
     const onMove = (e: MouseEvent) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+      const rect = rectRef.current;
+      if (!rect) return;
       mouseRef.current = {
         x: e.clientX - rect.left,
         y: e.clientY - rect.top,
       };
     };
+
+    const scheduleRectRefresh = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        updateRect();
+      });
+    };
+
     window.addEventListener("mousemove", onMove, { passive: true });
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
+    window.addEventListener("resize", scheduleRectRefresh, { passive: true });
+    window.addEventListener("scroll", scheduleRectRefresh, { passive: true });
+
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("resize", scheduleRectRefresh);
+      window.removeEventListener("scroll", scheduleRectRefresh);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
+  }, [active, updateRect]);
 
   const initCells = useCallback(() => {
     if (!containerRef.current || !canvasRef.current) return;
@@ -83,7 +112,7 @@ export default function AsciiHoverEffect({
     canvasRef.current.width = width * dpr;
     canvasRef.current.height = height * dpr;
 
-    ctx.scale(dpr, dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.font = `${fontSize}px monospace`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
@@ -164,10 +193,13 @@ export default function AsciiHoverEffect({
 
   useEffect(() => {
     initCells();
-    const observer = new ResizeObserver(() => initCells());
+    const observer = new ResizeObserver(() => {
+      initCells();
+      updateRect();
+    });
     if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, [initCells]);
+  }, [initCells, updateRect]);
 
   useEffect(() => {
     if (animationRef.current === null) {
