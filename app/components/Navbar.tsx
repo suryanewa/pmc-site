@@ -69,7 +69,9 @@ interface NavbarProps {
 }
 
 export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: NavbarProps) {
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(() =>
+    typeof window !== 'undefined' ? window.scrollY > 10 : false
+  );
   const [isEventsDropdownOpen, setIsEventsDropdownOpen] = useState(false);
   const [isProgramsDropdownOpen, setIsProgramsDropdownOpen] = useState(false);
   const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
@@ -80,7 +82,6 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
   useEffect(() => {
     let rafId: number | null = null;
     let lastScrolled = window.scrollY > 10;
-    setIsScrolled(lastScrolled);
 
     const handleScroll = () => {
       if (rafId !== null) return;
