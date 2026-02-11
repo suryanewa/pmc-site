@@ -106,7 +106,7 @@ export default function AsciiHoverEffect({
     cellsRef.current = newCells;
   }, [colors, chars, fontSize]);
 
-  const animate = useCallback(() => {
+  const animate = useCallback(function animateFrame() {
     const ctx = canvasRef.current?.getContext("2d");
     if (!ctx || !canvasRef.current) return;
 
@@ -156,7 +156,7 @@ export default function AsciiHoverEffect({
     });
 
     if (!allIdle) {
-      animationRef.current = requestAnimationFrame(animate);
+      animationRef.current = requestAnimationFrame(animateFrame);
     } else {
       animationRef.current = null;
     }
