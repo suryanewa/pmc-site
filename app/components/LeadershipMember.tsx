@@ -13,7 +13,7 @@ interface LeadershipMemberProps {
   coffeeChatUrl?: string;
   description?: string;
   className?: string;
-  imageClassName?: string;
+  flipImage?: boolean;
 }
 
 export function LeadershipMember({
@@ -24,7 +24,7 @@ export function LeadershipMember({
   coffeeChatUrl,
   description,
   className = '',
-  imageClassName,
+  flipImage,
 }: LeadershipMemberProps) {
   const linkedInHref =
     linkedinUrl ??
@@ -59,7 +59,8 @@ export function LeadershipMember({
               src={src}
               alt={name}
               fill
-              className={`object-cover ${imageClassName ?? ''}`}
+              className="object-cover"
+              style={flipImage ? { transform: 'scaleX(-1)' } : undefined}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
 
