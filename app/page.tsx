@@ -1,11 +1,23 @@
 import dynamic from 'next/dynamic';
 import { HomeHeroSection } from './components/HomeHeroSection';
-import { HomeProgramsSection } from './components/HomeProgramsSection';
-import { JoinUsSection } from './components/JoinUsSection';
 import { FAQSection } from './components/FAQSection';
 
 const LogoCloudAnimated = dynamic(
   () => import('@/components/smoothui/logo-cloud-1').then((m) => ({ default: m.LogoCloudAnimated }))
+);
+
+const HomeProgramsSection = dynamic(
+  () => import('./components/HomeProgramsSection').then((m) => ({ default: m.HomeProgramsSection })),
+  {
+    loading: () => <div className="min-h-screen" />,
+  }
+);
+
+const JoinUsSection = dynamic(
+  () => import('./components/JoinUsSection').then((m) => ({ default: m.JoinUsSection })),
+  {
+    loading: () => <div className="min-h-[600px]" />,
+  }
 );
 
 const logos = [
