@@ -1,0 +1,25 @@
+{
+  "timestamp": "2026-02-12T08:16:15Z",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "testDuration": 5000,
+  "scrollTest": {
+    "averageFPS": 122,
+    "minimumFPS": 94,
+    "maximumFPS": 189,
+    "frameDrops": 0,
+    "totalFrames": 601
+  },
+  "baseline": {
+    "averageFPS": 116,
+    "minimumFPS": 60,
+    "frameDrops": 0
+  },
+  "improvement": {
+    "averageFPS": "+5.2%",
+    "minimumFPS": "+56.7%",
+    "frameDrops": "0 (maintained)"
+  }
+}
