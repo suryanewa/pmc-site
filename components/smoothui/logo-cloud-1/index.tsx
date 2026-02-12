@@ -160,7 +160,6 @@ export function LogoCloudAnimated({
                       width={120}
                       height={40}
                       className={`h-10 w-auto object-contain max-w-[120px] ${logo.className ?? ""}`}
-                      unoptimized
                     />
                   </motion.div>
                 </motion.a>
@@ -192,7 +191,6 @@ export function LogoCloudAnimated({
                       width={120}
                       height={40}
                       className={`h-10 w-auto object-contain max-w-[120px] ${logo.className ?? ""}`}
-                      unoptimized
                     />
                   </motion.div>
                 </motion.a>

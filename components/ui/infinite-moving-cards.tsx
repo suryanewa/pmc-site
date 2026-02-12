@@ -103,7 +103,6 @@ export const InfiniteMovingCards = ({
               width={120}
               height={28}
               className="h-[28px] w-auto object-contain grayscale opacity-50 hover:grayscale-0 hover:opacity-100 transition-all duration-500"
-              unoptimized
             />
           </li>
         ))}

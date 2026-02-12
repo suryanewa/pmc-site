@@ -30,14 +30,14 @@ export function GsapScrollEffects() {
         gsap.to(el, {
           yPercent: speed * 100,
           ease: "none",
-          scrollTrigger: {
-            trigger: el,
-            start: "top bottom",
-            end: "bottom top",
-            scrub: true,
-          },
+            scrollTrigger: {
+              trigger: el,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: 0.5,
+            },
+          });
         });
-      });
     });
 
     return () => ctx.revert();

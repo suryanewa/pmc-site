@@ -70,11 +70,8 @@ export function ApplicationsCountdown({ accentColor = "#41C9C1" }: { accentColor
     if (dateRef.current) observer.observe(dateRef.current);
     if (countdownRef.current) observer.observe(countdownRef.current);
 
-    window.addEventListener('resize', measureWidths, { passive: true });
-
     return () => {
       observer.disconnect();
-      window.removeEventListener('resize', measureWidths);
     };
   }, []);
 
@@ -103,7 +100,17 @@ export function ApplicationsCountdown({ accentColor = "#41C9C1" }: { accentColor
   useEffect(() => {
     const timer = setInterval(() => {
       const newTimeLeft = calculateTimeLeft();
-      setTimeLeft(newTimeLeft);
+      setTimeLeft((prev) => {
+        if (
+          prev.days === newTimeLeft.days &&
+          prev.hours === newTimeLeft.hours &&
+          prev.minutes === newTimeLeft.minutes &&
+          prev.seconds === newTimeLeft.seconds
+        ) {
+          return prev;
+        }
+        return newTimeLeft;
+      });
 
       if (newTimeLeft.days === 0 && newTimeLeft.hours === 0 && newTimeLeft.minutes === 0 && newTimeLeft.seconds === 0) {
         clearInterval(timer);

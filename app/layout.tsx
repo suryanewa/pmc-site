@@ -19,7 +19,6 @@ import { RootNavbar } from "./components/RootNavbar";
 import { Preloader } from "./components/Preloader";
 import { SmoothScroll } from "./components/SmoothScroll";
 import { ScrollBackground } from "./components/ScrollBackground";
-import { GsapScrollEffects } from "./components/GsapScrollEffects";
 import { Providers } from "./components/Providers";
 import { PageTransition } from "./components/PageTransition";
 
@@ -87,7 +86,6 @@ export default function RootLayout({
           <Preloader />
           <SmoothScroll>
             <ScrollBackground />
-            <GsapScrollEffects />
             <RootNavbar />
             <PageTransition>
               <main id="main">{children}</main>

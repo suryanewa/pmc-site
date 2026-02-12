@@ -20,31 +20,38 @@ export function Preloader() {
       }
     }
 
-    // Simulate loading progress
-    const duration = 1800; // Total duration in ms
-    const interval = 20; // Update interval
-    const steps = duration / interval;
-    let currentStep = 0;
+    const duration = 1800;
+    const exitDelay = 200;
+    let rafId: number | null = null;
+    let finishTimeout: ReturnType<typeof setTimeout> | null = null;
+    let startTime: number | null = null;
 
-    const timer = setInterval(() => {
-      currentStep++;
-      // Eased progress (slow start, fast middle, slow end)
-      const linearProgress = currentStep / steps;
+    const animateProgress = (timestamp: number) => {
+      if (startTime === null) startTime = timestamp;
+      const elapsed = timestamp - startTime;
+      const linearProgress = Math.min(elapsed / duration, 1);
       const easedProgress = 1 - Math.pow(1 - linearProgress, 3);
-      setProgress(Math.min(easedProgress * 100, 100));
+      setProgress(easedProgress * 100);
 
-      if (currentStep >= steps) {
-        clearInterval(timer);
-        setTimeout(() => {
-          setIsLoading(false);
-          if (typeof window !== "undefined") {
-            sessionStorage.setItem(PRELOADER_SHOWN_KEY, "true");
-          }
-        }, 200);
+      if (linearProgress < 1) {
+        rafId = requestAnimationFrame(animateProgress);
+        return;
       }
-    }, interval);
 
-    return () => clearInterval(timer);
+      finishTimeout = setTimeout(() => {
+        setIsLoading(false);
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem(PRELOADER_SHOWN_KEY, "true");
+        }
+      }, exitDelay);
+    };
+
+    rafId = requestAnimationFrame(animateProgress);
+
+    return () => {
+      if (rafId !== null) cancelAnimationFrame(rafId);
+      if (finishTimeout) clearTimeout(finishTimeout);
+    };
   }, []);
 
   return (
@@ -68,6 +75,7 @@ export function Preloader() {
               alt="PMC logo"
               width={30}
               height={14}
+              sizes="30px"
               className="h-10 w-auto"
               priority
             />

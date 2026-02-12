@@ -122,7 +122,7 @@ export function HomeHeroSection() {
 
   return (
     <section className="min-h-screen flex flex-col items-start justify-center px-6 md:px-16 lg:px-24 bg-black py-16 md:py-24 relative overflow-visible">
-      <HeroWarpCanvas />
+      {!shouldReduceHeroMotion ? <HeroWarpCanvas /> : null}
       <div className="w-full max-w-[1400px] mx-auto relative z-10 grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
         <div className="max-w-[800px] text-left relative z-20">
           <motion.p
@@ -196,15 +196,15 @@ export function HomeHeroSection() {
           </motion.div>
         </div>
 
-        <div
-          className="relative z-0 hidden md:block w-full aspect-[16/10] justify-self-end overflow-visible"
-          data-gsap="parallax"
-          data-speed="0.08"
-        >
-          <Suspense fallback={<div className="w-full h-full" />}>
-            <HeroScene />
-          </Suspense>
-        </div>
+        {!shouldReduceHeroMotion ? (
+          <div
+            className="relative z-0 hidden md:block w-full aspect-[16/10] justify-self-end overflow-visible"
+          >
+            <Suspense fallback={<div className="w-full h-full" />}>
+              <HeroScene />
+            </Suspense>
+          </div>
+        ) : null}
       </div>
     </section>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId } from "react";
+import { useEffect, useId, useMemo } from "react";
 import { MotionValue, motion, useSpring, useTransform, motionValue } from "motion/react";
 import useMeasure from "react-use-measure";
 
@@ -79,7 +79,10 @@ export function Countdown({ value, padStart = false, decimalSeparator = "." }: S
   const integerValue = parseInt(integerPart, 10);
   const paddedInteger = padStart && integerValue < 10 ? `0${integerPart}` : integerPart;
   const integerDigits = paddedInteger.split("");
-  const integerPlaces = integerDigits.map((_, i) => Math.pow(10, integerDigits.length - i - 1));
+  const integerPlaces = useMemo(
+    () => integerDigits.map((_, i) => Math.pow(10, integerDigits.length - i - 1)),
+    [integerDigits.length]
+  );
 
   return (
     <div className="flex items-center">

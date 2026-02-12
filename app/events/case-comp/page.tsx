@@ -365,7 +365,6 @@ export default function CaseCompPage() {
                           height={['BrainStation', 'Perplexity', 'PitchBook'].includes(partner.name) ? 60 : 40}
                           className={`w-auto h-auto object-contain ${['BrainStation', 'Perplexity', 'PitchBook'].includes(partner.name) ? 'max-h-12 max-w-36' : 'max-h-8 max-w-24'}`}
                           style={partner.invert ? { filter: 'brightness(0) invert(1)' } : undefined}
-                          unoptimized
                         />
                       </div>
                     )
@@ -415,7 +414,6 @@ export default function CaseCompPage() {
                             height={company.name === 'Amazon' ? 48 : 32}
                             className={`w-auto h-auto object-contain ${company.name === 'Amazon' ? 'max-h-9 max-w-24' : 'max-h-6 max-w-20'}`}
                             style={company.invert ? { filter: 'brightness(0) invert(1)' } : undefined}
-                            unoptimized
                           />
                         </div>
                       )

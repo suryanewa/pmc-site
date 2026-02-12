@@ -15,26 +15,21 @@ const PROGRAM_CARD_SELECTOR = '[data-program-card]';
 
 export function AnimatedCursor() {
   const [hasPointer, setHasPointer] = React.useState(false);
-  const [isHovering, setIsHovering] = React.useState(false);
-  const [isOnProgramCard, setIsOnProgramCard] = React.useState(false);
-  const hoverRef = React.useRef(false);
-  const programCardRef = React.useRef(false);
+  const [cursorMode, setCursorMode] = React.useState<'default' | 'interactive' | 'program'>('default');
+  const modeRef = React.useRef<'default' | 'interactive' | 'program'>('default');
 
-  const updateHoverState = React.useCallback((next: boolean) => {
-    if (hoverRef.current === next) return;
-    hoverRef.current = next;
-    setIsHovering(next);
-  }, []);
-
-  const updateProgramCardState = React.useCallback((next: boolean) => {
-    if (programCardRef.current === next) return;
-    programCardRef.current = next;
-    setIsOnProgramCard(next);
+  const updateCursorMode = React.useCallback((next: 'default' | 'interactive' | 'program') => {
+    if (modeRef.current === next) return;
+    modeRef.current = next;
+    setCursorMode(next);
   }, []);
 
   React.useEffect(() => {
     const mq = window.matchMedia('(pointer: fine)');
-    const update = () => setHasPointer(mq.matches);
+    const update = () => {
+      const cpuCores = navigator.hardwareConcurrency ?? 8;
+      setHasPointer(mq.matches && cpuCores >= 6);
+    };
     update();
     mq.addEventListener('change', update);
     return () => mq.removeEventListener('change', update);
@@ -46,21 +41,22 @@ export function AnimatedCursor() {
     const handleOver = (e: MouseEvent) => {
       const target = e.target as Element | null;
       if (target?.closest(PROGRAM_CARD_SELECTOR)) {
-        updateProgramCardState(true);
-        updateHoverState(false);
+        updateCursorMode('program');
       } else if (target?.closest(INTERACTIVE_SELECTOR)) {
-        updateProgramCardState(false);
-        updateHoverState(true);
+        updateCursorMode('interactive');
+      } else {
+        updateCursorMode('default');
       }
     };
 
     const handleOut = (e: MouseEvent) => {
       const related = e.relatedTarget as Element | null;
-      if (!related?.closest(PROGRAM_CARD_SELECTOR)) {
-        updateProgramCardState(false);
-      }
-      if (!related?.closest(INTERACTIVE_SELECTOR)) {
-        updateHoverState(false);
+      if (related?.closest(PROGRAM_CARD_SELECTOR)) {
+        updateCursorMode('program');
+      } else if (related?.closest(INTERACTIVE_SELECTOR)) {
+        updateCursorMode('interactive');
+      } else {
+        updateCursorMode('default');
       }
     };
 
@@ -70,7 +66,7 @@ export function AnimatedCursor() {
       document.removeEventListener('mouseover', handleOver);
       document.removeEventListener('mouseout', handleOut);
     };
-  }, [hasPointer, updateHoverState, updateProgramCardState]);
+  }, [hasPointer, updateCursorMode]);
 
   if (!hasPointer) return null;
 
@@ -78,7 +74,7 @@ export function AnimatedCursor() {
     <CursorProvider global>
       <Cursor>
         <AnimatePresence mode="wait" initial={false}>
-          {isOnProgramCard ? (
+          {cursorMode === 'program' ? (
             <motion.div
               key="program-arrow"
               className="relative inline-flex h-10 w-10 shrink-0 overflow-hidden rounded-full p-[1.5px]"
@@ -92,7 +88,7 @@ export function AnimatedCursor() {
                 <ArrowRight className="size-4" />
               </span>
             </motion.div>
-          ) : isHovering ? (
+          ) : cursorMode === 'interactive' ? (
             <motion.div
               key="dot"
               className="rounded-full"

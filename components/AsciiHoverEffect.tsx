@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef, useCallback, useMemo, useState } from "react";
 
 interface AsciiHoverEffectProps {
   chars?: string;
@@ -41,6 +41,7 @@ export default function AsciiHoverEffect({
   className = "",
   colors = "#ffffff",
 }: AsciiHoverEffectProps) {
+  const [isInitialized, setIsInitialized] = useState(active);
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number | null>(null);
@@ -49,6 +50,15 @@ export default function AsciiHoverEffect({
   const mouseRef = useRef({ x: -9999, y: -9999 });
   const rippleRadiusRef = useRef(0);
   const rectRef = useRef<DOMRect | null>(null);
+  const lastMoveTimeRef = useRef(0);
+  const lastFrameTimeRef = useRef(0);
+  const charArray = useMemo(() => chars.split(""), [chars]);
+
+  useEffect(() => {
+    if (active && !isInitialized) {
+      setIsInitialized(true);
+    }
+  }, [active, isInitialized]);
 
   useEffect(() => {
     const wasActive = activeRef.current;
@@ -64,6 +74,7 @@ export default function AsciiHoverEffect({
   }, []);
 
   useEffect(() => {
+    if (!isInitialized) return;
     if (!active) return;
 
     let rafId: number | null = null;
@@ -71,6 +82,8 @@ export default function AsciiHoverEffect({
     updateRect();
 
     const onMove = (e: MouseEvent) => {
+      if (e.timeStamp - lastMoveTimeRef.current < 32) return;
+      lastMoveTimeRef.current = e.timeStamp;
       const rect = rectRef.current;
       if (!rect) return;
       mouseRef.current = {
@@ -89,15 +102,13 @@ export default function AsciiHoverEffect({
 
     window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("resize", scheduleRectRefresh, { passive: true });
-    window.addEventListener("scroll", scheduleRectRefresh, { passive: true });
 
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("resize", scheduleRectRefresh);
-      window.removeEventListener("scroll", scheduleRectRefresh);
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
-  }, [active, updateRect]);
+  }, [active, isInitialized, updateRect]);
 
   const initCells = useCallback(() => {
     if (!containerRef.current || !canvasRef.current) return;
@@ -120,7 +131,6 @@ export default function AsciiHoverEffect({
     const cols = Math.ceil(width / fontSize);
     const rows = Math.ceil(height / fontSize);
     const colorArray = colors.split(",").map(c => c.trim());
-    const charArray = chars.split("");
 
     const newCells: AsciiCell[] = [];
     for (let r = 0; r < rows; r++) {
@@ -133,9 +143,17 @@ export default function AsciiHoverEffect({
       }
     }
     cellsRef.current = newCells;
-  }, [colors, chars, fontSize]);
+  }, [charArray, colors, fontSize]);
 
-  const animate = useCallback(function animateFrame() {
+  const animate = useCallback(function animateFrame(timestamp: number) {
+    if (!lastFrameTimeRef.current) lastFrameTimeRef.current = timestamp;
+    const elapsed = timestamp - lastFrameTimeRef.current;
+    if (elapsed < 1000 / 45) {
+      animationRef.current = requestAnimationFrame(animateFrame);
+      return;
+    }
+    lastFrameTimeRef.current = timestamp;
+
     const ctx = canvasRef.current?.getContext("2d");
     if (!ctx || !canvasRef.current) return;
 
@@ -154,8 +172,6 @@ export default function AsciiHoverEffect({
     const maxDist = Math.sqrt(width * width + height * height);
 
     let allIdle = true;
-    const charArray = chars.split("");
-
     cellsRef.current.forEach(cell => {
       const dx = cell.x - mx;
       const dy = cell.y - my;
@@ -189,9 +205,10 @@ export default function AsciiHoverEffect({
     } else {
       animationRef.current = null;
     }
-  }, [chars]);
+  }, [charArray]);
 
   useEffect(() => {
+    if (!isInitialized) return;
     initCells();
     const observer = new ResizeObserver(() => {
       initCells();
@@ -199,13 +216,14 @@ export default function AsciiHoverEffect({
     });
     if (containerRef.current) observer.observe(containerRef.current);
     return () => observer.disconnect();
-  }, [initCells, updateRect]);
+  }, [initCells, isInitialized, updateRect]);
 
   useEffect(() => {
+    if (!isInitialized) return;
     if (animationRef.current === null) {
       animationRef.current = requestAnimationFrame(animate);
     }
-  }, [active, animate]);
+  }, [active, animate, isInitialized]);
 
   useEffect(() => {
     return () => {
@@ -214,6 +232,10 @@ export default function AsciiHoverEffect({
       }
     };
   }, []);
+
+  if (!isInitialized) {
+    return null;
+  }
 
   return (
     <div

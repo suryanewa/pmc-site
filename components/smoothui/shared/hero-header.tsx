@@ -55,7 +55,6 @@ export const HeroHeader = () => {
                     width={140}
                     height={28}
                     className={cn("h-6 w-auto", "dark:invert")}
-                    unoptimized
                   />
                 </Link>
 

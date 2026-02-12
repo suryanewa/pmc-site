@@ -24,7 +24,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     // Initialize Lenis
     const lenis = new Lenis({
-      duration: 1.2,
+      duration: 0.9,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: "vertical",
       gestureOrientation: "vertical",
@@ -34,12 +34,23 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     });
 
     lenisRef.current = lenis;
-    lenis.on("scroll", ScrollTrigger.update);
+    let scrollTriggerTicking = false;
+    const handleLenisScroll = () => {
+      if (scrollTriggerTicking) return;
+      scrollTriggerTicking = true;
+      requestAnimationFrame(() => {
+        scrollTriggerTicking = false;
+        ScrollTrigger.update();
+      });
+    };
+    lenis.on("scroll", handleLenisScroll);
 
     // RAF loop
     let rafId: number | null = null;
     let isActive = true;
     let isVisible = document.visibilityState === "visible";
+    let lastTime = 0;
+    const frameInterval = 1000 / 50;
 
     const handleVisibilityChange = () => {
       isVisible = document.visibilityState === "visible";
@@ -54,6 +65,12 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
         rafId = null;
         return;
       }
+      if (!lastTime) lastTime = time;
+      if (time - lastTime < frameInterval) {
+        rafId = requestAnimationFrame(raf);
+        return;
+      }
+      lastTime = time;
       lenis.raf(time);
       rafId = requestAnimationFrame(raf);
     }
@@ -66,6 +83,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       isActive = false;
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       if (rafId !== null) cancelAnimationFrame(rafId);
+      lenis.off("scroll", handleLenisScroll);
       lenis.destroy();
       lenisRef.current = null;
     };

@@ -9,6 +9,7 @@ function Logo() {
         alt="PMC logo"
         width={30}
         height={14}
+        sizes="30px"
         className="h-6 w-auto"
       />
     </div>

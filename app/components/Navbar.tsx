@@ -45,6 +45,7 @@ function Logo({ suffix, suffixColor, slashColor }: LogoProps) {
         alt="PMC logo"
         width={30}
         height={14}
+        sizes="30px"
         className="h-6 w-auto"
         priority
       />
@@ -69,36 +70,35 @@ interface NavbarProps {
 }
 
 export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: NavbarProps) {
-  const [isScrolled, setIsScrolled] = useState(() =>
-    typeof window !== 'undefined' ? window.scrollY > 10 : false
-  );
-  const [isEventsDropdownOpen, setIsEventsDropdownOpen] = useState(false);
-  const [isProgramsDropdownOpen, setIsProgramsDropdownOpen] = useState(false);
-  const [isTeamDropdownOpen, setIsTeamDropdownOpen] = useState(false);
+  type DropdownKey = 'events' | 'programs' | 'team' | null;
+
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<DropdownKey>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const isDark = variant === 'dark';
 
   useEffect(() => {
-    let rafId: number | null = null;
     let lastScrolled = window.scrollY > 10;
+    let lastRun = 0;
+    const throttleMs = 80;
+
+    setIsScrolled(lastScrolled);
 
     const handleScroll = () => {
-      if (rafId !== null) return;
-      rafId = requestAnimationFrame(() => {
-        rafId = null;
-        const nextScrolled = window.scrollY > 10;
-        if (nextScrolled !== lastScrolled) {
-          lastScrolled = nextScrolled;
-          setIsScrolled(nextScrolled);
-        }
-      });
+      const now = performance.now();
+      if (now - lastRun < throttleMs) return;
+      lastRun = now;
+      const nextScrolled = window.scrollY > 10;
+      if (nextScrolled !== lastScrolled) {
+        lastScrolled = nextScrolled;
+        setIsScrolled(nextScrolled);
+      }
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      if (rafId !== null) cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -169,8 +169,8 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
             <div className="hidden md:flex items-center justify-center gap-2 absolute left-1/2 -translate-x-1/2">
               <div
                 className="relative"
-                onMouseEnter={() => setIsEventsDropdownOpen(true)}
-                onMouseLeave={() => setIsEventsDropdownOpen(false)}
+                onMouseEnter={() => setActiveDropdown('events')}
+                onMouseLeave={() => setActiveDropdown(null)}
               >
                 <motion.button
                   className={`${textMuted} ${textHover} text-sm font-medium px-5 py-2.5 rounded-md transition-colors duration-200`}
@@ -180,7 +180,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
                 </motion.button>
 
                 <AnimatePresence>
-                  {isEventsDropdownOpen && (
+                  {activeDropdown === 'events' && (
                     <motion.div
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -214,8 +214,8 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
 
               <div
                 className="relative"
-                onMouseEnter={() => setIsProgramsDropdownOpen(true)}
-                onMouseLeave={() => setIsProgramsDropdownOpen(false)}
+                onMouseEnter={() => setActiveDropdown('programs')}
+                onMouseLeave={() => setActiveDropdown(null)}
               >
                 <motion.button
                   className={`${textMuted} ${textHover} text-sm font-medium px-5 py-2.5 rounded-md transition-colors duration-200`}
@@ -225,7 +225,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
                 </motion.button>
 
                 <AnimatePresence>
-                  {isProgramsDropdownOpen && (
+                  {activeDropdown === 'programs' && (
                     <motion.div
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -259,8 +259,8 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
 
               <div
                 className="relative"
-                onMouseEnter={() => setIsTeamDropdownOpen(true)}
-                onMouseLeave={() => setIsTeamDropdownOpen(false)}
+                onMouseEnter={() => setActiveDropdown('team')}
+                onMouseLeave={() => setActiveDropdown(null)}
               >
                 <motion.button
                   className={`${textMuted} ${textHover} text-sm font-medium px-5 py-2.5 rounded-md transition-colors duration-200`}
@@ -270,7 +270,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
                 </motion.button>
 
                 <AnimatePresence>
-                  {isTeamDropdownOpen && (
+                  {activeDropdown === 'team' && (
                     <motion.div
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
