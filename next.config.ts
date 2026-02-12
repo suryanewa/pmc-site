@@ -38,4 +38,7 @@ const millionConfig = {
   },
 };
 
-export default million.next(nextConfig as any, millionConfig);
+export default million.next(
+  nextConfig as unknown as Parameters<typeof million.next>[0],
+  millionConfig,
+);
