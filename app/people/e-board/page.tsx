@@ -1,14 +1,14 @@
-'use client';
-
 import { FadeUp } from '../../components/ScrollAnimations';
 import { LeadershipMember } from '../../components/LeadershipMember';
 import { TextAnimate } from '@/components/ui/text-animate';
 import { JoinUsSection } from '../../components/JoinUsSection';
 
+export const dynamic = 'force-static';
+
 const leadershipMembers = [
   {
     id: 1,
-    src: '/portraits/nihar-bagkar.jpeg',
+    src: '/portraits/nihar-bagkar.webp',
     name: 'Nihar Bagkar',
     role: 'President',
     coffeeChatUrl: 'https://calendly.com/nrb3931-nyu/30min',
@@ -32,7 +32,7 @@ const leadershipMembers = [
   },
   {
     id: 4,
-    src: '/portraits/nitya-garg.jpeg',
+    src: '/portraits/nitya-garg.webp',
     name: 'Nitya Garg',
     role: 'Treasurer',
     coffeeChatUrl: 'https://calendar.app.google/Kbtk8D6u1h2ANxN16',
@@ -40,7 +40,7 @@ const leadershipMembers = [
   },
   {
     id: 5,
-    src: '/portraits/maggie-lu.jpeg',
+    src: '/portraits/maggie-lu.webp',
     name: 'Maggie Lu',
     role: 'Director of Growth',
     coffeeChatUrl: 'https://calendly.com/mal9788-nyu/30min',
@@ -56,7 +56,7 @@ const leadershipMembers = [
   },
   {
     id: 7,
-    src: '/portraits/sean-hu.jpeg',
+    src: '/portraits/sean-hu.webp',
     name: 'Sean Hu',
     role: 'Director of Outreach',
     coffeeChatUrl: 'https://calendly.com/seanhu0812',
@@ -72,21 +72,21 @@ const leadershipMembers = [
   },
   {
     id: 9,
-    src: '/portraits/theresa-yung.png',
+    src: '/portraits/theresa-yung.webp',
     name: 'Theresa Yung',
     role: 'Marketing Lead',
     coffeeChatUrl: 'https://calendly.com/ty2537-nyu',
   },
   {
     id: 10,
-    src: '/portraits/sophia-xu.jpeg',
+    src: '/portraits/sophia-xu.webp',
     name: 'Sophia Xu',
     role: 'Event Coordinator',
     coffeeChatUrl: 'https://calendly.com/sx2538-nyu/30min',
   },
   {
     id: 11,
-    src: '/portraits/pranava-manthena.jpg',
+    src: '/portraits/pranava-manthena.webp',
     name: 'Pranava Manthena',
     role: 'Event Coordinator',
     coffeeChatUrl: 'https://calendly.com/pvm9895-stern/coffee-chat',
@@ -109,14 +109,14 @@ const leadershipMembers = [
   },
   {
     id: 14,
-    src: '/portraits/chirag-dhiwar.png',
+    src: '/portraits/chirag-dhiwar.webp',
     name: 'Chirag Dhiwar',
     role: 'Graduate Engagement Lead',
     coffeeChatUrl: 'https://calendly.com/chd9403-nyu/30min',
   },
   {
     id: 15,
-    src: '/portraits/tansin-taj.jpeg',
+    src: '/portraits/tansin-taj.webp',
     name: 'Tansin Taj',
     role: 'Graduate Engagement Lead',
     coffeeChatUrl: 'https://calendly.com/ft2366-nyu/30min',

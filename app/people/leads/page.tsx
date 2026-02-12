@@ -1,9 +1,9 @@
-'use client';
-
 import { FadeUp } from '../../components/ScrollAnimations';
 import { LeadershipMember } from '../../components/LeadershipMember';
 import { TextAnimate } from '@/components/ui/text-animate';
 import { JoinUsSection } from '../../components/JoinUsSection';
+
+export const dynamic = 'force-static';
 
 const programLeads = [
   {
@@ -12,7 +12,7 @@ const programLeads = [
     members: [
       {
         id: 1,
-        src: '/portraits/soumya-m.jpeg',
+        src: '/portraits/soumya-m.webp',
         name: 'Soumya M.',
         role: 'Senior Product Team Lead',
         coffeeChatUrl: 'https://calendly.com/srm9678-stern/pmc-coffee-chats',
@@ -20,14 +20,14 @@ const programLeads = [
       },
       {
         id: 2,
-        src: '/portraits/valerie-zou.jpg',
+        src: '/portraits/valerie-zou.webp',
         name: 'Valerie Zou',
         role: 'Junior Product Team Lead',
         coffeeChatUrl: 'https://calendly.com/vz2160-nyu/valerie-s-calendly',
       },
       {
         id: 3,
-        src: '/portraits/prateek-nedungadi.jpg',
+        src: '/portraits/prateek-nedungadi.webp',
         name: 'Prateek Nedungadi',
         role: 'Product Team Coordinator',
         coffeeChatUrl: 'https://calendly.com/prateek-nedungadi-stern/30min',
@@ -40,14 +40,14 @@ const programLeads = [
     members: [
       {
         id: 4,
-        src: '/portraits/jade-leong.jpeg',
+        src: '/portraits/jade-leong.webp',
         name: 'Jade Leong',
         role: 'Mentorship Lead',
         coffeeChatUrl: 'https://calendly.com/jyl9618-nyu/30min',
       },
       {
         id: 5,
-        src: '/portraits/ethan-lu.jpeg',
+        src: '/portraits/ethan-lu.webp',
         name: 'Ethan Lu',
         role: 'Mentorship Lead',
         coffeeChatUrl: 'https://calendly.com/rkl6999-nyu/30min',
@@ -60,14 +60,14 @@ const programLeads = [
     members: [
       {
         id: 6,
-        src: '/portraits/tarush-garg.jpg',
+        src: '/portraits/tarush-garg.webp',
         name: 'Tarush Garg',
         role: 'Case Competition Lead',
         coffeeChatUrl: 'https://calendly.com/tg2903-nyu/30min',
       },
       {
         id: 7,
-        src: '/portraits/surya-newa.png',
+        src: '/portraits/surya-newa.webp',
         name: 'Surya Newa',
         role: 'Case Competition Lead',
         coffeeChatUrl: 'https://cal.com/suryanewa/quick-chat',
