@@ -84,15 +84,14 @@ const ProgramCard = memo(function ProgramCard({
             className="opacity-40 mix-blend-screen"
           />
         </div>
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[44%]">
-          <ProgressiveBlur
-            direction="bottom"
-            blurLayers={10}
-            blurIntensity={1.25}
-            className="absolute inset-0"
-            animate={{ opacity: isHovered ? 1 : 0 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
-          />
+         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[3] h-[44%]">
+           <ProgressiveBlur
+             direction="bottom"
+             blurIntensity={1.25}
+             className="absolute inset-0"
+             animate={{ opacity: isHovered ? 1 : 0 }}
+             transition={{ duration: 0.25, ease: 'easeOut' }}
+           />
           <div
             className="absolute inset-0"
             style={{

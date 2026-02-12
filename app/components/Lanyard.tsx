@@ -34,9 +34,27 @@ export default function Lanyard({
   transparent = true
 }: LanyardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div
+      ref={containerRef}
       className={`relative z-0 w-full h-full flex justify-center items-center transform scale-100 origin-center min-h-[500px] ${
         isHovered ? 'lanyard-hovered' : ''
       }`}
@@ -48,7 +66,7 @@ export default function Lanyard({
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={1 / 60}>
-          <Band onHover={setIsHovered} />
+          <Band onHover={setIsHovered} isVisible={isVisible} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
@@ -88,11 +106,13 @@ export default function Lanyard({
 function Band({
   maxSpeed = 50,
   minSpeed = 10,
-  onHover
+  onHover,
+  isVisible
 }: {
   maxSpeed?: number;
   minSpeed?: number;
   onHover?: (hovered: boolean) => void;
+  isVisible: boolean;
 }) {
   const { size } = useThree();
   const band = useRef<THREE.Mesh<MeshLineGeometry, MeshLineMaterial> | null>(null);
@@ -172,6 +192,7 @@ function Band({
   }, [hovered, onHover]);
 
   useFrame((state, delta) => {
+    if (!isVisible) return;
     if (dragged && typeof dragged !== 'boolean') {
       vec.set(state.pointer.x, state.pointer.y, 0.5).unproject(state.camera);
       dir.copy(vec).sub(state.camera.position).normalize();

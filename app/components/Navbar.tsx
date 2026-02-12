@@ -75,8 +75,15 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<DropdownKey>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   const isDark = variant === 'dark';
+
+  // Set mounted state after hydration to prevent SSR mismatch
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     let lastScrolled = window.scrollY > 10;
@@ -141,7 +148,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
   const dropdownItemHover = isDark ? 'hover:bg-[#3F3F3F]/70' : 'hover:bg-[#3F3F3F]/70';
   const mobileMenuBg = isDark ? 'bg-black/95' : 'bg-black/95';
 
-  const navContainerClass = `mx-auto w-full border transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:rounded-2xl ${
+  const navContainerClass = `mx-auto w-full border transition-[max-width,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:rounded-2xl ${
     isScrolled
       ? 'max-w-3xl border-[#DBDBDB]/12 shadow-[0_10px_35px_rgba(0,0,0,0.35)]'
       : 'max-w-[1400px] border-transparent'
@@ -155,10 +162,10 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-        className={`${navContainerClass} transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isScrolled || isMobileMenuOpen ? `${scrolledBg} backdrop-blur-lg` : 'bg-transparent'}`}
+        className={`${navContainerClass} transition-[background-color,backdrop-filter,max-width,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isScrolled || isMobileMenuOpen ? `${scrolledBg} backdrop-blur-lg` : 'bg-transparent'}`}
       >
-        <div className={`relative mx-auto w-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isScrolled ? 'px-3 md:px-4' : 'px-6 md:px-10 lg:px-14'}`}>
-          <div className={`flex items-center justify-between transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isScrolled ? 'h-14 md:h-14' : 'h-20 md:h-20'}`}>
+        <div className={`relative mx-auto w-full transition-[padding] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isScrolled ? 'px-3 md:px-4' : 'px-6 md:px-10 lg:px-14'}`}>
+          <div className={`flex items-center justify-between transition-[height] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${isScrolled ? 'h-14 md:h-14' : 'h-20 md:h-20'}`}>
             <Link href="/" className="hover:opacity-80 transition-opacity duration-300 flex-shrink-0">
               <Logo
                 variant={variant}
@@ -358,7 +365,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
         </div>
       </motion.nav>
 
-      {typeof window !== 'undefined' &&
+      {isMounted &&
         createPortal(
           <AnimatePresence>
             {isMobileMenuOpen && (

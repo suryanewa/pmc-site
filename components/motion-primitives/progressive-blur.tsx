@@ -18,7 +18,7 @@ export type ProgressiveBlurProps = {
 
 export function ProgressiveBlur({
   direction = 'bottom',
-  blurLayers = 8,
+  blurLayers = 3,
   className,
   blurIntensity = 0.25,
   ...props

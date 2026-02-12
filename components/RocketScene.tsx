@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, Suspense, useMemo, useEffect } from "react";
+import { useRef, Suspense, useMemo, useEffect, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF } from "@react-three/drei";
 import * as THREE from "three";
@@ -8,9 +8,10 @@ import * as THREE from "three";
 interface RocketProps {
   isHovered: boolean;
   isActive: boolean;
+  isVisible: boolean;
 }
 
-function Rocket({ isHovered, isActive }: RocketProps) {
+function Rocket({ isHovered, isActive, isVisible }: RocketProps) {
   const { scene } = useGLTF("/models/rocket.gltf");
   const rocketRef = useRef<THREE.Group>(null);
   const materialsRef = useRef<THREE.MeshStandardMaterial[]>([]);
@@ -40,6 +41,7 @@ function Rocket({ isHovered, isActive }: RocketProps) {
   }, [isActive]);
 
   useFrame((state) => {
+    if (!isVisible) return;
     if (rocketRef.current) {
       if (isActiveRef.current && !hasEnteredRef.current) {
         if (introStartRef.current === null) {
@@ -151,13 +153,15 @@ function Rocket({ isHovered, isActive }: RocketProps) {
 
 interface LightsProps {
   isHovered: boolean;
+  isVisible: boolean;
 }
 
-function Lights({ isHovered }: LightsProps) {
+function Lights({ isHovered, isVisible }: LightsProps) {
   const pointLightRef = useRef<THREE.PointLight>(null);
   const dirLightRef = useRef<THREE.DirectionalLight>(null);
 
   useFrame(() => {
+    if (!isVisible) return;
     if (pointLightRef.current) {
       const targetIntensity = isHovered ? 2 : 0.2;
       pointLightRef.current.intensity = THREE.MathUtils.lerp(
@@ -205,10 +209,28 @@ interface RocketSceneProps {
 
 export default function RocketScene({ className = "", isHovered = false, isActive = false }: RocketSceneProps) {
   const fadeDuration = 5.5;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div className={`absolute inset-0 overflow-hidden ${className}`}>
       <div
+        ref={containerRef}
         className="absolute inset-0"
         style={{
           transform: 'translateY(40%)',
@@ -227,9 +249,9 @@ export default function RocketScene({ className = "", isHovered = false, isActiv
           shadows
           className="!absolute inset-0"
         >
-          <Lights isHovered={isHovered} />
+          <Lights isHovered={isHovered} isVisible={isVisible} />
           <Suspense fallback={null}>
-            <Rocket isHovered={isHovered} isActive={isActive} />
+            <Rocket isHovered={isHovered} isActive={isActive} isVisible={isVisible} />
           </Suspense>
         </Canvas>
       </div>
