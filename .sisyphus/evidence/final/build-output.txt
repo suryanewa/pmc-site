@@ -1,0 +1,44 @@
+
+> eeg-site@0.1.0 build
+> next build
+
+▲ Next.js 16.1.6 (Turbopack)
+- Experiments (use with caution):
+  · optimizePackageImports
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.2s
+  Running TypeScript ...
+  Collecting page data using 9 workers ...
+⚠ Using edge runtime on a page currently disables static generation for that page
+  Generating static pages using 9 workers (0/17) ...
+  Generating static pages using 9 workers (4/17) 
+  Generating static pages using 9 workers (8/17) 
+  Generating static pages using 9 workers (12/17) 
+✓ Generating static pages using 9 workers (17/17) in 262.7ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ○ /
+├ ○ /_not-found
+├ ƒ /api/newsletter/subscribe
+├ ○ /events/case-comp
+├ ○ /events/office-visits
+├ ○ /events/speakers
+├ ○ /mac3d
+├ ƒ /opengraph-image
+├ ○ /people
+├ ○ /people/e-board
+├ ○ /people/leads
+├ ○ /people/past-teams
+├ ○ /programs/grad-bootcamp
+├ ○ /programs/mentorship
+├ ○ /programs/product-team
+├ ○ /robots.txt
+├ ○ /sitemap.xml
+└ ƒ /twitter-image
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -245,7 +245,7 @@ export default function GradBootcampPage() {
           'Passionate about solving user problems and creating impact',
         ]}
         timeCommitment="2.5 hours / session + independent work"
-        imageSrc="/bill.png"
+        imageSrc="/bill.webp"
       />
 
       {/* Deliverables */}

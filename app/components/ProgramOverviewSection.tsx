@@ -22,7 +22,7 @@ export function ProgramOverviewSection({
   description,
   whatToExpect,
   requirements,
-  imageSrc = "/community/retreat-f2025.png", // Default fallback
+  imageSrc = "/community/retreat-f2025.webp", // Default fallback
   imageAlt = "Program overview image",
   accentColor = "#41C9C1",
   whatToExpectIntro = "Students will finish with 5+ portfolio projects including:",
@@ -77,7 +77,7 @@ export function ProgramOverviewSection({
                 <div className="relative border-t lg:border-t-0 min-h-[300px] lg:min-h-full p-8 md:p-12 border-[#3F3F3F]/40">
                   <div className="relative w-full h-full overflow-hidden border border-[#3F3F3F]/40 bg-black">
                     <Image
-                      src={imageSrc || "/community/retreat-f2025.png"}
+                      src={imageSrc || "/community/retreat-f2025.webp"}
                       alt={imageAlt || "Program overview image"}
                       fill
                       className="object-cover cursor-default"

@@ -239,7 +239,7 @@ export default function ProductTeamPage() {
           'Passionate about solving user problems and creating impact',
         ]}
         timeCommitment="6–7 hours / week"
-        imageSrc="/product-team/6796689aa6dd4f0210c8eff0_IMG_8903.jpg"
+        imageSrc="/product-team/6796689aa6dd4f0210c8eff0_IMG_8903.webp"
       />
 
       {/* Deliverables Section — "Join P-Team to..." */}
@@ -328,13 +328,13 @@ export default function ProductTeamPage() {
           <FadeIn delay={0.2}>
             <div className="grid grid-cols-2 gap-3 md:gap-4">
               <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
-                <Image src="/product-team/IMG_9983.jpeg" alt="Product Team working together" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
+                <Image src="/product-team/IMG_9983.webp" alt="Product Team working together" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
               </div>
               <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
-                <Image src="/product-team/IMG_1511.jpeg" alt="Product Team collaboration" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
+                <Image src="/product-team/IMG_1511.webp" alt="Product Team collaboration" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
               </div>
               <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
-                <Image src="/product-team/screenshot-feb-2026.png" alt="Product Team session" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
+                <Image src="/product-team/screenshot-feb-2026.webp" alt="Product Team session" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
               </div>
               <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
                 <Image src="/product-team/productteamf24.webp" alt="Product Team Fall 2024" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />

@@ -25,7 +25,7 @@ export default function Mac3DPage() {
           <div className="relative flex min-h-screen flex-col items-start justify-center gap-8 px-6 py-20">
             <div className="relative h-[220px] w-full overflow-hidden rounded-2xl bg-[#3F3F3F]/30">
               <Image
-                src="/background-no-overlay.png"
+                src="/background-no-overlay.webp"
                 alt=""
                 aria-hidden="true"
                 fill

@@ -25,8 +25,8 @@ const mentorCompanies: CompanyLogo[] = [
   { name: 'JPMorgan Chase', logo: '/companies/chase-logo.svg', invert: true },
   { name: 'Mastercard', logo: '/companies/mastercard.svg', invert: true },
   { name: 'PwC', logo: '/companies/pwc.svg', invert: true },
-  { name: 'Capital One', logo: '/companies/capital-one.png', invert: true },
-  { name: 'Meta', logo: '/companies/meta.png', invert: true },
+  { name: 'Capital One', logo: '/companies/capital-one.webp', invert: true },
+  { name: 'Meta', logo: '/companies/meta.webp', invert: true },
 ];
 
 const additionalEvents = [

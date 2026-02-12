@@ -20,6 +20,16 @@ const nextConfig = {
       },
     ],
   },
+  experimental: {
+    optimizePackageImports: [
+      'motion/react',
+      'lucide-react',
+      '@radix-ui/react-*',
+      'three',
+      '@react-three/drei',
+      '@react-three/fiber',
+    ],
+  },
 };
 
 const millionConfig = {

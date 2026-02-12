@@ -191,9 +191,9 @@ interface CompanyLogo {
 }
 
 const casePartners: CompanyLogo[] = [
-  { name: 'BrainStation', logo: '/companies/brainstation.png', invert: true },
+  { name: 'BrainStation', logo: '/companies/brainstation.webp', invert: true },
   { name: '28 Ventures', logo: '/companies/28-ventures.avif' },
-  { name: 'PitchBook', logo: '/companies/pitchbook.png', invert: true },
+  { name: 'PitchBook', logo: '/companies/pitchbook.webp', invert: true },
   { name: 'Perplexity', logo: 'https://svgl.app/library/perplexity.svg' },
 ];
 
@@ -202,8 +202,8 @@ const networkJudges: CompanyLogo[] = [
   { name: 'Google', logo: 'https://svgl.app/library/google.svg' },
   { name: 'Microsoft', logo: 'https://svgl.app/library/microsoft.svg' },
   { name: 'IBM', logo: 'https://svgl.app/library/ibm.svg' },
-  { name: 'Amazon', logo: '/companies/amazon.png', invert: true },
-  { name: 'Capital One', logo: '/companies/capital-one.png', invert: true },
+  { name: 'Amazon', logo: '/companies/amazon.webp', invert: true },
+  { name: 'Capital One', logo: '/companies/capital-one.webp', invert: true },
   { name: 'Oracle', logo: '/companies/oracle.svg', invert: true },
   { name: 'GrubHub', logo: '/companies/grubhub.svg', invert: true },
   { name: 'TikTok', logo: 'https://svgl.app/library/tiktok-icon-light.svg' },
@@ -211,16 +211,16 @@ const networkJudges: CompanyLogo[] = [
 ];
 
 const partnerSchools: LogoItem[] = [
-  { src: '/schools/upenn.png', alt: 'University of Pennsylvania' },
-  { src: '/schools/columbia.png', alt: 'Columbia University' },
+  { src: '/schools/upenn.webp', alt: 'University of Pennsylvania' },
+  { src: '/schools/columbia.webp', alt: 'Columbia University' },
   { src: '/schools/brown.svg', alt: 'Brown University' },
-  { src: '/schools/cornell.svg.png', alt: 'Cornell University' },
-  { src: '/schools/duke.png', alt: 'Duke University' },
+  { src: '/schools/cornell.svg.webp', alt: 'Cornell University' },
+  { src: '/schools/duke.webp', alt: 'Duke University' },
   { src: '/schools/georgetown.avif', alt: 'Georgetown University' },
-  { src: '/schools/umich.png', alt: 'University of Michigan' },
+  { src: '/schools/umich.webp', alt: 'University of Michigan' },
   { src: '/schools/ucla.svg', alt: 'UCLA' },
-  { src: '/schools/binghampton.jpg', alt: 'Binghamton University' },
-  { src: '/schools/uiuc.png', alt: 'UIUC' },
+  { src: '/schools/binghampton.webp', alt: 'Binghamton University' },
+  { src: '/schools/uiuc.webp', alt: 'UIUC' },
 ];
 
 const caseCompFAQs = [
@@ -565,16 +565,16 @@ export default function CaseCompPage() {
           <FadeIn delay={0.2}>
             <div className="grid grid-cols-2 gap-4">
               <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
-                <Image src="/case-comp/IMG_2261.jpeg" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
+                <Image src="/case-comp/IMG_2261.webp" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
               </div>
               <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
-                <Image src="/case-comp/IMG_2226.jpeg" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
+                <Image src="/case-comp/IMG_2226.webp" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
               </div>
               <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
-                <Image src="/case-comp/IMG_2227.jpeg" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
+                <Image src="/case-comp/IMG_2227.webp" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
               </div>
               <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
-                <Image src="/case-comp/IMG_6944.jpeg" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
+                <Image src="/case-comp/IMG_6944.webp" alt="Case Competition" fill className="object-cover" sizes="(max-width: 768px) 50vw, 50vw" />
               </div>
             </div>
           </FadeIn>

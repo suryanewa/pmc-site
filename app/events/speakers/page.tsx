@@ -329,13 +329,13 @@ export default function SpeakersPage() {
           <FadeUp>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
-                <Image src="/speakers/IMG_3671.jpeg" alt="Speaker event" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+                <Image src="/speakers/IMG_3671.webp" alt="Speaker event" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
               </div>
               <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
-                <Image src="/speakers/_DSC6939.jpeg" alt="Speaker event" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+                <Image src="/speakers/_DSC6939.webp" alt="Speaker event" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
               </div>
               <div className="relative aspect-[4/3] overflow-hidden border border-[#3F3F3F]/40">
-                <Image src="/speakers/1770754775263.jpeg" alt="Speaker event" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
+                <Image src="/speakers/1770754775263.webp" alt="Speaker event" fill className="object-cover" sizes="(max-width: 768px) 100vw, 33vw" />
               </div>
             </div>
           </FadeUp>

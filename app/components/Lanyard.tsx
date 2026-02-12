@@ -155,8 +155,8 @@ function Band({
     [0, 1.45, 0]
   ]);
 
-  const customGrabCursor = "url('/cursors/move.png') 23 23, grab";
-  const customGrabbingCursor = "url('/cursors/move.png') 23 23, grabbing";
+  const customGrabCursor = "url('/cursors/move.webp') 23 23, grab";
+  const customGrabbingCursor = "url('/cursors/move.webp') 23 23, grabbing";
 
   useEffect(() => {
     if (hovered) {
