@@ -13,6 +13,7 @@ interface LeadershipMemberProps {
   coffeeChatUrl?: string;
   description?: string;
   className?: string;
+  imageClassName?: string;
 }
 
 export function LeadershipMember({
@@ -23,6 +24,7 @@ export function LeadershipMember({
   coffeeChatUrl,
   description,
   className = '',
+  imageClassName,
 }: LeadershipMemberProps) {
   const linkedInHref =
     linkedinUrl ??
@@ -57,7 +59,7 @@ export function LeadershipMember({
               src={src}
               alt={name}
               fill
-              className={`object-cover ${(name === 'Tarush Garg' || name === 'Surya Newa') ? '[transform:scaleX(-1)]' : ''}`}
+              className={`object-cover ${imageClassName ?? ''}`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
 

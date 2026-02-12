@@ -5,7 +5,23 @@ import { JoinUsSection } from '../../components/JoinUsSection';
 
 export const dynamic = 'force-static';
 
-const programLeads = [
+interface ProgramMember {
+  id: number;
+  src: string;
+  name: string;
+  role: string;
+  coffeeChatUrl: string;
+  description?: string;
+  imageClassName?: string;
+}
+
+interface ProgramGroup {
+  program: string;
+  color: string;
+  members: ProgramMember[];
+}
+
+const programLeads: ProgramGroup[] = [
   {
     program: 'Product Team',
     color: '#41C9C1',
@@ -64,6 +80,7 @@ const programLeads = [
         name: 'Tarush Garg',
         role: 'Case Competition Lead',
         coffeeChatUrl: 'https://calendly.com/tg2903-nyu/30min',
+        imageClassName: '-scale-x-100',
       },
       {
         id: 7,
@@ -71,6 +88,7 @@ const programLeads = [
         name: 'Surya Newa',
         role: 'Case Competition Lead',
         coffeeChatUrl: 'https://cal.com/suryanewa/quick-chat',
+        imageClassName: '-scale-x-100',
       },
     ],
   },
@@ -124,6 +142,7 @@ export default function LeadsPage() {
                           role={member.role}
                           coffeeChatUrl={member.coffeeChatUrl}
                           description={member.description}
+                          imageClassName={member.imageClassName}
                         />
                       </FadeUp>
                     </div>
@@ -139,6 +158,7 @@ export default function LeadsPage() {
                         role={member.role}
                         coffeeChatUrl={member.coffeeChatUrl}
                         description={member.description}
+                        imageClassName={member.imageClassName}
                       />
                     </FadeUp>
                   ))}
