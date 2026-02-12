@@ -12,7 +12,6 @@ interface ProgramMember {
   role: string;
   coffeeChatUrl: string;
   description?: string;
-  flipImage?: boolean;
 }
 
 interface ProgramGroup {
@@ -80,7 +79,6 @@ const programLeads: ProgramGroup[] = [
         name: 'Tarush Garg',
         role: 'Case Competition Lead',
         coffeeChatUrl: 'https://calendly.com/tg2903-nyu/30min',
-        flipImage: true,
       },
       {
         id: 7,
@@ -88,7 +86,6 @@ const programLeads: ProgramGroup[] = [
         name: 'Surya Newa',
         role: 'Case Competition Lead',
         coffeeChatUrl: 'https://cal.com/suryanewa/quick-chat',
-        flipImage: true,
       },
     ],
   },
@@ -142,7 +139,7 @@ export default function LeadsPage() {
                           role={member.role}
                           coffeeChatUrl={member.coffeeChatUrl}
                           description={member.description}
-                          flipImage={member.flipImage}
+
                         />
                       </FadeUp>
                     </div>
@@ -158,7 +155,7 @@ export default function LeadsPage() {
                         role={member.role}
                         coffeeChatUrl={member.coffeeChatUrl}
                         description={member.description}
-                        flipImage={member.flipImage}
+
                       />
                     </FadeUp>
                   ))}
