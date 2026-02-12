@@ -75,15 +75,15 @@ Eliminate runtime inefficiencies by fixing the scroll engine (Lenis+GSAP double 
 - `.sisyphus/evidence/phase2-final/` — FPS evidence showing maintained/improved performance
 
 ### Definition of Done
-- [ ] `npm run lint && npm run typecheck && npm run build` all pass
-- [ ] Zero `requestAnimationFrame` calls in SmoothScroll.tsx (Lenis driven by gsap.ticker)
-- [ ] Zero `million` references in next.config.ts or package.json
-- [ ] Zero `transition-all` in Navbar.tsx
-- [ ] Zero `Math.sqrt` in AsciiHoverEffect.tsx (replaced with squared distance)
-- [ ] ProgressiveBlur default reduced to 3 layers
-- [ ] IntersectionObserver present in AsciiHoverEffect, RocketScene, Lanyard
-- [ ] Zero visual regressions across 6 priority pages
-- [ ] Zero new console errors
+- [x] `npm run lint && npm run typecheck && npm run build` all pass
+- [x] Zero `requestAnimationFrame` calls in SmoothScroll.tsx (Lenis driven by gsap.ticker)
+- [x] Zero `million` references in next.config.ts or package.json
+- [x] Zero `transition-all` in Navbar.tsx
+- [x] Zero `Math.sqrt` in AsciiHoverEffect.tsx (replaced with squared distance)
+- [x] ProgressiveBlur default reduced to 3 layers
+- [x] IntersectionObserver present in AsciiHoverEffect, RocketScene, Lanyard
+- [x] Zero visual regressions across 6 priority pages
+- [x] Zero new console errors
 
 ### Must Have
 - Lenis+GSAP sync via `gsap.ticker.add()` pattern
@@ -206,7 +206,7 @@ Wave 3 (After Wave 2 — lower impact + final):
 
 ---
 
-- [ ] 1. Sync Lenis Scroll Engine to GSAP Ticker
+- [x] 1. Sync Lenis Scroll Engine to GSAP Ticker ✅ COMPLETE
 
   **What to do**:
   - Rewrite `app/components/SmoothScroll.tsx` to use the official Lenis+GSAP pattern:
@@ -239,18 +239,18 @@ Wave 3 (After Wave 2 — lower impact + final):
   - **Blocked By**: Task 0
 
   **Acceptance Criteria**:
-  - [ ] Zero `requestAnimationFrame` in SmoothScroll.tsx
-  - [ ] gsap.ticker.add present
-  - [ ] lagSmoothing disabled
-  - [ ] Lenis config unchanged
-  - [ ] `npm run lint && typecheck && build` pass
+  - [x] Zero `requestAnimationFrame` in SmoothScroll.tsx
+  - [x] gsap.ticker.add present
+  - [x] lagSmoothing disabled
+  - [x] Lenis config unchanged
+  - [x] `npm run lint && typecheck && build` pass
 
   **Commit**: YES
   - Message: `perf(scroll): sync Lenis to GSAP ticker`
 
 ---
 
-- [ ] 2. Remove Million.js From Build Pipeline
+- [x] 2. Remove Million.js From Build Pipeline ✅ COMPLETE
 
   **What to do**:
   - Remove from `next.config.ts`: import, millionConfig, millionNextConfig, millionRuntimeConfig
@@ -271,16 +271,16 @@ Wave 3 (After Wave 2 — lower impact + final):
   - **Parallel Group**: Wave 1
 
   **Acceptance Criteria**:
-  - [ ] Zero million references in next.config.ts
-  - [ ] Zero million in package.json
-  - [ ] Build succeeds
+  - [x] Zero million references in next.config.ts
+  - [x] Zero million in package.json
+  - [x] Build succeeds
 
   **Commit**: YES
   - Message: `perf(build): remove Million.js`
 
 ---
 
-- [ ] 3. Optimize AsciiHoverEffect
+- [x] 3. Optimize AsciiHoverEffect ✅ COMPLETE
 
   **What to do**:
   - Add IntersectionObserver to detect off-screen state
@@ -300,16 +300,16 @@ Wave 3 (After Wave 2 — lower impact + final):
   - **Parallel Group**: Wave 1
 
   **Acceptance Criteria**:
-  - [ ] IntersectionObserver present
-  - [ ] Math.sqrt count ≤ 1
-  - [ ] Build passes
+  - [x] IntersectionObserver present
+  - [x] Math.sqrt count ≤ 1
+  - [x] Build passes
 
   **Commit**: YES
   - Message: `perf(ascii): add IO pause and optimize distance calc`
 
 ---
 
-- [ ] 4. Fix Navbar Transitions and Hydration
+- [x] 4. Fix Navbar Transitions and Hydration ✅ COMPLETE
 
   **What to do**:
   - Replace ALL `transition-all` with specific properties (lines 144, 158, 160, 161)
@@ -329,17 +329,17 @@ Wave 3 (After Wave 2 — lower impact + final):
   - **Blocked By**: Task 1
 
   **Acceptance Criteria**:
-  - [ ] Zero `transition-all` in Navbar
-  - [ ] Zero `typeof window` in Navbar
-  - [ ] `isMounted` pattern present
-  - [ ] Build passes
+  - [x] Zero `transition-all` in Navbar
+  - [x] Zero `typeof window` in Navbar
+  - [x] `isMounted` pattern present
+  - [x] Build passes
 
   **Commit**: YES
   - Message: `perf(navbar): fix transitions and hydration`
 
 ---
 
-- [ ] 5. Reduce ProgressiveBlur Layer Count
+- [x] 5. Reduce ProgressiveBlur Layer Count ✅ COMPLETE
 
   **What to do**:
   - Change default `blurLayers` from 8 to 3 in `progressive-blur.tsx`
@@ -354,16 +354,16 @@ Wave 3 (After Wave 2 — lower impact + final):
   - **Parallel Group**: Wave 2
 
   **Acceptance Criteria**:
-  - [ ] Default is 3 layers
-  - [ ] No blurLayers={10} override
-  - [ ] Build passes
+  - [x] Default is 3 layers
+  - [x] No blurLayers={10} override
+  - [x] Build passes
 
   **Commit**: YES
   - Message: `perf(blur): reduce layers from 8 to 3`
 
 ---
 
-- [ ] 6. Add IntersectionObserver Pause to R3F Canvases
+- [x] 6. Add IntersectionObserver Pause to R3F Canvases ✅ COMPLETE
 
   **What to do**:
   - Wrap Canvas in container with ref in `RocketScene.tsx` and `Lanyard.tsx`
@@ -379,15 +379,15 @@ Wave 3 (After Wave 2 — lower impact + final):
   - **Parallel Group**: Wave 2
 
   **Acceptance Criteria**:
-  - [ ] IntersectionObserver in both files
-  - [ ] Build passes
+  - [x] IntersectionObserver in both files
+  - [x] Build passes
 
   **Commit**: YES
   - Message: `perf(3d): pause R3F canvases off-screen`
 
 ---
 
-- [ ] 7. Fix CandleScene Layout Transitions
+- [x] 7. Fix CandleScene Layout Transitions ✅ COMPLETE
 
   **What to do**:
   - Replace CSS transitions on `width`, `height`, `top` with `transform`-based alternatives
@@ -402,16 +402,16 @@ Wave 3 (After Wave 2 — lower impact + final):
   - **Parallel Group**: Wave 3
 
   **Acceptance Criteria**:
-  - [ ] No layout-triggering transitions
-  - [ ] Transform-based alternatives present
-  - [ ] Build passes
+  - [x] No layout-triggering transitions
+  - [x] Transform-based alternatives present
+  - [x] Build passes
 
   **Commit**: YES
   - Message: `perf(candle): use transforms instead of layout`
 
 ---
 
-- [ ] 8. Final Runtime Performance Measurement
+- [x] 8. Final Runtime Performance Measurement ✅ COMPLETE
 
   **What to do**:
   - Repeat FPS measurement from Task 0
@@ -432,10 +432,10 @@ Wave 3 (After Wave 2 — lower impact + final):
   - **Blocked By**: Tasks 1-7
 
   **Acceptance Criteria**:
-  - [ ] FPS report exists
-  - [ ] 6 screenshots exist
-  - [ ] Summary report exists
-  - [ ] Zero console errors
+  - [x] FPS report exists
+  - [x] 6 screenshots exist
+  - [x] Summary report exists
+  - [x] Zero console errors
 
   **Commit**: NO (measurement only)
 
