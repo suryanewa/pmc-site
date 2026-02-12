@@ -59,6 +59,7 @@ const ProgramCard = memo(function ProgramCard({
                 ? 'NEJJOUcoL3C4e87FYFaQ'
                 : 'xG650J1WpXyfilT1Q6Bp'
           }
+          data-us-production="true"
           className="absolute z-0 pointer-events-none"
           style={{
             width: 1440,

@@ -54,6 +54,7 @@ export function HeroScene() {
     >
       <div
         data-us-project={UNICORN_PROJECT_ID}
+        data-us-production="true"
         className="unicorn-hero-scene"
         style={{
           width: 1440,

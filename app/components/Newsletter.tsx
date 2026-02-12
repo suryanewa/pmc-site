@@ -116,6 +116,7 @@ export function Newsletter({ source = 'website', accentColor }: NewsletterProps)
       >
         <div
           data-us-project={UNICORN_PROJECT_ID}
+          data-us-production="true"
           className="unicorn-newsletter-scene"
           style={{
             width: 1440,
