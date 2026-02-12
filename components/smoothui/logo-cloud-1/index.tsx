@@ -53,6 +53,8 @@ export function LogoCloudAnimated({
   logos = defaultLogos,
 }: LogoCloudAnimatedProps) {
   const trackRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isVisibleRef = useRef(false);
   const [trackWidth, setTrackWidth] = useState(0);
   const x = useMotionValue(0);
 
@@ -81,15 +83,39 @@ export function LogoCloudAnimated({
     speed.set(baseSpeed);
   }, [baseSpeed, speed]);
 
+  // IntersectionObserver to pause animation when off-screen
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisibleRef.current = entry.isIntersecting;
+        });
+      },
+      {
+        threshold: 0,
+        rootMargin: '50px',
+      }
+    );
+
+    observer.observe(containerRef.current);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   useAnimationFrame((_, delta) => {
-    if (!trackWidth) return;
+    // Early return if not visible or no track width
+    if (!isVisibleRef.current || !trackWidth) return;
     const moveBy = (speed.get() * delta) / 1000;
     const next = x.get() - moveBy;
     x.set(next <= -trackWidth ? 0 : next);
   });
 
   return (
-    <section className="overflow-hidden py-20">
+    <section ref={containerRef} className="overflow-hidden py-20">
       <div className="mx-auto max-w-7xl px-6">
         <motion.div
           animate={{ opacity: 1, y: 0 }}

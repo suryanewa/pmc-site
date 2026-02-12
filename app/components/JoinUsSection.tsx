@@ -108,13 +108,14 @@ export function JoinUsSection({
     >
       <motion.div
         className={`absolute inset-0 ${t.gradientOpacity} overflow-hidden`}
-        animate={{
+        whileInView={{
           background: [
             `radial-gradient(circle at 0% 0%, ${t.gradientColor} 0%, transparent 50%)`,
             `radial-gradient(circle at 100% 100%, ${t.gradientColor} 0%, transparent 50%)`,
             `radial-gradient(circle at 0% 0%, ${t.gradientColor} 0%, transparent 50%)`,
           ],
         }}
+        viewport={{ once: false, margin: '0px' }}
         transition={{ duration: 10, repeat: Infinity, ease: 'linear' }}
       />
 
