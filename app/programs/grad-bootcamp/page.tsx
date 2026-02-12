@@ -276,7 +276,7 @@ export default function GradBootcampPage() {
                   <AsciiHoverEffect
                     active={hoveredCard === `deliverable-${item.number}`}
                     colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
+                    fontSize={12}
                     className="opacity-40 mix-blend-screen"
                   />
                   <span
@@ -428,7 +428,7 @@ export default function GradBootcampPage() {
                 <AsciiHoverEffect
                   active={hoveredCard === 'director-sohan'}
                   colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                  fontSize={10}
+                  fontSize={12}
                   className="opacity-40 mix-blend-screen"
                 />
                 <h4 className="relative z-10 text-xl font-medium text-[#DBDBDB] mb-2">Sohan Joshi</h4>
@@ -448,7 +448,7 @@ export default function GradBootcampPage() {
                 <AsciiHoverEffect
                   active={hoveredCard === 'director-shreyam'}
                   colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                  fontSize={10}
+                  fontSize={12}
                   className="opacity-40 mix-blend-screen"
                 />
                 <h4 className="relative z-10 text-xl font-medium text-[#DBDBDB] mb-2">Shreyam Borah</h4>

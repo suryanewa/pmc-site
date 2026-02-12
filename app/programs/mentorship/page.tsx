@@ -100,7 +100,7 @@ export default function MentorshipPage() {
 
   const asciiConfig = {
     colors: `${ACCENT},rgba(219,219,219,0.7),rgba(63,63,63,0.8)`,
-    fontSize: 10,
+    fontSize: 12,
     className: 'opacity-40 mix-blend-screen',
   };
 

@@ -263,7 +263,7 @@ export default function SpeakersPage() {
                   <AsciiHoverEffect
                     active={hoveredCard === i}
                     colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
+                    fontSize={12}
                     className="opacity-40 mix-blend-screen"
                   />
                   <div className="relative z-10">
@@ -362,7 +362,7 @@ export default function SpeakersPage() {
               <AsciiHoverEffect
                 active={hoverLogistics}
                 colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                fontSize={10}
+                fontSize={12}
                 className="opacity-40 mix-blend-screen"
               />
               <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">

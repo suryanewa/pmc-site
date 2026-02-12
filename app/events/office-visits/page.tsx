@@ -163,7 +163,7 @@ export default function OfficeVisitsPage() {
                 <AsciiHoverEffect
                   active={hoverOverview}
                   colors="#5076DD,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                  fontSize={10}
+                  fontSize={12}
                   className="opacity-40 mix-blend-screen"
                 />
                 <div className="relative z-10 p-8 md:p-12">
@@ -197,7 +197,7 @@ export default function OfficeVisitsPage() {
                   <AsciiHoverEffect
                     active={hoverSee}
                     colors="#5076DD,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
+                    fontSize={12}
                     className="opacity-40 mix-blend-screen"
                   />
                   <div className="relative z-10">
@@ -224,7 +224,7 @@ export default function OfficeVisitsPage() {
                   <AsciiHoverEffect
                     active={hoverHow}
                     colors="#5076DD,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
+                    fontSize={12}
                     className="opacity-40 mix-blend-screen"
                   />
                   <div className="relative z-10">
@@ -301,7 +301,7 @@ export default function OfficeVisitsPage() {
                   <AsciiHoverEffect
                     active={hoveredBenefit === i}
                     colors="#5076DD,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
+                      fontSize={12}
                     className="opacity-40 mix-blend-screen"
                   />
                   <div className="relative z-10">

@@ -304,7 +304,7 @@ export default function CaseCompPage() {
                     <AsciiHoverEffect
                       active={hoveredBenefit === i + 10}
                       colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                      fontSize={10}
+                      fontSize={12}
                       className="opacity-40 mix-blend-screen"
                     />
                     <div className="w-8 h-8 text-[#6966E3] shrink-0 relative z-10">{f.icon}</div>
@@ -343,7 +343,7 @@ export default function CaseCompPage() {
                   <AsciiHoverEffect
                     active={hoveredBenefit === `partner-${i}`}
                     colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
+                    fontSize={12}
                     className="opacity-40 mix-blend-screen"
                   />
                   {partner.logo ? (
@@ -391,7 +391,7 @@ export default function CaseCompPage() {
                   <AsciiHoverEffect
                     active={hoveredBenefit === `judge-${i}`}
                     colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
+                    fontSize={12}
                     className="opacity-40 mix-blend-screen"
                   />
                   <div className="relative z-10">
@@ -474,7 +474,7 @@ export default function CaseCompPage() {
                   <AsciiHoverEffect
                     active={hoveredBenefit === i + 20}
                     colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
+                    fontSize={12}
                     className="opacity-40 mix-blend-screen"
                   />
                   <span className="relative z-10 flex items-center justify-center w-10 h-10 border border-[#3F3F3F]/60 text-[#DBDBDB] text-sm font-medium shrink-0 transition-colors duration-300 group-hover:border-[#6966E3] group-hover:text-[#6966E3]">
@@ -513,7 +513,7 @@ export default function CaseCompPage() {
                   <AsciiHoverEffect
                     active={hoveredBenefit === i}
                     colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
+                      fontSize={12}
                     className="opacity-40 mix-blend-screen"
                   />
                   <div className="relative z-10">
@@ -537,7 +537,7 @@ export default function CaseCompPage() {
                   <AsciiHoverEffect
                     active={hoveredBenefit === i + 3}
                     colors="#6966E3,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-                    fontSize={10}
+                      fontSize={12}
                     className="opacity-40 mix-blend-screen"
                   />
                   <div className="relative z-10">
