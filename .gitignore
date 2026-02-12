@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Million Lint
 .million
+
+# Performance baseline evidence (regeneratable, large files)
+.sisyphus/evidence/
