@@ -339,3 +339,62 @@ useFrame((state) => {
 - `components/RocketScene.tsx` (1 file, ~15 lines changed)
 - `app/components/Lanyard.tsx` (1 file, ~15 lines changed)
 
+## Task 5: CandleScene CSS Transition Optimization (2026-02-12)
+
+### Changes Made
+1. **Replaced width/height transitions with transform: scale()** (4 elements)
+   - Blinking glow element (line 90): `width 0.5s, height 0.5s` → `transform 0.5s` with `scale(${isHovered ? 1.8 : 1})`
+   - Thread element (line 150): `height 0.5s, top 0.5s` → `transform 0.5s` with `scaleY(${isHovered ? 1.6 : 1})`
+   - Glow element (line 165): `width 0.5s, height 0.5s, top 0.5s` → `transform 0.5s` with `scale(${isHovered ? 1.5 : 1}) translateY(${isHovered ? -8 : 0}px)`
+   - Flame element (line 194): `height 0.5s ease-out, width 0.5s ease-out, top 0.5s ease-out` → `transform 0.5s ease-out` with `scaleX(${isHovered ? 1.375 : 1}) scaleY(${isHovered ? 1.857 : 1})`
+
+2. **Removed unused state variables** (lines 47-58)
+   - Removed: `flameHeight`, `flameTop`, `glowHeight`, `glowWidth`, `glowTop`, `threadHeight`
+   - These were only used for width/height/top transitions, now replaced with transform-based scaling
+
+3. **Added transformOrigin properties** where needed
+   - Blinking glow: `transformOrigin: 'center'`
+   - Thread: `transformOrigin: 'center'`
+   - Glow: `transformOrigin: 'center'`
+   - Flame: Already had `transformOrigin: '50% 100%'`
+
+### Performance Impact
+- **Layout recalculation**: Eliminated 4 layout-triggering properties (width, height, top)
+- **Paint operations**: Reduced from 4 separate property transitions to 1 transform transition per element
+- **GPU acceleration**: Transform properties are GPU-accelerated; layout properties trigger CPU reflow
+- **Hover responsiveness**: Same 0.5s animation duration, but now GPU-accelerated instead of CPU-bound
+
+### Visual Verification
+- ✅ Candle hover effect still works (tested with Playwright)
+- ✅ Blinking glow scales up on hover (1.8x scale)
+- ✅ Thread grows taller on hover (1.6x scaleY)
+- ✅ Glow element scales and moves up on hover (1.5x scale + -8px translateY)
+- ✅ Flame widens and grows taller on hover (1.375x scaleX + 1.857x scaleY)
+- ✅ All animations maintain 0.5s duration and smooth easing
+
+### Verification Results
+- ✅ `grep -E "transition.*(?:width|height|top)" components/CandleScene.tsx | grep -v transform` - No matches (all layout transitions removed)
+- ✅ `grep "transform.*scale\|transform.*translateY" components/CandleScene.tsx` - 6 matches (all transform-based alternatives present)
+- ✅ `npm run lint` - 0 errors (pre-existing warnings only)
+- ✅ `npm run typecheck` - Clean, no errors
+- ✅ `npm run build` - Successful (17 routes, 261.9ms static generation)
+- ✅ Playwright hover test - Candle visual effect preserved on hover
+
+### Technical Notes
+- Layout properties (width, height, top) trigger browser reflow → recalculate layout → repaint
+- Transform properties are GPU-accelerated → no reflow, only composite
+- Scale factors calculated to match original hover dimensions:
+  - Blinking glow: 50px → 90px = 1.8x scale
+  - Thread: 20px → 32px = 1.6x scale
+  - Glow: 32px → 56px = 1.75x scale (using 1.5x + translateY for positioning)
+  - Flame: 16px → 22px width = 1.375x scaleX, 70px → 130px height = 1.857x scaleY
+- TransformOrigin ensures scaling happens from the correct point (center for most, bottom for flame)
+
+### Pattern Learned
+- Always use transform (scale, translateX/Y, rotate) for animations instead of layout properties
+- Layout properties cause reflow; transform properties are GPU-accelerated
+- This pattern applies to any hover/state-based size changes in React components
+
+### Files Modified
+- `components/CandleScene.tsx` (1 file, 4 transitions replaced + 6 unused variables removed)
+

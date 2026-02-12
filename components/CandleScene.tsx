@@ -42,20 +42,8 @@ export default function CandleScene({ className = "", isHovered = false, isActiv
   const blinkingGlowColor = isHovered ? "#41C9C1" : "#5076DD";
   const blinkingGlowBlur = isHovered ? "60px" : "40px";
 
-  const flameAnimationDuration = isHovered ? "1.5s" : "6s";
-  const enlargeAnimationDuration = isHovered ? "1s" : "5s";
-  const flameHeight = isHovered ? 130 : 70;
-  const flameTop = isHovered 
-    ? 'calc(100% - 380px - 130px - 16px)' 
-    : 'calc(100% - 380px - 70px - 16px)';
-  
-  const glowHeight = isHovered ? 56 : 32;
-  const glowWidth = isHovered ? 24 : 16;
-  const glowTop = isHovered
-    ? 'calc(100% - 380px - 44px)'
-    : 'calc(100% - 380px - 28px)';
-  
-  const threadHeight = isHovered ? 32 : 20;
+   const flameAnimationDuration = isHovered ? "1.5s" : "6s";
+   const enlargeAnimationDuration = isHovered ? "1s" : "5s";
 
   const introDuration = 6.5;
 
@@ -80,21 +68,22 @@ export default function CandleScene({ className = "", isHovered = false, isActiv
           animation: isLoaded ? `candle-generate ${introDuration}s ease-out both` : 'none',
         }}
       >
-        <div 
-          style={{
-            position: 'absolute',
-            width: isHovered ? '90px' : '50px',
-            height: isHovered ? '160px' : '80px',
-            left: '50%',
-            top: '-25%',
-            transform: 'translateX(-50%)',
-            borderRadius: '50%',
-            background: blinkingGlowColor,
-            filter: `blur(${blinkingGlowBlur})`,
-            animation: isLoaded ? 'blinkIt 0.1s infinite' : 'none',
-            transition: 'background 0.5s, filter 0.5s, width 0.5s, height 0.5s',
-          }}
-        />
+         <div 
+           style={{
+             position: 'absolute',
+             width: '50px',
+             height: '80px',
+             left: '50%',
+             top: '-25%',
+             transform: `translateX(-50%) scale(${isHovered ? 1.8 : 1})`,
+             borderRadius: '50%',
+             background: blinkingGlowColor,
+             filter: `blur(${blinkingGlowBlur})`,
+             animation: isLoaded ? 'blinkIt 0.1s infinite' : 'none',
+             transition: 'background 0.5s, filter 0.5s, transform 0.5s',
+             transformOrigin: 'center',
+           }}
+         />
 
         <div 
           style={{
@@ -137,34 +126,36 @@ export default function CandleScene({ className = "", isHovered = false, isActiv
           />
         </div>
 
-        <div 
-          style={{
-            position: 'absolute',
-            width: '5px',
-            height: `${threadHeight}px`,
-            top: `calc(100% - 380px - ${threadHeight / 2}px)`,
-            left: '50%',
-            zIndex: 1,
-            borderRadius: '40% 40% 0 0',
-            transform: 'translateX(-50%)',
-            background: threadGradient,
-            transition: 'background 0.5s, height 0.5s, top 0.5s',
-          }}
-        />
+         <div 
+           style={{
+             position: 'absolute',
+             width: '5px',
+             height: '20px',
+             top: `calc(100% - 380px - 10px)`,
+             left: '50%',
+             zIndex: 1,
+             borderRadius: '40% 40% 0 0',
+             transform: `translateX(-50%) scaleY(${isHovered ? 1.6 : 1})`,
+             background: threadGradient,
+             transition: 'background 0.5s, transform 0.5s',
+             transformOrigin: 'center',
+           }}
+         />
 
-        <div 
-          style={{
-            position: 'absolute',
-            width: `${glowWidth}px`,
-            height: `${glowHeight}px`,
-            borderRadius: '50% 50% 35% 35%',
-            left: '50%',
-            top: glowTop,
-            transform: 'translateX(-50%)',
-            background: glowColor,
-            boxShadow: glowShadow,
-            transition: 'background 0.5s, box-shadow 0.5s, width 0.5s, height 0.5s, top 0.5s',
-          }}
+         <div 
+           style={{
+             position: 'absolute',
+             width: '16px',
+             height: '32px',
+             borderRadius: '50% 50% 35% 35%',
+             left: '50%',
+             top: `calc(100% - 380px - 28px)`,
+             transform: `translateX(-50%) scale(${isHovered ? 1.5 : 1}) translateY(${isHovered ? -8 : 0}px)`,
+             background: glowColor,
+             boxShadow: glowShadow,
+             transition: 'background 0.5s, box-shadow 0.5s, transform 0.5s',
+             transformOrigin: 'center',
+           }}
         >
           <div 
             style={{
@@ -181,23 +172,23 @@ export default function CandleScene({ className = "", isHovered = false, isActiv
           />
         </div>
 
-        <div 
-          style={{
-            position: 'absolute',
-            width: isHovered ? '22px' : '16px',
-            height: `${flameHeight}px`,
-            left: '50%',
-            transformOrigin: '50% 100%',
-            transform: 'translateX(-50%)',
-            top: flameTop,
-            borderRadius: '50% 50% 20% 20%',
-            background: 'linear-gradient(#DBDBDB 80%, transparent)',
-            opacity: flameOpacity,
-            animation: isLoaded 
-              ? `moveFlame ${flameAnimationDuration} linear infinite, enlargeFlame ${enlargeAnimationDuration} linear infinite`
-              : 'none',
-            transition: 'opacity 0.5s, height 0.5s ease-out, width 0.5s ease-out, top 0.5s ease-out',
-          }}
+         <div 
+           style={{
+             position: 'absolute',
+             width: '16px',
+             height: '70px',
+             left: '50%',
+             transformOrigin: '50% 100%',
+             transform: `translateX(-50%) scaleX(${isHovered ? 1.375 : 1}) scaleY(${isHovered ? 1.857 : 1})`,
+             top: `calc(100% - 380px - 70px - 16px)`,
+             borderRadius: '50% 50% 20% 20%',
+             background: 'linear-gradient(#DBDBDB 80%, transparent)',
+             opacity: flameOpacity,
+             animation: isLoaded 
+               ? `moveFlame ${flameAnimationDuration} linear infinite, enlargeFlame ${enlargeAnimationDuration} linear infinite`
+               : 'none',
+             transition: 'opacity 0.5s, transform 0.5s ease-out',
+           }}
         >
           <div 
             style={{
