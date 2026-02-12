@@ -8,9 +8,27 @@ const UNICORN_PROJECT_ID = "iqmKJVFD9SyCutTNbiGK";
 export function HeroScene() {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const [sceneScale, setSceneScale] = useState(1);
+  const [shouldLoadScene, setShouldLoadScene] = useState(false);
+  const hasInitializedSceneRef = useRef(false);
 
   useEffect(() => {
-    void initializeUnicornStudio();
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasInitializedSceneRef.current) {
+          hasInitializedSceneRef.current = true;
+          setShouldLoadScene(true);
+          void initializeUnicornStudio();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '50px' }
+    );
+
+    observer.observe(wrapper);
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -52,20 +70,22 @@ export function HeroScene() {
       ref={wrapperRef}
       className="relative w-full h-full flex items-center justify-center overflow-visible"
     >
-      <div
-        data-us-project={UNICORN_PROJECT_ID}
-        data-us-production="true"
-        className="unicorn-hero-scene"
-        style={{
-          width: 1440,
-          height: 900,
-          transform: `translate(-50%, -50%) scale(${sceneScale * 0.9})`,
-          transformOrigin: "center",
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-        }}
-      />
+      {shouldLoadScene && (
+        <div
+          data-us-project={UNICORN_PROJECT_ID}
+          data-us-production="true"
+          className="unicorn-hero-scene"
+          style={{
+            width: 1440,
+            height: 900,
+            transform: `translate(-50%, -50%) scale(${sceneScale * 0.9})`,
+            transformOrigin: "center",
+            position: "absolute",
+            left: "50%",
+            top: "50%",
+          }}
+        />
+      )}
     </div>
   );
 }

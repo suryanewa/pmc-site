@@ -1,11 +1,12 @@
 'use client';
 
-import { memo, useRef, useState } from 'react';
+import { memo, useRef, useState, useEffect } from 'react';
 import Link from 'next/link';
 import { FadeUp } from './ScrollAnimations';
 import { TextAnimate } from '@/components/ui/text-animate';
 import { ProgressiveBlur } from '@/components/motion-primitives/progressive-blur';
 import AsciiHoverEffect from '@/components/AsciiHoverEffect';
+import { initializeUnicornStudio } from '@/lib/unicorn-loader';
 
 const programs = [
   {
@@ -41,34 +42,60 @@ const ProgramCard = memo(function ProgramCard({
   index: number;
 }) {
   const [isHovered, setIsHovered] = useState(false);
+  const [shouldLoadEmbed, setShouldLoadEmbed] = useState(false);
+  const [hasInitializedEmbed, setHasInitializedEmbed] = useState(false);
+  const cardRef = useRef<HTMLAnchorElement>(null);
+
+  useEffect(() => {
+    const card = cardRef.current;
+    if (!card) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasInitializedEmbed) {
+          setShouldLoadEmbed(true);
+          setHasInitializedEmbed(true);
+          void initializeUnicornStudio();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '100px' }
+    );
+
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [hasInitializedEmbed]);
 
   return (
     <FadeUp delay={0.1 * index} className="h-full">
       <Link
+        ref={cardRef}
         href={program.href}
         data-program-card
         className="group relative block h-full min-h-[320px] rounded-2xl bg-[#1E1E1E]/80 p-8 shadow-[0_20px_40px_rgba(0,0,0,0.18)] overflow-hidden"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div
-          data-us-project={
-            program.id === 'investing'
-              ? 'M5cRPBWulgAdSjCuFemf'
-              : program.id === 'eir'
-                ? 'NEJJOUcoL3C4e87FYFaQ'
-                : 'xG650J1WpXyfilT1Q6Bp'
-          }
-          data-us-production="true"
-          className="absolute z-0 pointer-events-none"
-          style={{
-            width: 1440,
-            height: 900,
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%) scale(0.8)',
-          }}
-        />
+        {shouldLoadEmbed && (
+          <div
+            data-us-project={
+              program.id === 'investing'
+                ? 'M5cRPBWulgAdSjCuFemf'
+                : program.id === 'eir'
+                  ? 'NEJJOUcoL3C4e87FYFaQ'
+                  : 'xG650J1WpXyfilT1Q6Bp'
+            }
+            data-us-production="true"
+            className="absolute z-0 pointer-events-none"
+            style={{
+              width: 1440,
+              height: 900,
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%) scale(0.8)',
+            }}
+          />
+        )}
         <div
           className="absolute inset-0 z-[1] pointer-events-none"
           style={{

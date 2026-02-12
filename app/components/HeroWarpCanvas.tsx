@@ -1,13 +1,45 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useIsMobile } from "../../hooks/use-is-mobile";
 
 export function HeroWarpCanvas() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const isMobile = useIsMobile();
+  const [shouldRender, setShouldRender] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  });
 
   useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    
+    const handleChange = (e: MediaQueryListEvent) => {
+      setPrefersReducedMotion(e.matches);
+    };
+    
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
+
+  // Defer initialization to improve LCP
+  useEffect(() => {
+    if (prefersReducedMotion) {
+      // Don't render canvas at all if reduced motion is preferred
+      return;
+    }
+    
+    const timer = setTimeout(() => {
+      setShouldRender(true);
+    }, 150);
+    
+    return () => clearTimeout(timer);
+  }, [prefersReducedMotion]);
+
+  useEffect(() => {
+    if (!shouldRender || prefersReducedMotion) return;
+    
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -68,10 +100,11 @@ export function HeroWarpCanvas() {
     let smoothedMx = 0;
 
     let isVisible = true;
+    let isPageVisible = true;
     const visibilityObserver = new IntersectionObserver(
       ([entry]) => {
         isVisible = entry.isIntersecting;
-        if (isVisible && rafId === null) {
+        if (isVisible && isPageVisible && rafId === null) {
           lastTime = 0;
           rafId = requestAnimationFrame(warp);
         }
@@ -80,8 +113,20 @@ export function HeroWarpCanvas() {
     );
     visibilityObserver.observe(canvas);
 
+    const handleVisibilityChange = () => {
+      isPageVisible = document.visibilityState === 'visible';
+      if (!isPageVisible && rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      } else if (isPageVisible && isVisible && rafId === null) {
+        lastTime = 0;
+        rafId = requestAnimationFrame(warp);
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
     const warp = (time: number) => {
-      if (!isVisible) {
+      if (!isVisible || !isPageVisible) {
         rafId = null;
         return;
       }
@@ -224,6 +269,7 @@ export function HeroWarpCanvas() {
 
     return () => {
       visibilityObserver.disconnect();
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (rafId) cancelAnimationFrame(rafId);
       window.removeEventListener("resize", handleResize);
       if (!isMobile) {
@@ -234,7 +280,15 @@ export function HeroWarpCanvas() {
         hero.removeEventListener("pointerleave", handlePointerLeave);
       }
     };
-  }, [isMobile]);
+  }, [isMobile, shouldRender, prefersReducedMotion]);
+
+  if (prefersReducedMotion || !shouldRender) {
+    return (
+      <div className="absolute inset-0 z-0" aria-hidden="true">
+        <div className="h-full w-full bg-[rgba(4,21,64,0.1)]" />
+      </div>
+    );
+  }
 
   return (
     <div className="absolute inset-0 z-0">

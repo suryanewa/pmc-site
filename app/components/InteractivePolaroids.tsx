@@ -2,7 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion, useSpring } from 'motion/react';
 import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useIsMobile } from '../../hooks/use-is-mobile';
 
 type PolaroidPosition = {
@@ -93,10 +93,11 @@ function PolaroidCard({
   setTopIndex: (id: number) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const rotateX = useSpring(0, { damping: 30, stiffness: 100, mass: 2 });
-  const rotateY = useSpring(0, { damping: 30, stiffness: 100, mass: 2 });
-  const scale = useSpring(1, { damping: 30, stiffness: 100, mass: 2 });
-  const imgScale = useSpring(1, { damping: 30, stiffness: 100, mass: 2 });
+  const springConfig = useMemo(() => ({ damping: 30, stiffness: 100, mass: 2 }), []);
+  const rotateX = useSpring(0, springConfig);
+  const rotateY = useSpring(0, springConfig);
+  const scale = useSpring(1, springConfig);
+  const imgScale = useSpring(1, springConfig);
   const [isDragging, setIsDragging] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const isMobile = useIsMobile();
@@ -117,7 +118,13 @@ function PolaroidCard({
     return () => observer.disconnect();
   }, [shouldReduceMotion, updateRect]);
 
+  const lastMouseMoveRef = useRef(0);
+  
   const handleMouseMove = (e: React.MouseEvent) => {
+    const now = performance.now();
+    if (now - lastMouseMoveRef.current < 16) return;
+    lastMouseMoveRef.current = now;
+    
     const rect = rectRef.current;
     if (!rect || isDragging) return;
     const offsetX = e.clientX - rect.left - rect.width / 2;
