@@ -20,7 +20,7 @@ const leadershipMembers = [
     name: 'Mykayla Liu',
     role: 'Vice President',
     coffeeChatUrl: 'https://calendly.com/ml9151-nyu/30min',
-    description: 'Mykayla is a sophomore studying Economics with a minor in Business Studies. She enjoys traveling, cafe hopping and crossword puzzles!',
+    description: 'Mykayla is a sophomore studying Economics with a minor in Business Studies and Data Science. She enjoys thrifting, Minecraft, and trying new restaurants!',
   },
   {
     id: 3,
@@ -83,6 +83,7 @@ const leadershipMembers = [
     name: 'Sophia Xu',
     role: 'Event Coordinator',
     coffeeChatUrl: 'https://calendly.com/sx2538-nyu/30min',
+    description: 'Sophia is a sophomore at CAS studying economics with a minor in data science. In her free time she enjoys finding new restaurants, taking dance classes in the city, and mogging Ethan Lu.',
   },
   {
     id: 11,
