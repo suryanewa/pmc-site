@@ -170,7 +170,7 @@ export default function LeadershipPage() {
           <section className="pt-12 pb-20">
             <TierDivider label="Executive Board" color="#41C9C1" />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 max-w-[900px] mx-auto">
               <FadeUp>
                 <LeadershipMember
                   src={president.src}
@@ -180,17 +180,26 @@ export default function LeadershipPage() {
                   description={president.description}
                 />
               </FadeUp>
-              {vpsAndTreasurer.map((member, i) => (
-                <FadeUp key={member.id} delay={(i + 1) * 0.1}>
+              <FadeUp delay={0.1}>
+                <LeadershipMember
+                  src={vpsAndTreasurer[0].src}
+                  name={vpsAndTreasurer[0].name}
+                  role={vpsAndTreasurer[0].role}
+                  coffeeChatUrl={vpsAndTreasurer[0].coffeeChatUrl}
+                  description={vpsAndTreasurer[0].description}
+                />
+              </FadeUp>
+              <FadeUp delay={0.2} className="md:col-span-2 flex justify-center">
+                <div className="w-full md:w-[calc(50%-1rem)]">
                   <LeadershipMember
-                    src={member.src}
-                    name={member.name}
-                    role={member.role}
-                    coffeeChatUrl={member.coffeeChatUrl}
-                    description={member.description}
+                    src={vpsAndTreasurer[1].src}
+                    name={vpsAndTreasurer[1].name}
+                    role={vpsAndTreasurer[1].role}
+                    coffeeChatUrl={vpsAndTreasurer[1].coffeeChatUrl}
+                    description={vpsAndTreasurer[1].description}
                   />
-                </FadeUp>
-              ))}
+                </div>
+              </FadeUp>
             </div>
           </section>
 
