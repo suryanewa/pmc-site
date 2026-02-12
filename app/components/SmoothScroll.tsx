@@ -34,56 +34,31 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     });
 
     lenisRef.current = lenis;
-    let scrollTriggerTicking = false;
-    const handleLenisScroll = () => {
-      if (scrollTriggerTicking) return;
-      scrollTriggerTicking = true;
-      requestAnimationFrame(() => {
-        scrollTriggerTicking = false;
-        ScrollTrigger.update();
-      });
-    };
-    lenis.on("scroll", handleLenisScroll);
 
-    // RAF loop
-    let rafId: number | null = null;
-    let isActive = true;
-    let isVisible = document.visibilityState === "visible";
-    let lastTime = 0;
-    const frameInterval = 1000 / 50;
+    lenis.on("scroll", ScrollTrigger.update);
+
+    const tickerCallback = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    gsap.ticker.add(tickerCallback);
+    gsap.ticker.lagSmoothing(0);
 
     const handleVisibilityChange = () => {
-      isVisible = document.visibilityState === "visible";
-      if (isVisible && isActive && rafId === null) {
-        rafId = requestAnimationFrame(raf);
+      if (document.visibilityState === "hidden") {
+        lenis.stop();
+      } else {
+        lenis.start();
       }
     };
 
-    function raf(time: number) {
-      if (!isActive) return;
-      if (!isVisible) {
-        rafId = null;
-        return;
-      }
-      if (!lastTime) lastTime = time;
-      if (time - lastTime < frameInterval) {
-        rafId = requestAnimationFrame(raf);
-        return;
-      }
-      lastTime = time;
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-
     document.addEventListener("visibilitychange", handleVisibilityChange);
-    rafId = requestAnimationFrame(raf);
 
     // Cleanup
     return () => {
-      isActive = false;
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      lenis.off("scroll", handleLenisScroll);
+      gsap.ticker.remove(tickerCallback);
+      lenis.off("scroll", ScrollTrigger.update);
       lenis.destroy();
       lenisRef.current = null;
     };

@@ -1,6 +1,5 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import million from "million/compiler";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
@@ -32,21 +31,4 @@ const nextConfig = {
   },
 };
 
-const millionConfig = {
-  auto: { rsc: true },
-  rsc: true,
-};
-
-const millionNextConfig = million.next(
-  {
-    appDir: true,
-  },
-  millionConfig,
-);
-
-const { appDir: _ignoredAppDir, ...millionRuntimeConfig } = millionNextConfig;
-
-export default {
-  ...nextConfig,
-  ...millionRuntimeConfig,
-};
+export default nextConfig;

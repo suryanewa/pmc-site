@@ -52,6 +52,7 @@ export default function AsciiHoverEffect({
   const rectRef = useRef<DOMRect | null>(null);
   const lastMoveTimeRef = useRef(0);
   const lastFrameTimeRef = useRef(0);
+  const isVisibleRef = useRef(false);
   const charArray = useMemo(() => chars.split(""), [chars]);
 
   useEffect(() => {
@@ -100,12 +101,22 @@ export default function AsciiHoverEffect({
       });
     };
 
-    window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("resize", scheduleRectRefresh, { passive: true });
+    const attachListeners = () => {
+      window.addEventListener("mousemove", onMove, { passive: true });
+      window.addEventListener("resize", scheduleRectRefresh, { passive: true });
+    };
 
-    return () => {
+    const detachListeners = () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("resize", scheduleRectRefresh);
+    };
+
+    if (isVisibleRef.current) {
+      attachListeners();
+    }
+
+    return () => {
+      detachListeners();
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
   }, [active, isInitialized, updateRect]);
@@ -146,6 +157,12 @@ export default function AsciiHoverEffect({
   }, [charArray, colors, fontSize]);
 
   const animate = useCallback(function animateFrame(timestamp: number) {
+    // Early return if not visible
+    if (!isVisibleRef.current) {
+      animationRef.current = null;
+      return;
+    }
+
     if (!lastFrameTimeRef.current) lastFrameTimeRef.current = timestamp;
     const elapsed = timestamp - lastFrameTimeRef.current;
     if (elapsed < 1000 / 45) {
@@ -169,17 +186,19 @@ export default function AsciiHoverEffect({
       rippleRadiusRef.current += 10;
     }
     const rippleRadius = rippleRadiusRef.current;
-    const maxDist = Math.sqrt(width * width + height * height);
+    const maxDistSq = width * width + height * height;
+    const rippleRadiusSq = rippleRadius * rippleRadius;
 
     let allIdle = true;
     cellsRef.current.forEach(cell => {
       const dx = cell.x - mx;
       const dy = cell.y - my;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+      const distSq = dx * dx + dy * dy;
 
       let target = 0;
-      if (isActive && dist <= rippleRadius) {
-        target = Math.max(0.12, 1 - (dist / maxDist) * 1.4);
+      if (isActive && distSq <= rippleRadiusSq) {
+        // Only one sqrt needed for opacity calculation
+        target = Math.max(0.12, 1 - Math.sqrt(distSq / maxDistSq) * 1.4);
       }
 
       const fadeSpeed = cell.opacity < target ? 0.07 : 0.045;
@@ -210,13 +229,30 @@ export default function AsciiHoverEffect({
   useEffect(() => {
     if (!isInitialized) return;
     initCells();
-    const observer = new ResizeObserver(() => {
+    const resizeObserver = new ResizeObserver(() => {
       initCells();
       updateRect();
     });
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, [initCells, isInitialized, updateRect]);
+    if (containerRef.current) resizeObserver.observe(containerRef.current);
+
+    const visibilityObserver = new IntersectionObserver(
+      ([entry]) => {
+        const wasVisible = isVisibleRef.current;
+        isVisibleRef.current = entry.isIntersecting;
+        
+        if (entry.isIntersecting && !wasVisible && animationRef.current === null) {
+          animationRef.current = requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0 }
+    );
+    if (containerRef.current) visibilityObserver.observe(containerRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
+    };
+  }, [initCells, isInitialized, updateRect, animate]);
 
   useEffect(() => {
     if (!isInitialized) return;
