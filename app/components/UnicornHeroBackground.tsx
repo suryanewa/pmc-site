@@ -23,7 +23,9 @@ function UnicornHeroBackgroundBase({ projectId }: UnicornHeroBackgroundProps) {
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const cpuCores = navigator.hardwareConcurrency ?? 8;
-    setIsEnabled(!isMobile && !prefersReducedMotion && cpuCores >= 6);
+    requestAnimationFrame(() => {
+      setIsEnabled(!isMobile && !prefersReducedMotion && cpuCores >= 6);
+    });
   }, [isMobile]);
 
   return (

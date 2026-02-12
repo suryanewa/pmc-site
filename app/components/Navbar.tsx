@@ -83,7 +83,9 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
     let lastRun = 0;
     const throttleMs = 80;
 
-    setIsScrolled(lastScrolled);
+    if (lastScrolled) {
+      requestAnimationFrame(() => setIsScrolled(true));
+    }
 
     const handleScroll = () => {
       const now = performance.now();

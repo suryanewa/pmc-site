@@ -15,7 +15,7 @@ export function Preloader() {
     if (typeof window !== "undefined") {
       const alreadyShown = sessionStorage.getItem(PRELOADER_SHOWN_KEY);
       if (alreadyShown) {
-        setIsLoading(false);
+        requestAnimationFrame(() => setIsLoading(false));
         return;
       }
     }
