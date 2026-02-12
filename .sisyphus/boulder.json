@@ -1,9 +1,9 @@
 {
-  "active_plan": "/Users/suryanewa/Developer/repos/pmc-redesign/.sisyphus/plans/runtime-performance.md",
-  "started_at": "2026-02-12T07:25:27.001Z",
+  "active_plan": "/Users/suryanewa/Developer/repos/pmc-redesign/.sisyphus/plans/site-performance-remediation.md",
+  "started_at": "2026-02-12T09:22:46.475Z",
   "session_ids": [
-    "ses_3af61a799ffeKfqnCOilWRrL6P"
+    "ses_3af0b9f8fffel83wAgZLx6dkpg"
   ],
-  "plan_name": "runtime-performance",
+  "plan_name": "site-performance-remediation",
   "agent": "atlas"
 }
