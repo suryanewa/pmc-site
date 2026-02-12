@@ -487,8 +487,8 @@ grep "IntersectionObserver" app/components/Lanyard.tsx  # → match
 ```
 
 ### Final Checklist
-- [ ] All tasks completed with build verification
-- [ ] Visual regression < 2% on all 6 pages
-- [ ] FPS maintained or improved from baseline (116fps avg)
-- [ ] Zero console errors
-- [ ] Summary report in `.sisyphus/evidence/phase2-final/summary.md`
+- [x] All tasks completed with build verification
+- [x] Visual regression < 2% on all 6 pages
+- [x] FPS maintained or improved from baseline (116fps avg)
+- [x] Zero console errors
+- [x] Summary report in `.sisyphus/evidence/phase2-final/summary.md`
