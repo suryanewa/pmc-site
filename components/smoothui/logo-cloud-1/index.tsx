@@ -37,13 +37,13 @@ const defaultLogos = [
     url: "https://figma.com",
     className: "h-[72px] max-w-[220px]",
   },
-  { name: "Venmo", src: "/companies/venmo.png", url: "https://venmo.com" },
+    { name: "Venmo", src: "/companies/venmo.webp", url: "https://venmo.com" },
   { name: "Anthropic", src: "/companies/anthropic.svg", url: "https://anthropic.com" },
   { name: "USV", src: "/companies/usv.svg", url: "https://usv.com" },
-  { name: "Bessemer", src: "/companies/bessemer.png", url: "https://bvp.com" },
-  { name: "Meta", src: "/companies/meta.png", url: "https://meta.com" },
-  { name: "CLEAR", src: "/companies/clear.png", url: "https://clearme.com" },
-  { name: "Clay", src: "/companies/clay.png", url: "https://clay.com" },
+    { name: "Bessemer", src: "/companies/bessemer.webp", url: "https://bvp.com" },
+    { name: "Meta", src: "/companies/meta.webp", url: "https://meta.com" },
+    { name: "CLEAR", src: "/companies/clear.webp", url: "https://clearme.com" },
+    { name: "Clay", src: "/companies/clay.webp", url: "https://clay.com" },
   { name: "Mine", src: "/companies/mine.svg", url: "https://usemine.com" },
 ];
 
