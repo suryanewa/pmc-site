@@ -20,7 +20,7 @@ const leadershipMembers = [
     name: 'Mykayla Liu',
     role: 'Vice President',
     coffeeChatUrl: 'https://calendly.com/ml9151-nyu/30min',
-    description: 'Mykayla is a sophomore studying Economics with a minor in Business Studies and Data Science. She enjoys thrifting, Minecraft, and trying new restaurants!',
+    description: 'Mykayla is a sophomore studying Economics with a minor in Business Studies. She enjoys traveling, cafe hopping and crossword puzzles!',
   },
   {
     id: 3,
@@ -83,7 +83,6 @@ const leadershipMembers = [
     name: 'Sophia Xu',
     role: 'Event Coordinator',
     coffeeChatUrl: 'https://calendly.com/sx2538-nyu/30min',
-    description: 'Sophia is a sophomore at CAS studying economics with a minor in data science. In her free time she enjoys finding new restaurants, taking dance classes in the city, and mogging Ethan Lu.',
   },
   {
     id: 11,
@@ -125,8 +124,8 @@ const leadershipMembers = [
 ];
 
 const president = leadershipMembers.find(m => m.id === 1)!;
-const vpsAndTreasurer = leadershipMembers.filter(m => [2, 3, 4].includes(m.id));
-const directors = leadershipMembers.filter(m => [5, 6, 7, 8, 13].includes(m.id));
+const vpsAndTreasurer = leadershipMembers.filter(m => [2, 3].includes(m.id));
+const directors = leadershipMembers.filter(m => [4, 5, 6, 7, 8, 13].includes(m.id));
 const leads = leadershipMembers.filter(m => [9, 10, 11, 12, 14, 15].includes(m.id));
 
 function TierDivider({ label, color }: { label: string; color: string }) {
@@ -171,23 +170,18 @@ export default function LeadershipPage() {
           <section className="pt-12 pb-20">
             <TierDivider label="Executive Board" color="#41C9C1" />
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 mb-12">
-              <div className="md:col-start-2">
-                <FadeUp>
-                  <LeadershipMember
-                    src={president.src}
-                    name={president.name}
-                    role={president.role}
-                    coffeeChatUrl={president.coffeeChatUrl}
-                    description={president.description}
-                  />
-                </FadeUp>
-              </div>
-            </div>
-
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+              <FadeUp>
+                <LeadershipMember
+                  src={president.src}
+                  name={president.name}
+                  role={president.role}
+                  coffeeChatUrl={president.coffeeChatUrl}
+                  description={president.description}
+                />
+              </FadeUp>
               {vpsAndTreasurer.map((member, i) => (
-                <FadeUp key={member.id} delay={i * 0.1}>
+                <FadeUp key={member.id} delay={(i + 1) * 0.1}>
                   <LeadershipMember
                     src={member.src}
                     name={member.name}
