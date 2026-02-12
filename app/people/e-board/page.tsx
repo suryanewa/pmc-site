@@ -170,7 +170,7 @@ export default function LeadershipPage() {
           <section className="pt-12 pb-20">
             <TierDivider label="Executive Board" color="#41C9C1" />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 max-w-[900px] mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
               <FadeUp>
                 <LeadershipMember
                   src={president.src}
@@ -189,16 +189,14 @@ export default function LeadershipPage() {
                   description={vpsAndTreasurer[0].description}
                 />
               </FadeUp>
-              <FadeUp delay={0.2} className="md:col-span-2 flex justify-center">
-                <div className="w-full md:w-[calc(50%-1rem)]">
-                  <LeadershipMember
-                    src={vpsAndTreasurer[1].src}
-                    name={vpsAndTreasurer[1].name}
-                    role={vpsAndTreasurer[1].role}
-                    coffeeChatUrl={vpsAndTreasurer[1].coffeeChatUrl}
-                    description={vpsAndTreasurer[1].description}
-                  />
-                </div>
+              <FadeUp delay={0.2}>
+                <LeadershipMember
+                  src={vpsAndTreasurer[1].src}
+                  name={vpsAndTreasurer[1].name}
+                  role={vpsAndTreasurer[1].role}
+                  coffeeChatUrl={vpsAndTreasurer[1].coffeeChatUrl}
+                  description={vpsAndTreasurer[1].description}
+                />
               </FadeUp>
             </div>
           </section>
