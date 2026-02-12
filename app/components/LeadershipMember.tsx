@@ -57,7 +57,7 @@ export function LeadershipMember({
               src={src}
               alt={name}
               fill
-              className="object-cover"
+              className={`object-cover ${(name === 'Tarush Garg' || name === 'Surya Newa') ? '[transform:scaleX(-1)]' : ''}`}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
 
