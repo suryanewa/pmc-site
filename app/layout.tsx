@@ -26,12 +26,14 @@ const gothamMedium = localFont({
   src: "../public/fonts/Gotham Medium.otf",
   variable: "--font-gotham-medium",
   weight: "500",
+  display: "swap",
 });
 
 const gothamBold = localFont({
   src: "../public/fonts/Gotham Bold.otf",
   variable: "--font-gotham-bold",
   weight: "700",
+  display: "swap",
 });
 
 const siteUrl = getSiteUrl();
