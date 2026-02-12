@@ -83,7 +83,7 @@ export default function AsciiHoverEffect({
     updateRect();
 
     const onMove = (e: MouseEvent) => {
-      if (e.timeStamp - lastMoveTimeRef.current < 32) return;
+      if (e.timeStamp - lastMoveTimeRef.current < 50) return;
       lastMoveTimeRef.current = e.timeStamp;
       const rect = rectRef.current;
       if (!rect) return;
@@ -165,7 +165,7 @@ export default function AsciiHoverEffect({
 
     if (!lastFrameTimeRef.current) lastFrameTimeRef.current = timestamp;
     const elapsed = timestamp - lastFrameTimeRef.current;
-    if (elapsed < 1000 / 45) {
+    if (elapsed < 1000 / 30) {
       animationRef.current = requestAnimationFrame(animateFrame);
       return;
     }
@@ -190,6 +190,8 @@ export default function AsciiHoverEffect({
     const rippleRadiusSq = rippleRadius * rippleRadius;
 
     let allIdle = true;
+    
+    ctx.save();
     cellsRef.current.forEach(cell => {
       const dx = cell.x - mx;
       const dy = cell.y - my;
@@ -218,6 +220,7 @@ export default function AsciiHoverEffect({
         allIdle = false;
       }
     });
+    ctx.restore();
 
     if (!allIdle) {
       animationRef.current = requestAnimationFrame(animateFrame);
@@ -229,28 +232,29 @@ export default function AsciiHoverEffect({
   useEffect(() => {
     if (!isInitialized) return;
     initCells();
-    const resizeObserver = new ResizeObserver(() => {
-      initCells();
-      updateRect();
-    });
-    if (containerRef.current) resizeObserver.observe(containerRef.current);
-
-    const visibilityObserver = new IntersectionObserver(
+    
+    const observer = new IntersectionObserver(
       ([entry]) => {
         const wasVisible = isVisibleRef.current;
         isVisibleRef.current = entry.isIntersecting;
         
-        if (entry.isIntersecting && !wasVisible && animationRef.current === null) {
-          animationRef.current = requestAnimationFrame(animate);
+        if (entry.isIntersecting) {
+          if (!wasVisible && animationRef.current === null) {
+            animationRef.current = requestAnimationFrame(animate);
+          }
+          if (entry.boundingClientRect.width !== rectRef.current?.width ||
+              entry.boundingClientRect.height !== rectRef.current?.height) {
+            initCells();
+            updateRect();
+          }
         }
       },
       { threshold: 0 }
     );
-    if (containerRef.current) visibilityObserver.observe(containerRef.current);
+    if (containerRef.current) observer.observe(containerRef.current);
 
     return () => {
-      resizeObserver.disconnect();
-      visibilityObserver.disconnect();
+      observer.disconnect();
     };
   }, [initCells, isInitialized, updateRect, animate]);
 

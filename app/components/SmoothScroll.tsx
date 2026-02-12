@@ -35,7 +35,18 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     lenisRef.current = lenis;
 
-    lenis.on("scroll", ScrollTrigger.update);
+    // Throttle ScrollTrigger updates to ~60fps to prevent excessive work
+    let lastScrollUpdate = 0;
+    const throttledScrollUpdate = () => {
+      const now = performance.now();
+      if (now - lastScrollUpdate > 16) {
+        // ~60fps throttle
+        ScrollTrigger.update();
+        lastScrollUpdate = now;
+      }
+    };
+
+    lenis.on("scroll", throttledScrollUpdate);
 
     const tickerCallback = (time: number) => {
       lenis.raf(time * 1000);
@@ -58,7 +69,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       gsap.ticker.remove(tickerCallback);
-      lenis.off("scroll", ScrollTrigger.update);
+      lenis.off("scroll", throttledScrollUpdate);
       lenis.destroy();
       lenisRef.current = null;
     };

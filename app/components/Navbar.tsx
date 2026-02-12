@@ -88,7 +88,8 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
   useEffect(() => {
     let lastScrolled = window.scrollY > 10;
     let lastRun = 0;
-    const throttleMs = 80;
+    const throttleMs = 100;
+    let rafId: number | null = null;
 
     if (lastScrolled) {
       requestAnimationFrame(() => setIsScrolled(true));
@@ -98,16 +99,23 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
       const now = performance.now();
       if (now - lastRun < throttleMs) return;
       lastRun = now;
-      const nextScrolled = window.scrollY > 10;
-      if (nextScrolled !== lastScrolled) {
-        lastScrolled = nextScrolled;
-        setIsScrolled(nextScrolled);
-      }
+      
+      if (rafId !== null) return;
+      
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        const nextScrolled = window.scrollY > 10;
+        if (nextScrolled !== lastScrolled) {
+          lastScrolled = nextScrolled;
+          setIsScrolled(nextScrolled);
+        }
+      });
     };
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => {
       window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -156,7 +164,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
 
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 w-full pt-4 md:pt-6 px-5 md:px-8 lg:px-12">
+    <header className="fixed top-0 left-0 right-0 z-50 w-full pt-4 md:pt-6 px-5 md:px-8 lg:px-12" style={{ contain: 'layout style' }}>
       <motion.nav
         data-navbar
         initial={{ y: -20, opacity: 0 }}

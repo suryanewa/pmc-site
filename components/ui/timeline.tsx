@@ -5,7 +5,7 @@ import {
   useTransform,
   motion,
 } from "motion/react";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { ScrollLinkedAirplane } from "./ScrollLinkedAirplane";
 
 // Helper function to interpolate between two hex colors
@@ -70,25 +70,28 @@ export const Timeline = ({
     return () => observer.disconnect();
   }, []);
 
-  useEffect(() => {
-    // Calculate positions of each title relative to the timeline container
-    const calculatePositions = () => {
-      if (ref.current && titleRefs.current.length > 0 && height > 0) {
-        const containerRect = ref.current.getBoundingClientRect();
-        const positions = titleRefs.current.map((titleRef, index) => {
-          if (!titleRef) {
-            // Fallback: estimate position based on index
-            return (index / data.length) * height * 0.8;
-          }
-          const titleRect = titleRef.getBoundingClientRect();
-          // Get position relative to container top
-          const relativeTop = titleRect.top - containerRect.top;
-          return relativeTop;
-        });
-        setTitlePositions(positions);
-      }
-    };
+  // Memoized position calculation to batch DOM reads
+  const calculatePositions = useCallback(() => {
+    if (ref.current && titleRefs.current.length > 0 && height > 0) {
+      // Single DOM read: get container rect once
+      const containerRect = ref.current.getBoundingClientRect();
+      
+      // Batch all position calculations without additional DOM reads
+      const positions = titleRefs.current.map((titleRef, index) => {
+        if (!titleRef) {
+          // Fallback: estimate position based on index
+          return (index / data.length) * height * 0.8;
+        }
+        const titleRect = titleRef.getBoundingClientRect();
+        // Get position relative to container top
+        const relativeTop = titleRect.top - containerRect.top;
+        return relativeTop;
+      });
+      setTitlePositions(positions);
+    }
+  }, [height, data.length]);
 
+  useEffect(() => {
     let rafId: number | null = null;
     let isScheduled = false;
 
@@ -112,7 +115,7 @@ export const Timeline = ({
       window.removeEventListener('resize', scheduleRecalculate);
       window.removeEventListener('scroll', scheduleRecalculate);
     };
-  }, [height, data.length]);
+  }, [calculatePositions]);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -124,56 +127,51 @@ export const Timeline = ({
   const dashedLineColor = useTransform(scrollYProgress, [0, 1], ["#DBDBDB", lineColor]);
   const dashedLineGlow = useTransform(scrollYProgress, [0, 1], ["#DBDBDB00", lineColor + "80"]);
 
-  // Helper function to create transform function for a specific title index
-  const createTitleColorTransformFn = (index: number) => (latest: number) => {
-    if (titlePositions.length === 0 || height === 0 || titlePositions[index] === undefined) return "#DBDBDB";
-    
-    const normalizedPosition = titlePositions[index] / height;
-    const highlightRange = 0.10;
-    const highlightStart = Math.max(0, normalizedPosition - highlightRange);
-    const highlightEnd = Math.min(1, normalizedPosition + highlightRange);
-    
-    // Get the next title's position (if it exists)
-    const hasNextTitle = index < titlePositions.length - 1 && titlePositions[index + 1] !== undefined;
-    const nextTitlePosition = hasNextTitle ? titlePositions[index + 1] / height : 1;
-    const nextTitleStart = hasNextTitle ? Math.max(0, nextTitlePosition - highlightRange) : 1;
-    
-    // Before this title is reached
-    if (latest < highlightStart) {
-      return "#DBDBDB";
-    }
-    
-    // Approaching this title (fade in)
-    if (latest >= highlightStart && latest < normalizedPosition) {
-      const progress = (latest - highlightStart) / highlightRange;
-      const intensity = Math.max(0, Math.min(1, progress));
-      return interpolateColor("#DBDBDB", lineColor, intensity);
-    }
-    
-    // At this title (fully highlighted)
-    if (latest >= normalizedPosition && latest < highlightEnd) {
-      return lineColor;
-    }
-    
-    // Past this title but before next title starts
-    if (latest >= highlightEnd && latest < nextTitleStart) {
-      return lineColor;
-    }
-    
-    // Next title is being approached (fade out)
-    if (hasNextTitle && latest >= nextTitleStart && latest < nextTitlePosition + highlightRange) {
-      const fadeStart = nextTitleStart;
-      const fadeEnd = Math.min(1, nextTitlePosition + highlightRange);
-      if (latest < fadeEnd) {
-        const fadeProgress = (latest - fadeStart) / (fadeEnd - fadeStart);
-        const intensity = Math.max(0, Math.min(1, 1 - fadeProgress));
+  // Memoized color transform function factory to avoid recreating on every render
+  const createTitleColorTransformFn = useMemo(() => {
+    return (index: number) => (latest: number) => {
+      if (titlePositions.length === 0 || height === 0 || titlePositions[index] === undefined) return "#DBDBDB";
+      
+      const normalizedPosition = titlePositions[index] / height;
+      const highlightRange = 0.10;
+      const highlightStart = Math.max(0, normalizedPosition - highlightRange);
+      const highlightEnd = Math.min(1, normalizedPosition + highlightRange);
+      
+      const hasNextTitle = index < titlePositions.length - 1 && titlePositions[index + 1] !== undefined;
+      const nextTitlePosition = hasNextTitle ? titlePositions[index + 1] / height : 1;
+      const nextTitleStart = hasNextTitle ? Math.max(0, nextTitlePosition - highlightRange) : 1;
+      
+      if (latest < highlightStart) {
+        return "#DBDBDB";
+      }
+      
+      if (latest >= highlightStart && latest < normalizedPosition) {
+        const progress = (latest - highlightStart) / highlightRange;
+        const intensity = Math.max(0, Math.min(1, progress));
         return interpolateColor("#DBDBDB", lineColor, intensity);
       }
-    }
-    
-    // After next title has been reached (or no next title and we're past the end)
-    return "#DBDBDB";
-  };
+      
+      if (latest >= normalizedPosition && latest < highlightEnd) {
+        return lineColor;
+      }
+      
+      if (latest >= highlightEnd && latest < nextTitleStart) {
+        return lineColor;
+      }
+      
+      if (hasNextTitle && latest >= nextTitleStart && latest < nextTitlePosition + highlightRange) {
+        const fadeStart = nextTitleStart;
+        const fadeEnd = Math.min(1, nextTitlePosition + highlightRange);
+        if (latest < fadeEnd) {
+          const fadeProgress = (latest - fadeStart) / (fadeEnd - fadeStart);
+          const intensity = Math.max(0, Math.min(1, 1 - fadeProgress));
+          return interpolateColor("#DBDBDB", lineColor, intensity);
+        }
+      }
+      
+      return "#DBDBDB";
+    };
+  }, [titlePositions, height, lineColor]);
 
   // Create color transforms for each title at the top level (max 10 titles)
   // All hooks must be called unconditionally
