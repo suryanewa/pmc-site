@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useCallback, useMemo, useState } from "react";
+import { useIsMobile } from "../hooks/use-is-mobile";
 
 interface AsciiHoverEffectProps {
   chars?: string;
@@ -8,6 +9,13 @@ interface AsciiHoverEffectProps {
   active?: boolean;
   className?: string;
   colors?: string;
+}
+
+interface NavigatorPerformanceInfo extends Navigator {
+  connection?: {
+    saveData?: boolean;
+  };
+  deviceMemory?: number;
 }
 
 class AsciiCell {
@@ -41,7 +49,9 @@ export default function AsciiHoverEffect({
   className = "",
   colors = "#ffffff",
 }: AsciiHoverEffectProps) {
+  const isMobile = useIsMobile();
   const [isInitialized, setIsInitialized] = useState(active);
+  const [isEffectEnabled, setIsEffectEnabled] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animationRef = useRef<number | null>(null);
@@ -56,18 +66,32 @@ export default function AsciiHoverEffect({
   const charArray = useMemo(() => chars.split(""), [chars]);
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    const nav = navigator as NavigatorPerformanceInfo;
+
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const saveData = nav.connection?.saveData ?? false;
+    const cpuCores = nav.hardwareConcurrency ?? 8;
+    const deviceMemory = nav.deviceMemory ?? 8;
+
+    setIsEffectEnabled(!isMobile && !prefersReducedMotion && !saveData && cpuCores >= 6 && deviceMemory >= 4);
+  }, [isMobile]);
+
+  useEffect(() => {
+    if (!isEffectEnabled) return;
     if (active && !isInitialized) {
       setIsInitialized(true);
     }
-  }, [active, isInitialized]);
+  }, [active, isInitialized, isEffectEnabled]);
 
   useEffect(() => {
+    if (!isEffectEnabled) return;
     const wasActive = activeRef.current;
     activeRef.current = active;
     if (!wasActive && active) {
       rippleRadiusRef.current = 0;
     }
-  }, [active]);
+  }, [active, isEffectEnabled]);
 
   const updateRect = useCallback(() => {
     if (!containerRef.current) return;
@@ -75,6 +99,7 @@ export default function AsciiHoverEffect({
   }, []);
 
   useEffect(() => {
+    if (!isEffectEnabled) return;
     if (!isInitialized) return;
     if (!active) return;
 
@@ -83,7 +108,7 @@ export default function AsciiHoverEffect({
     updateRect();
 
     const onMove = (e: MouseEvent) => {
-      if (e.timeStamp - lastMoveTimeRef.current < 50) return;
+      if (e.timeStamp - lastMoveTimeRef.current < 80) return;
       lastMoveTimeRef.current = e.timeStamp;
       const rect = rectRef.current;
       if (!rect) return;
@@ -119,7 +144,7 @@ export default function AsciiHoverEffect({
       detachListeners();
       if (rafId !== null) cancelAnimationFrame(rafId);
     };
-  }, [active, isInitialized, updateRect]);
+  }, [active, isInitialized, updateRect, isEffectEnabled]);
 
   const initCells = useCallback(() => {
     if (!containerRef.current || !canvasRef.current) return;
@@ -165,7 +190,7 @@ export default function AsciiHoverEffect({
 
     if (!lastFrameTimeRef.current) lastFrameTimeRef.current = timestamp;
     const elapsed = timestamp - lastFrameTimeRef.current;
-    if (elapsed < 1000 / 30) {
+    if (elapsed < 1000 / 24) {
       animationRef.current = requestAnimationFrame(animateFrame);
       return;
     }
@@ -210,7 +235,7 @@ export default function AsciiHoverEffect({
         cell.opacity = Math.max(0, cell.opacity - fadeSpeed);
       }
 
-      if (isActive && cell.opacity > 0.01 && Math.random() < 0.05) {
+      if (isActive && cell.opacity > 0.01 && Math.random() < 0.02) {
         cell.char = charArray[Math.floor(Math.random() * charArray.length)];
       }
 
@@ -230,6 +255,7 @@ export default function AsciiHoverEffect({
   }, [charArray]);
 
   useEffect(() => {
+    if (!isEffectEnabled) return;
     if (!isInitialized) return;
     initCells();
     
@@ -256,14 +282,15 @@ export default function AsciiHoverEffect({
     return () => {
       observer.disconnect();
     };
-  }, [initCells, isInitialized, updateRect, animate]);
+  }, [initCells, isInitialized, updateRect, animate, isEffectEnabled]);
 
   useEffect(() => {
+    if (!isEffectEnabled) return;
     if (!isInitialized) return;
     if (animationRef.current === null) {
       animationRef.current = requestAnimationFrame(animate);
     }
-  }, [active, animate, isInitialized]);
+  }, [active, animate, isInitialized, isEffectEnabled]);
 
   useEffect(() => {
     return () => {
@@ -273,7 +300,7 @@ export default function AsciiHoverEffect({
     };
   }, []);
 
-  if (!isInitialized) {
+  if (!isEffectEnabled || !isInitialized) {
     return null;
   }
 
