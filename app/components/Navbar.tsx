@@ -151,12 +151,12 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
   const textColor = isDark ? 'text-[#DBDBDB]' : 'text-[#DBDBDB]';
   const textMuted = isDark ? 'text-[#DBDBDB]/60' : 'text-[#DBDBDB]/60';
   const textHover = isDark ? 'hover:text-[#DBDBDB]' : 'hover:text-[#DBDBDB]';
-  const dropdownBg = isDark ? 'bg-[#3F3F3F]' : 'bg-[#3F3F3F]';
+  const dropdownBg = isDark ? 'bg-black' : 'bg-black';
   const dropdownBorder = isDark ? 'border-[#DBDBDB]/10' : 'border-[#DBDBDB]/10';
   const dropdownItemHover = isDark ? 'hover:bg-[#3F3F3F]/70' : 'hover:bg-[#3F3F3F]/70';
   const mobileMenuBg = isDark ? 'bg-black/95' : 'bg-black/95';
 
-  const navContainerClass = `mx-auto w-full border transition-[max-width,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] md:rounded-2xl ${
+  const navContainerClass = `mx-auto w-full border transition-[max-width,border-color,box-shadow] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
     isScrolled
       ? 'max-w-3xl border-[#DBDBDB]/12 shadow-[0_10px_35px_rgba(0,0,0,0.35)]'
       : 'max-w-[1400px] border-transparent'
@@ -190,7 +190,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
                 onMouseLeave={() => setActiveDropdown(null)}
               >
                 <motion.button
-                  className={`${textMuted} ${textHover} text-sm font-medium px-5 py-2.5 rounded-md transition-colors duration-200`}
+                  className={`${textMuted} ${textHover} text-sm font-medium px-5 py-2.5 transition-colors duration-200`}
                   whileTap={{ scale: 0.97 }}
                 >
                   Events
@@ -205,7 +205,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
                       transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
                       className="absolute top-full left-0 pt-2"
                     >
-                      <div className={`${dropdownBg} backdrop-blur-xl border ${dropdownBorder} shadow-xl py-2 min-w-[180px] rounded-xl`}>
+                      <div className={`${dropdownBg} backdrop-blur-xl border ${dropdownBorder} shadow-xl py-2 min-w-[180px]`}>
                         {eventsDropdownItems.map((item, index) => (
                           <motion.div
                             key={item.href}
@@ -235,7 +235,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
                 onMouseLeave={() => setActiveDropdown(null)}
               >
                 <motion.button
-                  className={`${textMuted} ${textHover} text-sm font-medium px-5 py-2.5 rounded-md transition-colors duration-200`}
+                  className={`${textMuted} ${textHover} text-sm font-medium px-5 py-2.5 transition-colors duration-200`}
                   whileTap={{ scale: 0.97 }}
                 >
                   Programs
@@ -250,7 +250,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
                       transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
                       className="absolute top-full left-0 pt-2"
                     >
-                      <div className={`${dropdownBg} backdrop-blur-xl border ${dropdownBorder} shadow-xl py-2 min-w-[180px] rounded-xl`}>
+                      <div className={`${dropdownBg} backdrop-blur-xl border ${dropdownBorder} shadow-xl py-2 min-w-[180px]`}>
                         {programsDropdownItems.map((item, index) => (
                           <motion.div
                             key={item.href}
@@ -280,7 +280,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
                 onMouseLeave={() => setActiveDropdown(null)}
               >
                 <motion.button
-                  className={`${textMuted} ${textHover} text-sm font-medium px-5 py-2.5 rounded-md transition-colors duration-200`}
+                  className={`${textMuted} ${textHover} text-sm font-medium px-5 py-2.5 transition-colors duration-200`}
                   whileTap={{ scale: 0.97 }}
                 >
                   Team
@@ -295,7 +295,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
                       transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
                       className="absolute top-full left-0 pt-2"
                     >
-                      <div className={`${dropdownBg} backdrop-blur-xl border ${dropdownBorder} shadow-xl py-2 min-w-[180px] rounded-xl`}>
+                      <div className={`${dropdownBg} backdrop-blur-xl border ${dropdownBorder} shadow-xl py-2 min-w-[180px]`}>
                         {teamDropdownItems.map((item, index) => (
                           <motion.div
                             key={item.href}
