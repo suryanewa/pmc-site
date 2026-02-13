@@ -151,11 +151,7 @@ export function Newsletter({ source = 'website', accentColor }: NewsletterProps)
         </motion.p>
 
         <form onSubmit={handleSubmit} className="relative w-full max-w-xl group/form">
-          <div className="relative rounded-2xl p-[1.5px] overflow-hidden">
-            <span
-              className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#41C9C1_0%,#5076DD_50%,#41C9C1_100%)]"
-              aria-hidden="true"
-            />
+          <div className="conic-gradient-button relative rounded-2xl p-[1.5px] overflow-hidden">
             <div
               className={`
               relative flex items-center rounded-2xl bg-black/80 backdrop-blur-md overflow-hidden
@@ -170,23 +166,23 @@ export function Newsletter({ source = 'website', accentColor }: NewsletterProps)
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
               disabled={status === 'loading'}
-              className="flex-1 bg-transparent px-8 py-5 text-white placeholder:text-white/20 outline-none w-full text-lg"
+              className="flex-1 bg-transparent px-6 py-3.5 text-white placeholder:text-white/30 group-hover/form:placeholder:text-white/60 outline-none w-full text-base transition-colors duration-300"
             />
 
-            <div className="h-8 w-px bg-white/10" />
+            <div className={`h-8 w-px bg-white/10 transition-opacity duration-300 group-hover/form:opacity-0 ${isFocused ? 'opacity-0' : ''}`} />
 
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="conic-gradient-button relative flex items-center gap-3 px-10 py-5 bg-transparent group/btn transition-all"
+              className="relative flex items-center gap-2.5 px-7 py-3.5 bg-transparent group/btn transition-all"
             >
-              <div className="absolute inset-0 bg-[#41C9C1]/0 group-hover/btn:bg-[#41C9C1]/5 transition-colors duration-300" />
+              <div className="absolute inset-0 bg-[#41C9C1]/0 group-hover/form:bg-[#41C9C1]/5 transition-colors duration-300" />
 
-              <span className="relative z-10 text-white font-medium group-hover/btn:text-[#41C9C1] transition-colors text-lg">
+              <span className="relative z-10 text-white/40 font-medium group-hover/form:text-white transition-colors duration-300 text-base">
                 {status === 'loading' ? '...' : 'Subscribe'}
               </span>
               <ArrowRight
-                className={`relative z-10 size-5 text-white group-hover/btn:text-[#41C9C1] transition-all duration-300 ${status === 'loading' ? 'opacity-0' : 'group-hover/btn:translate-x-1'}`}
+                className={`relative z-10 size-4 text-white/40 group-hover/form:text-white transition-all duration-300 ${status === 'loading' ? 'opacity-0' : 'group-hover/form:translate-x-1'}`}
               />
             </button>
             </div>

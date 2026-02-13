@@ -717,3 +717,47 @@ npm run build    # Pass (2s compile time)
 - Baseline summary: `.sisyphus/evidence/perf-baseline/summary.md`
 - Vercel React Best Practices: `bundle-dynamic-imports`, `bundle-defer-third-party`
 
+
+## Test Infrastructure Setup (Task 2)
+
+### Configuration Decisions
+- **Vitest**: Chosen for unit/component testing due to native ESM support and speed
+- **React Testing Library**: Standard for React component testing, promotes accessible queries
+- **Playwright**: E2E testing with multi-browser support (Chromium + Mobile Chrome configured)
+- **Setup file**: Located at `tests/setup.ts` (imports @testing-library/jest-dom)
+- **Test directory structure**:
+  - `tests/` - Unit and component tests (*.test.ts)
+  - `e2e/` - Playwright E2E tests (*.spec.ts)
+
+### Test Scripts
+```json
+"test": "vitest run",           // Run unit tests once
+"test:watch": "vitest",          // Watch mode for development
+"test:e2e": "playwright test",   // Run E2E tests
+"test:e2e:ui": "playwright test --ui"  // Playwright UI mode
+```
+
+### CI Integration
+- Tests run in parallel after gate passes
+- Separate jobs: `test` (unit) and `e2e` (E2E)
+- E2E job includes browser installation and build step
+- Playwright reports uploaded as artifacts (30-day retention)
+- CI uses: Node 20, npm ci for reproducible builds
+
+### Initial Tests Created
+1. **Unit test** (`tests/smoke.test.ts`): Basic assertions and async operations
+2. **E2E tests** (`e2e/home.spec.ts`): 
+   - Page load and title check
+   - Main content rendering
+   - Smooth scroll behavior
+   - Animation pause on tab visibility change
+   - Tests run on both Desktop Chrome and Mobile Chrome
+
+### Performance Considerations
+- Vitest excludes e2e directory to prevent conflicts
+- Playwright configured with `fullyParallel: true`
+- CI workers: 1 for reproducibility, unlimited locally
+- Retries: 2 in CI, 0 locally
+- Dev server reuse enabled for local development
+- 120s timeout for dev server startup
+

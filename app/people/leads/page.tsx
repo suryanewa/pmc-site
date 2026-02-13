@@ -39,7 +39,6 @@ const programLeads: ProgramGroup[] = [
         name: 'Valerie Zou',
         role: 'Junior Product Team Lead',
         coffeeChatUrl: 'https://calendly.com/vz2160-nyu/valerie-s-calendly',
-        description: 'Valerie is a sophomore studying Economics with a minor in Business Studies. She enjoys art, fortnite music festival, and going out to eat!',
       },
       {
         id: 3,
@@ -47,7 +46,6 @@ const programLeads: ProgramGroup[] = [
         name: 'Prateek Nedungadi',
         role: 'Product Team Coordinator',
         coffeeChatUrl: 'https://calendly.com/prateek-nedungadi-stern/30min',
-        description: 'Prateek is a freshman studying Finance and Computer Science. He loves dogs, the Golden State Warriors, being big and trying new fragrances!',
       },
     ],
   },
@@ -61,7 +59,6 @@ const programLeads: ProgramGroup[] = [
         name: 'Jade Leong',
         role: 'Mentorship Lead',
         coffeeChatUrl: 'https://calendly.com/jyl9618-nyu/30min',
-        description: 'Jade is a junior at NYU studying Computer Science and MCC. She loves trying new matcha spots, listening to podcasts, and ragebaiting Ethan Lu!',
       },
       {
         id: 5,
@@ -69,7 +66,6 @@ const programLeads: ProgramGroup[] = [
         name: 'Ethan Lu',
         role: 'Mentorship Lead',
         coffeeChatUrl: 'https://calendly.com/rkl6999-nyu/30min',
-        description: 'Ethan is a sophomore studying Business Technology Management. He enjoys playing basketball and exploring the city. He is ferda.',
       },
     ],
   },
@@ -83,7 +79,6 @@ const programLeads: ProgramGroup[] = [
         name: 'Tarush Garg',
         role: 'Case Competition Lead',
         coffeeChatUrl: 'https://calendly.com/tg2903-nyu/30min',
-        description: 'Tarush is a Freshman studying Computer Science & Economics. He loves drinking coffee, traveling, and swiping all of PMC into Downstein.',
       },
       {
         id: 7,

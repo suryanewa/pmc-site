@@ -110,14 +110,12 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <a
-                  href="https://linktr.us17.list-manage.com/subscribe?u=245830e19ea7d43db4cf58081&id=6bd6c94c01"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <Link
+                  href="/#join-us"
                   className="text-[#DBDBDB]/70 hover:text-[#DBDBDB] hover:translate-x-1 transition-all duration-300 inline-block"
                 >
                   Newsletter
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

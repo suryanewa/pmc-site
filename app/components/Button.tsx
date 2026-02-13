@@ -33,7 +33,6 @@ export function Button({
   animated = true,
 }: ButtonProps) {
   void rippleColor;
-  void animated;
   const sizeStyles = {
     default: {
       outer: 'h-12',
@@ -45,8 +44,10 @@ export function Button({
     },
   };
 
-  const baseStyles =
-    'conic-gradient-button group relative inline-flex overflow-hidden !p-[1.5px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 transition-transform duration-200 ease-out hover:scale-[1.04] active:scale-[0.97]';
+  const baseStyles = cn(
+    'group relative inline-flex overflow-hidden !p-[1.5px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50 transition-transform duration-200 ease-out hover:scale-[1.04] active:scale-[0.97]',
+    animated ? 'conic-gradient-button' : 'border border-[#3F3F3F] hover:border-white bg-slate-950 transition-colors duration-300'
+  );
 
   const disabledStyles = disabled ? 'opacity-50 pointer-events-none' : '';
 

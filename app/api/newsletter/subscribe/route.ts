@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { subscribeToMailchimp, MailchimpError } from '@/lib/mailchimp/server';
 import { getSupabaseAdmin } from '@/lib/supabase/server';
 
-// Simple email validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function POST(request: NextRequest) {
@@ -9,7 +9,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email, firstName, lastName, source } = body;
 
-    // Validate email exists
     if (!email || typeof email !== 'string') {
       return NextResponse.json(
         { error: 'Email is required' },
@@ -17,10 +16,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Normalize email: trim and lowercase
     const normalizedEmail = email.trim().toLowerCase();
 
-    // Validate email format
     if (!EMAIL_REGEX.test(normalizedEmail)) {
       return NextResponse.json(
         { error: 'Invalid email format' },
@@ -28,32 +25,32 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get Supabase admin client (lazy initialized)
-    const supabase = getSupabaseAdmin();
+    await subscribeToMailchimp({
+      email: normalizedEmail,
+      firstName: firstName?.trim() || null,
+      lastName: lastName?.trim() || null,
+      source: source || null,
+    });
 
-    // Upsert to handle duplicates gracefully
-    // ON CONFLICT DO NOTHING ensures no error on duplicate
-    const { error } = await supabase
-      .from('newsletter_subscribers')
-      .upsert(
-        {
-          email: normalizedEmail,
-          first_name: firstName?.trim() || null,
-          last_name: lastName?.trim() || null,
-          source: source || null,
-        },
-        {
-          onConflict: 'email',
-          ignoreDuplicates: true,
-        }
-      );
-
-    if (error) {
-      console.error('Supabase error:', error);
-      return NextResponse.json(
-        { error: 'Failed to subscribe. Please try again.' },
-        { status: 500 }
-      );
+    // Supabase backup — fire-and-forget, don't block on failure
+    try {
+      const supabase = getSupabaseAdmin();
+      await supabase
+        .from('newsletter_subscribers')
+        .upsert(
+          {
+            email: normalizedEmail,
+            first_name: firstName?.trim() || null,
+            last_name: lastName?.trim() || null,
+            source: source || null,
+          },
+          {
+            onConflict: 'email',
+            ignoreDuplicates: true,
+          }
+        );
+    } catch {
+      // no-op
     }
 
     return NextResponse.json(
@@ -63,10 +60,30 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Newsletter subscribe error:', error);
 
-    // Missing Supabase env vars (common in local/dev)
+    if (error instanceof MailchimpError) {
+      if (error.title === 'Member Exists') {
+        return NextResponse.json(
+          { success: true, message: 'You\'re already subscribed!' },
+          { status: 200 }
+        );
+      }
+
+      if (error.title === 'Invalid Resource') {
+        return NextResponse.json(
+          { error: 'Invalid email address. Please check and try again.' },
+          { status: 400 }
+        );
+      }
+
+      return NextResponse.json(
+        { error: 'Failed to subscribe. Please try again.' },
+        { status: 500 }
+      );
+    }
+
     const message =
-      error instanceof Error && error.message.includes('Missing Supabase')
-        ? 'Newsletter service is not configured. Please add Supabase environment variables.'
+      error instanceof Error && error.message.includes('Missing Mailchimp')
+        ? 'Newsletter service is not configured.'
         : 'An unexpected error occurred';
 
     return NextResponse.json({ error: message }, { status: 500 });

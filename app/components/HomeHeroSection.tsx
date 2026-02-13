@@ -185,9 +185,7 @@ export function HomeHeroSection() {
                 Coffee Chat
               </Button>
               <a
-                href="https://linktr.us17.list-manage.com/subscribe?u=245830e19ea7d43db4cf58081&id=6bd6c94c01"
-                target="_blank"
-                rel="noopener noreferrer"
+                href="#join-us"
                 className="relative text-white after:absolute after:left-0 after:-bottom-1 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-white after:transition-transform after:duration-300 hover:after:scale-x-100"
               >
                 Join Our Newsletter
