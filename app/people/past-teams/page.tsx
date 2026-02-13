@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 import { FadeUp } from '../../components/ScrollAnimations';
 import {
   teamsData,
@@ -32,6 +32,22 @@ const PROGRAM_FILTER_ORDER: ProgramFilter[] = [
   'case-comp',
 ];
 
+type GroupedMember = {
+  key: string;
+  name: string;
+};
+
+type TeamGroup = {
+  team: Team;
+  members: GroupedMember[];
+};
+
+type FilteredSemester = {
+  semester: 'spring' | 'fall';
+  year: number;
+  teamGroups: TeamGroup[];
+};
+
 const CHEVRON_SVG = (
   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 12 12" fill="none">
     <path d="M6 9L1 4h10L6 9Z" fill="#DBDBDB" />
@@ -48,45 +64,81 @@ export default function PastTeamsPage() {
     return uniqueYears.sort((a, b) => b - a);
   }, []);
 
-  const toggleYear = (year: number) => {
-    if (selectedYears === 'all') {
-      setSelectedYears(new Set([year]));
-      return;
-    }
-    const next = new Set(selectedYears);
-    if (next.has(year)) {
-      next.delete(year);
-      setSelectedYears(next.size === 0 ? 'all' : new Set(next));
-    } else {
+  const toggleYear = useCallback((year: number) => {
+    setSelectedYears((prev) => {
+      if (prev === 'all') {
+        return new Set([year]);
+      }
+      const next = new Set(prev);
+      if (next.has(year)) {
+        next.delete(year);
+        return next.size === 0 ? 'all' : new Set(next);
+      }
       next.add(year);
-      setSelectedYears(new Set(next));
-    }
-  };
+      return new Set(next);
+    });
+  }, []);
 
   const allowedTeams = programFilterTeams[selectedProgram];
 
-  const filteredData = useMemo(() => {
-    return teamsData
-      .filter((data) => {
-        const yearMatch = selectedYears === 'all' || selectedYears.has(data.year);
-        const semesterMatch = selectedSemester === 'all' || data.semester === selectedSemester;
-        return yearMatch && semesterMatch;
-      })
-      .map((data) => {
-        const members =
-          allowedTeams === 'all'
-            ? data.members
-            : data.members.filter((m) => (allowedTeams as Team[]).includes(m.team));
-        return { ...data, members };
-      })
-      .filter((data) => data.members.length > 0);
-  }, [selectedYears, selectedSemester, allowedTeams]);
+  const allowedTeamsSet = useMemo(() => {
+    if (allowedTeams === 'all') {
+      return null;
+    }
+    return new Set(allowedTeams);
+  }, [allowedTeams]);
 
-  const clearFilters = () => {
+  const filteredData = useMemo<FilteredSemester[]>(() => {
+    const output: FilteredSemester[] = [];
+
+    for (const data of teamsData) {
+      const yearMatch = selectedYears === 'all' || selectedYears.has(data.year);
+      const semesterMatch = selectedSemester === 'all' || data.semester === selectedSemester;
+
+      if (!yearMatch || !semesterMatch) {
+        continue;
+      }
+
+      const grouped = new Map<Team, GroupedMember[]>();
+      for (const team of TEAM_DISPLAY_ORDER) {
+        grouped.set(team, []);
+      }
+
+      data.members.forEach((member, memberIndex) => {
+        if (allowedTeamsSet && !allowedTeamsSet.has(member.team)) {
+          return;
+        }
+
+        grouped.get(member.team)?.push({
+          key: `${data.semester}-${data.year}-${member.team}-${member.name}-${memberIndex}`,
+          name: member.name,
+        });
+      });
+
+      const teamGroups = TEAM_DISPLAY_ORDER
+        .map((team) => ({
+          team,
+          members: grouped.get(team) ?? [],
+        }))
+        .filter((group) => group.members.length > 0);
+
+      if (teamGroups.length > 0) {
+        output.push({
+          semester: data.semester,
+          year: data.year,
+          teamGroups,
+        });
+      }
+    }
+
+    return output;
+  }, [selectedYears, selectedSemester, allowedTeamsSet]);
+
+  const clearFilters = useCallback(() => {
     setSelectedYears('all');
     setSelectedSemester('all');
     setSelectedProgram('all');
-  };
+  }, []);
 
   const hasActiveFilters =
     selectedYears !== 'all' || selectedSemester !== 'all' || selectedProgram !== 'all';
@@ -102,6 +154,7 @@ export default function PastTeamsPage() {
                 animation="slideLeft"
                 by="character"
                 className="inline"
+                once={true}
               >
                 Past Teams
               </TextAnimate>
@@ -226,38 +279,31 @@ export default function PastTeamsPage() {
 
       <div className="relative px-6 md:px-16 lg:px-24 py-16 md:py-24 min-h-[50vh]">
         <div className="max-w-[1400px] mx-auto flex flex-col gap-24">
-          <AnimatePresence mode="popLayout">
+          <AnimatePresence>
             {filteredData.length > 0 ? (
               filteredData.map((data) => {
                 const semesterLabel = data.semester === 'spring' ? 'Spring' : 'Fall';
                 const yearLabel = data.year.toString().slice(-2);
 
-                const teamGroups = TEAM_DISPLAY_ORDER
-                  .map((team) => ({
-                    team,
-                    members: data.members.filter((m) => m.team === team),
-                  }))
-                  .filter((g) => g.members.length > 0);
-
                 return (
                   <motion.div
                     key={`${data.semester}-${data.year}`}
-                    layout
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.5 }}
+                    style={{ contentVisibility: 'auto', containIntrinsicSize: '1px 850px' }}
                   >
                     <FadeUp>
                       <h2 className="sub-section-title text-[#DBDBDB] mb-8 md:mb-12 text-center">
-                        <TextAnimate as="span" animation="slideLeft" by="character" className="inline" startOnView={true}>
+                        <TextAnimate as="span" animation="slideLeft" by="character" className="inline" startOnView={true} once={true}>
                           {`${semesterLabel} '${yearLabel}`}
                         </TextAnimate>
                       </h2>
                     </FadeUp>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16">
-                      {teamGroups.map((group, gi) => {
+                      {data.teamGroups.map((group, gi) => {
                         const cfg = teamConfig[group.team];
                         return (
                           <div key={group.team} className="flex flex-col gap-6">
@@ -270,9 +316,9 @@ export default function PastTeamsPage() {
                               </h3>
                             </FadeUp>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              {group.members.map((member, idx) => (
+                              {group.members.map((member) => (
                                 <TeamMemberCard
-                                  key={`${member.name}-${idx}`}
+                                  key={member.key}
                                   name={member.name}
                                   className="rounded-2xl"
                                 />
