@@ -289,6 +289,7 @@ body.loading {
   position: relative;
   isolation: isolate;
   border: 0;
+  border-radius: 0;
   --border-dim: rgba(168, 239, 255, 0.1);
   transition: --border-dim 400ms cubic-bezier(0.22, 1, 0.36, 1);
   background-color: rgba(10, 12, 18, 1);
@@ -303,7 +304,7 @@ body.loading {
   content: "";
   position: absolute;
   inset: 0;
-  border-radius: inherit;
+  border-radius: 0;
   padding: 2px;
   background: conic-gradient(
     from var(--angle),
