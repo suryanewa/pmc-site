@@ -178,7 +178,7 @@ export function Newsletter({ source = 'website', accentColor }: NewsletterProps)
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="relative flex items-center gap-3 px-10 py-5 bg-transparent group/btn transition-all"
+              className="conic-gradient-button relative flex items-center gap-3 px-10 py-5 bg-transparent group/btn transition-all"
             >
               <div className="absolute inset-0 bg-[#41C9C1]/0 group-hover/btn:bg-[#41C9C1]/5 transition-colors duration-300" />
 

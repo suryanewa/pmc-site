@@ -330,7 +330,7 @@ export function Navbar({ variant = 'light', logoSuffix, logoSuffixColor }: Navba
             </div>
 
             <button
-              className={`md:hidden ${textColor} p-2 -mr-2`}
+              className={`conic-gradient-button md:hidden ${textColor} p-2 -mr-2`}
               onClick={() => setIsMobileMenuOpen((prev) => !prev)}
               aria-label="Toggle menu"
               aria-expanded={isMobileMenuOpen}

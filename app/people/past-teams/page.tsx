@@ -232,7 +232,7 @@ export default function PastTeamsPage() {
             </div>
 
             {hasActiveFilters && (
-              <button onClick={clearFilters} className="mt-2 text-sm text-[#41C9C1] hover:underline font-medium text-left cursor-pointer">
+              <button onClick={clearFilters} className="conic-gradient-button mt-2 px-3 py-1 text-sm text-[#41C9C1] hover:underline font-medium text-left cursor-pointer">
                 Clear all
               </button>
             )}
@@ -269,7 +269,7 @@ export default function PastTeamsPage() {
             </div>
 
             {hasActiveFilters && (
-              <button onClick={clearFilters} className="ml-auto text-sm text-[#41C9C1] hover:underline font-medium cursor-pointer">
+              <button onClick={clearFilters} className="conic-gradient-button ml-auto px-3 py-1 text-sm text-[#41C9C1] hover:underline font-medium cursor-pointer">
                 Clear all
               </button>
             )}
@@ -334,7 +334,7 @@ export default function PastTeamsPage() {
             ) : (
               <div className="text-center py-20">
                 <p className="text-xl text-[#DBDBDB]/70">No teams found for the selected filters.</p>
-                <button onClick={clearFilters} className="mt-4 text-[#41C9C1] hover:underline font-medium cursor-pointer">
+                <button onClick={clearFilters} className="conic-gradient-button mt-4 px-3 py-1 text-[#41C9C1] hover:underline font-medium cursor-pointer">
                   Clear filters
                 </button>
               </div>
