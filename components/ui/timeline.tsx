@@ -1,29 +1,9 @@
 "use client";
-import {
-  useMotionValueEvent,
-  useScroll,
-  useTransform,
-  motion,
-} from "motion/react";
-import React, { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import { ScrollLinkedAirplane } from "./ScrollLinkedAirplane";
 
-// Helper function to interpolate between two hex colors
-function interpolateColor(color1: string, color2: string, factor: number): string {
-  const r1 = parseInt(color1.slice(1, 3), 16);
-  const g1 = parseInt(color1.slice(3, 5), 16);
-  const b1 = parseInt(color1.slice(5, 7), 16);
-  
-  const r2 = parseInt(color2.slice(1, 3), 16);
-  const g2 = parseInt(color2.slice(3, 5), 16);
-  const b2 = parseInt(color2.slice(5, 7), 16);
-  
-  const r = Math.round(r1 + (r2 - r1) * factor);
-  const g = Math.round(g1 + (g2 - g1) * factor);
-  const b = Math.round(b1 + (b2 - b1) * factor);
-  
-  return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
-}
+import { motion, useScroll, useTransform } from "motion/react";
+import { Compass } from "lucide-react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+
 
 interface TimelineEntry {
   title: string;
@@ -39,235 +19,295 @@ interface TimelineProps {
   lineColor?: string;
 }
 
+const DIM_TEXT = "#DBDBDB";
+
+function clamp01(value: number): number {
+  return Math.max(0, Math.min(1, value));
+}
+
+function parseRgb(value: string): [number, number, number] {
+  const normalized = value.startsWith("#") ? value.slice(1) : value;
+  const hex = normalized.length === 3
+    ? `${normalized[0]}${normalized[0]}${normalized[1]}${normalized[1]}${normalized[2]}${normalized[2]}`
+    : normalized;
+
+  return [
+    parseInt(hex.slice(0, 2), 16),
+    parseInt(hex.slice(2, 4), 16),
+    parseInt(hex.slice(4, 6), 16),
+  ];
+}
+
+function interpolateColor(color1: string, color2: string, ratio: number): string {
+  const [r1, g1, b1] = parseRgb(color1);
+  const [r2, g2, b2] = parseRgb(color2);
+  const t = clamp01(ratio);
+  const r = Math.round(r1 + (r2 - r1) * t);
+  const g = Math.round(g1 + (g2 - g1) * t);
+  const b = Math.round(b1 + (b2 - b1) * t);
+  return `#${r.toString(16).padStart(2, "0")}${g.toString(16).padStart(2, "0")}${b.toString(16).padStart(2, "0")}`;
+}
+
+function TimelineItem({
+  item,
+  start,
+  nextStart,
+  color,
+  iconLeft,
+  scrollProgress,
+  rowRef,
+}: {
+  item: TimelineEntry;
+  start: number;
+  nextStart: number;
+  color: string;
+  iconLeft: number;
+  scrollProgress: ReturnType<typeof useScroll>["scrollYProgress"];
+  rowRef: (element: HTMLDivElement | null) => void;
+}) {
+  const leadInStart = clamp01(start - 0.1);
+  const leadInEnd = clamp01(start - 0.04);
+  const activeStart = clamp01(start - 0.01);
+  const activeEnd = clamp01(nextStart - 0.01);
+  const leadOutEnd = clamp01(nextStart + 0.1);
+
+  const titleColor = useTransform(scrollProgress, (value) => {
+    if (value <= leadInStart || value >= leadOutEnd) return DIM_TEXT;
+    if (value < leadInEnd) {
+      return interpolateColor(DIM_TEXT, color, (value - leadInStart) / (leadInEnd - leadInStart || 1));
+    }
+    if (value <= activeEnd) {
+      return color;
+    }
+    if (value < leadOutEnd) {
+      return interpolateColor(color, DIM_TEXT, (value - activeEnd) / (leadOutEnd - activeEnd || 1));
+    }
+    return DIM_TEXT;
+  });
+
+  const rowOpacity = useTransform(scrollProgress, (value) => {
+    const enter = clamp01((value - leadInStart) / (activeStart - leadInStart || 1));
+    const leave = clamp01((leadOutEnd - value) / (leadOutEnd - activeEnd || 1));
+    return clamp01(Math.min(enter, leave));
+  });
+
+  const rowTranslate = useTransform(rowOpacity, [0, 1], [12, 0]);
+
+  const markerScale = useTransform(
+    scrollProgress,
+    [leadInStart, activeStart, clamp01(activeStart + 0.02), activeEnd, leadOutEnd],
+    [0.6, 0.85, 1, 0.85, 0.6],
+  );
+
+  return (
+    <div
+      ref={rowRef}
+      className="flex justify-start pt-10 md:pt-32 md:gap-24"
+    >
+      <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
+        <motion.div
+          className="hidden md:flex items-center justify-center absolute top-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{
+            left: iconLeft,
+            color: titleColor,
+            scale: markerScale,
+            opacity: rowOpacity,
+          }}
+        >
+          <Compass size={45} strokeWidth={1.5} />
+        </motion.div>
+
+        <motion.h3
+          className="hidden md:block text-xl md:pl-24 md:text-5xl font-medium text-left"
+          style={{
+            fontFamily: "var(--font-gotham-medium)",
+            color: titleColor,
+            opacity: rowOpacity,
+            y: rowTranslate,
+          }}
+        >
+          {item.title}
+        </motion.h3>
+      </div>
+
+      <motion.div
+        className="relative pl-24 pr-4 md:pl-4 w-full"
+        style={{
+          opacity: rowOpacity,
+          y: rowTranslate,
+        }}
+      >
+        <motion.h3
+          className="md:hidden block text-2xl mb-4 text-left font-medium"
+          style={{
+            fontFamily: "var(--font-gotham-medium)",
+            color: titleColor,
+          }}
+        >
+          {item.title}
+        </motion.h3>
+
+        <motion.div style={{ color: titleColor }}>
+          {item.content}
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+}
+
 export const Timeline = ({
   data,
   title,
   description,
   showHeader = true,
   className = "",
-  lineColor = "#41C9C1"
+  lineColor = "#41C9C1",
 }: TimelineProps) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const titleRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [height, setHeight] = useState(0);
   const [titlePositions, setTitlePositions] = useState<number[]>([]);
-
-  useEffect(() => {
-    if (!ref.current) return;
-
-    const updateHeight = () => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      setHeight(rect.height);
-    };
-
-    updateHeight();
-
-    const observer = new ResizeObserver(updateHeight);
-    observer.observe(ref.current);
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Memoized position calculation to batch DOM reads
-  const calculatePositions = useCallback(() => {
-    if (ref.current && titleRefs.current.length > 0 && height > 0) {
-      // Single DOM read: get container rect once
-      const containerRect = ref.current.getBoundingClientRect();
-      
-      // Batch all position calculations without additional DOM reads
-      const positions = titleRefs.current.map((titleRef, index) => {
-        if (!titleRef) {
-          // Fallback: estimate position based on index
-          return (index / data.length) * height * 0.8;
-        }
-        const titleRect = titleRef.getBoundingClientRect();
-        // Get position relative to container top
-        const relativeTop = titleRect.top - containerRect.top;
-        return relativeTop;
-      });
-      setTitlePositions(positions);
-    }
-  }, [height, data.length]);
-
-  useEffect(() => {
-    let rafId: number | null = null;
-    let isScheduled = false;
-
-    const scheduleRecalculate = () => {
-      if (isScheduled) return;
-      isScheduled = true;
-      rafId = requestAnimationFrame(() => {
-        isScheduled = false;
-        calculatePositions();
-      });
-    };
-
-    const timeoutId = window.setTimeout(scheduleRecalculate, 100);
-
-    window.addEventListener('resize', scheduleRecalculate);
-    window.addEventListener('scroll', scheduleRecalculate, { passive: true });
-    
-    return () => {
-      clearTimeout(timeoutId);
-      if (rafId !== null) cancelAnimationFrame(rafId);
-      window.removeEventListener('resize', scheduleRecalculate);
-      window.removeEventListener('scroll', scheduleRecalculate);
-    };
-  }, [calculatePositions]);
+  const [iconLeft, setIconLeft] = useState(0);
+  const [trackHeight, setTrackHeight] = useState(0);
+  const dataLength = data.length;
 
   const { scrollYProgress } = useScroll({
-    target: containerRef,
+    target: sectionRef,
     offset: ["start 10%", "end 50%"],
   });
 
-  const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height]);
-  const opacityTransform = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
-  const dashedLineColor = useTransform(scrollYProgress, [0, 1], ["#DBDBDB", lineColor]);
-  const dashedLineGlow = useTransform(scrollYProgress, [0, 1], ["#DBDBDB00", lineColor + "80"]);
+  const lineHeight = useTransform(scrollYProgress, [0, 1], [0, trackHeight]);
 
-  // Memoized color transform function factory to avoid recreating on every render
-  const createTitleColorTransformFn = useMemo(() => {
-    return (index: number) => (latest: number) => {
-      if (titlePositions.length === 0 || height === 0 || titlePositions[index] === undefined) return "#DBDBDB";
-      
-      const normalizedPosition = titlePositions[index] / height;
-      const highlightRange = 0.10;
-      const highlightStart = Math.max(0, normalizedPosition - highlightRange);
-      const highlightEnd = Math.min(1, normalizedPosition + highlightRange);
-      
-      const hasNextTitle = index < titlePositions.length - 1 && titlePositions[index + 1] !== undefined;
-      const nextTitlePosition = hasNextTitle ? titlePositions[index + 1] / height : 1;
-      const nextTitleStart = hasNextTitle ? Math.max(0, nextTitlePosition - highlightRange) : 1;
-      
-      if (latest < highlightStart) {
-        return "#DBDBDB";
-      }
-      
-      if (latest >= highlightStart && latest < normalizedPosition) {
-        const progress = (latest - highlightStart) / highlightRange;
-        const intensity = Math.max(0, Math.min(1, progress));
-        return interpolateColor("#DBDBDB", lineColor, intensity);
-      }
-      
-      if (latest >= normalizedPosition && latest < highlightEnd) {
-        return lineColor;
-      }
-      
-      if (latest >= highlightEnd && latest < nextTitleStart) {
-        return lineColor;
-      }
-      
-      if (hasNextTitle && latest >= nextTitleStart && latest < nextTitlePosition + highlightRange) {
-        const fadeStart = nextTitleStart;
-        const fadeEnd = Math.min(1, nextTitlePosition + highlightRange);
-        if (latest < fadeEnd) {
-          const fadeProgress = (latest - fadeStart) / (fadeEnd - fadeStart);
-          const intensity = Math.max(0, Math.min(1, 1 - fadeProgress));
-          return interpolateColor("#DBDBDB", lineColor, intensity);
-        }
-      }
-      
-      return "#DBDBDB";
+  const setRowRef = useCallback((index: number) => {
+    return (element: HTMLDivElement | null) => {
+      titleRefs.current[index] = element;
     };
-  }, [titlePositions, height, lineColor]);
+  }, []);
 
-  // Create color transforms for each title at the top level (max 10 titles)
-  // All hooks must be called unconditionally
-  const titleColor0 = useTransform(scrollYProgress, createTitleColorTransformFn(0));
-  const titleColor1 = useTransform(scrollYProgress, createTitleColorTransformFn(1));
-  const titleColor2 = useTransform(scrollYProgress, createTitleColorTransformFn(2));
-  const titleColor3 = useTransform(scrollYProgress, createTitleColorTransformFn(3));
-  const titleColor4 = useTransform(scrollYProgress, createTitleColorTransformFn(4));
-  const titleColor5 = useTransform(scrollYProgress, createTitleColorTransformFn(5));
-  const titleColor6 = useTransform(scrollYProgress, createTitleColorTransformFn(6));
-  const titleColor7 = useTransform(scrollYProgress, createTitleColorTransformFn(7));
-  const titleColor8 = useTransform(scrollYProgress, createTitleColorTransformFn(8));
-  const titleColor9 = useTransform(scrollYProgress, createTitleColorTransformFn(9));
+  const measure = useCallback(() => {
+    if (!trackRef.current) {
+      return;
+    }
 
-  const titleColors = [
-    titleColor0,
-    titleColor1,
-    titleColor2,
-    titleColor3,
-    titleColor4,
-    titleColor5,
-    titleColor6,
-    titleColor7,
-    titleColor8,
-    titleColor9,
-  ];
+    const rect = trackRef.current.getBoundingClientRect();
+    const nextHeight = rect.height;
+
+    const dashedLineViewportX = rect.left + 32;
+    const centerX = dashedLineViewportX / 2;
+    const centerRelativeToRow = centerX - rect.left - 10;
+    setIconLeft((prev) => (Math.abs(prev - centerRelativeToRow) < 1 ? prev : centerRelativeToRow));
+    setTrackHeight((prev) => (Math.abs(prev - nextHeight) < 0.5 ? prev : nextHeight));
+
+    const fallback = Array.from({ length: dataLength }, (_, index) => {
+      const divisor = Math.max(dataLength - 1, 1);
+      return index / divisor;
+    });
+
+    const nextPositions = titleRefs.current.slice(0, dataLength).map((titleRef, index) => {
+      if (!titleRef || !nextHeight) {
+        return fallback[index] ?? 0;
+      }
+
+      const titleRect = titleRef.getBoundingClientRect();
+      const midpoint = titleRect.top - rect.top + titleRect.height * 0.55;
+      return clamp01(midpoint / nextHeight);
+    });
+
+    setTitlePositions((prev) => {
+      if (
+        prev.length === nextPositions.length
+        && prev.every((value, index) => Math.abs(value - (nextPositions[index] ?? 0)) < 0.001)
+      ) {
+        return prev;
+      }
+
+      return nextPositions;
+    });
+  }, [dataLength]);
+
+  useEffect(() => {
+    measure();
+
+    const node = trackRef.current;
+    if (!node) {
+      return;
+    }
+
+    let animationFrame: number | null = null;
+    const schedule = () => {
+      if (animationFrame !== null) {
+        cancelAnimationFrame(animationFrame);
+      }
+
+      animationFrame = requestAnimationFrame(measure);
+    };
+
+    const observer = new ResizeObserver(schedule);
+    observer.observe(node);
+    window.addEventListener("resize", schedule, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", schedule);
+      if (animationFrame !== null) {
+        cancelAnimationFrame(animationFrame);
+      }
+    };
+  }, [measure]);
+
+  const fallbackStops = Array.from({ length: dataLength }, (_, index) => {
+    const divisor = Math.max(dataLength - 1, 1);
+    return index / divisor;
+  });
+
+  const stops = titlePositions.length === dataLength ? titlePositions : fallbackStops;
 
   return (
-    <div
-      className={`w-full md:px-10 ${className}`}
-      ref={containerRef}
-    >
+    <div className={`w-full md:px-10 ${className}`} ref={sectionRef}>
       {showHeader && (title || description) && (
         <div className="max-w-7xl mx-auto py-20 px-4 md:px-8 lg:px-10">
           {title && (
-            <h2 className="text-lg md:text-4xl mb-4 text-[#DBDBDB] max-w-4xl">
-              {title}
-            </h2>
+            <h2 className="text-lg md:text-4xl mb-4 text-[#DBDBDB] max-w-4xl">{title}</h2>
           )}
           {description && (
-            <p className="text-[#DBDBDB]/70 text-sm md:text-base max-w-sm">
-              {description}
-            </p>
+            <p className="text-[#DBDBDB]/70 text-sm md:text-base max-w-sm">{description}</p>
           )}
         </div>
       )}
 
-      <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
-        {data.map((item, index) => {
-          const titleColor = titleColors[index] || titleColor0; // Fallback to first transform
-          
-          return (
-            <div
-              key={index}
-              className="flex justify-start pt-10 md:pt-32 md:gap-24"
-            >
-              <div 
-                ref={(el) => {
-                  titleRefs.current[index] = el;
-                }}
-                className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full"
-              >
-                <motion.h3 
-                  className="hidden md:block text-xl md:pl-24 md:text-5xl font-medium" 
-                  style={{ 
-                    fontFamily: 'var(--font-gotham-medium)',
-                    color: titleColor,
-                  }}
-                >
-                  {item.title}
-                </motion.h3>
-              </div>
+      <div ref={trackRef} className="relative max-w-7xl mx-auto pb-20">
+        <div className="relative">
+          <motion.div
+            className="absolute left-[31px] top-0 w-[3px] rounded-full"
+            style={{
+              height: lineHeight,
+              background: `linear-gradient(to bottom, ${lineColor}, ${lineColor}dd, ${lineColor}88)`,
+              boxShadow: `0 0 12px ${lineColor}88, 0 0 4px ${lineColor}55`,
+            }}
+          />
 
-              <div className="relative pl-24 pr-4 md:pl-4 w-full">
-                <motion.h3 
-                  className="md:hidden block text-2xl mb-4 text-left font-medium" 
-                  style={{ 
-                    fontFamily: 'var(--font-gotham-medium)',
-                    color: titleColor,
-                  }}
-                >
-                  {item.title}
-                </motion.h3>
-                {item.content}{" "}
-              </div>
-            </div>
-          );
-        })}
-        {/* Static dashed background line */}
-        <div
-          style={{
-            height: height + "px",
-          }}
-          className="absolute md:left-8 left-8 top-0 w-[2px] border-l-2 border-dashed border-[#3F3F3F]/60"
-        />
-        <ScrollLinkedAirplane containerRef={containerRef} trackHeight={height + 40} lineColor={lineColor} />
+          <div className="relative px-2">
+            {data.map((item, index) => {
+              const start = stops[index] ?? 0;
+              const nextStart = stops[index + 1] ?? 1;
+
+              return (
+                <TimelineItem
+                  key={`${item.title}-${index}`}
+                  item={item}
+                  start={start}
+                  nextStart={nextStart}
+                  color={lineColor}
+                  iconLeft={iconLeft}
+                  scrollProgress={scrollYProgress}
+                  rowRef={setRowRef(index)}
+                />
+              );
+            })}
+          </div>
+
+
+        </div>
       </div>
     </div>
   );

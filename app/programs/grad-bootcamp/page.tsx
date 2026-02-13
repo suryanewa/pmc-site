@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import { Timeline } from '@/components/ui/timeline';
 import { FadeUp, FadeIn } from '../../components/ScrollAnimations';
 import { Chip } from '../../components/Chip';
@@ -20,7 +21,7 @@ const curriculumData = [
     title: 'Sessions 1–3',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">
           Phase 1: Research &amp; Problem Framing
         </h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
@@ -41,7 +42,7 @@ const curriculumData = [
     title: 'Sessions 4–5',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">
           Phase 2: Ideation &amp; Prioritization
         </h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
@@ -61,7 +62,7 @@ const curriculumData = [
     title: 'Sessions 6–8',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">
           Phase 3: PRD, Prototyping &amp; Testing
         </h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
@@ -81,7 +82,7 @@ const curriculumData = [
     title: 'Sessions 9–10',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">
           Phase 4: Storytelling &amp; Presentations
         </h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
@@ -102,39 +103,33 @@ const curriculumData = [
 const deliverables = [
   {
     number: '01',
-    title: 'Portfolio-Ready PRD',
+    title: 'End-to-End Case Study',
     description:
-      'A complete Product Requirements Document showing your journey from user research to MVP.',
+      'A complete end-to-end product case study and a strong understanding of the PM lifecycle.',
   },
   {
     number: '02',
-    title: 'User Research Summaries',
+    title: 'Portfolio-Ready Project',
     description:
-      'Journey maps and opportunity statements backed by real user interviews and surveys.',
+      'A portfolio-ready product project you can showcase to recruiters and hiring managers.',
   },
   {
     number: '03',
-    title: 'Prioritized Feature Sets',
+    title: 'PM Frameworks Experience',
     description:
-      'Clear OKRs and success metrics with features prioritized using industry frameworks.',
+      'Hands-on experience with core PM frameworks and workflows used by industry professionals.',
   },
   {
     number: '04',
-    title: 'Working Prototype',
+    title: 'Industry PM Feedback',
     description:
-      'A working prototype or vibe-coded MVP demonstrating your product vision.',
+      'Direct feedback from industry product managers on your work and approach.',
   },
   {
     number: '05',
-    title: 'Presentation Deck',
+    title: 'Interview-Ready Artifact',
     description:
-      'A complete deck showcasing Problem, Research, Ideation, MVP, Metrics, and Next Steps.',
-  },
-  {
-    number: '06',
-    title: 'Resume-Ready Project',
-    description:
-      'A project to showcase in PM interviews and internship applications with real feedback from industry PMs.',
+      'A strong artifact to use in PM interviews and applications.',
   },
 ];
 
@@ -158,14 +153,23 @@ const applicationSteps = [
     number: '1',
     title: 'Written Application',
     description:
-      'Questions about your interests in product management, your experience, and how you think about products you use every day.',
+      'Short questions about your interest in product management, your background, and how you think about the products you use every day.',
   },
   {
     number: '2',
     title: 'Interview',
     description:
-      'A conversation to get to know you better and understand how you approach problem-solving.',
+      'A conversation to understand your motivation, problem-solving approach, and fit for a hands-on, fast-paced program.',
   },
+];
+
+const speakerCompanies: { name: string; logo?: string; invert?: boolean }[] = [
+  { name: 'Stripe', logo: 'https://svgl.app/library/stripe.svg' },
+  { name: 'Meta', logo: '/companies/meta.webp', invert: true },
+  { name: 'Datadog', logo: 'https://svgl.app/library/datadog.svg' },
+  { name: 'NBCUniversal', logo: 'https://svgl.app/library/nbc.svg', invert: true },
+  { name: 'Goldman Sachs', logo: 'https://svgl.app/library/goldman-sachs.svg', invert: true },
+  { name: 'Boost Payments' },
 ];
 
 export default function GradBootcampPage() {
@@ -182,7 +186,7 @@ export default function GradBootcampPage() {
             <FadeUp>
               <h1 className="section-title text-[#DBDBDB] text-center">
                 <TextAnimate as="span" animation="slideLeft" by="character" className="inline">
-                  Graduate PM Bootcamp
+                  Graduate Bootcamp
                 </TextAnimate>
               </h1>
             </FadeUp>
@@ -215,37 +219,35 @@ export default function GradBootcampPage() {
         description={
           <>
             <p className="mb-6">
-              The Graduate PM Bootcamp is a 10-day intensive program designed for a select cohort
-              of 10–12 NYU graduate students to experience the full product management lifecycle.
-              Participants choose a product they use and love, identify user problems, and develop
-              effective solutions from the ground up—just like product managers do every day.
+              The Graduate Product Management Bootcamp is a selective, hands-on program designed for NYU graduate students who want to break into product management and adjacent roles.
+            </p>
+            <p className="mb-6">
+              Over eight intensive sessions spread across 3–4 weeks, participants choose a product they personally use and believe can be improved, then work through the complete PM workflow — from problem discovery and user research to ideation, MVP planning, PRD writing, prototyping, and testing.
             </p>
             <p>
-              Guided by experienced industry PMs and mentored by the NYUPMC e-board, our cohorts
-              gain practical skills and bring their product ideas to life.
+              The program combines instruction from experienced industry product managers across big tech and startups, with continuous feedback and mentorship from the NYUPMC e-board. By the end, participants leave with a resume-ready, portfolio-ready PM project that reflects how product managers think, build, and communicate.
             </p>
           </>
         }
         whatToExpect={[
-          'User research through interviews, surveys, and journey mapping',
-          'Problem framing and value proposition development',
-          'Solution ideation using SCAMPER and Crazy 8s',
-          'Feature prioritization with RICE and MoSCoW',
-          'PRD development and MVP prototyping',
-          'Usability testing and metrics planning (AARRR & HEART)',
-          'Product storytelling and go-to-market strategy',
-          'Final presentations to industry PMs',
+          'Problem definition, hypothesis formulation, and clear problem framing',
+          'User research through interviews and qualitative analysis',
+          'Feature ideation and prioritization',
+          'PRD writing and MVP planning',
+          'Prototyping, testing, and metrics definition',
+          'Presenting your work and receiving feedback from industry PMs',
         ]}
-        whatToExpectIntro="You will work on:"
+        whatToExpectIntro="You will work on…"
         requirements={[
-          'An NYU graduate student',
-          '0–1 years of internship or work experience in software engineering, marketing, or design',
-          'New to Product Management — we\'re here to help you do real PM work!',
-          'Curious about how products are built and how to apply frameworks like Design Thinking, Lean Startup, and Agile',
-          'Passionate about solving user problems and creating impact',
+          'An NYU graduate student across any school',
+          'Early in your career with 0–1 years of experience in marketing, design, software engineering, or PM',
+          'Interested in product management, product marketing, design, or strategy',
+          'Curious about how real products are built and scaled',
+          'Motivated to create a strong PM portfolio project',
         ]}
-        timeCommitment="2.5 hours / session + independent work"
-        imageSrc="/bill.webp"
+        timeCommitment="~10 hours per week during the program"
+        imageSrc="/grad-bootcamp/IMG_0505.webp"
+        imageAlt="Graduate Bootcamp session"
       />
 
       {/* Deliverables */}
@@ -254,13 +256,13 @@ export default function GradBootcampPage() {
           <FadeUp>
             <h2 className="section-title text-[#DBDBDB] mb-4 text-center">
               <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
-                Join the Bootcamp to...
+                What You&apos;ll Walk Away With
               </TextAnimate>
             </h2>
           </FadeUp>
           <FadeUp delay={0.1}>
             <p className="text-lg text-[#DBDBDB]/70 leading-relaxed mb-16 max-w-2xl mx-auto text-center">
-              Produce quality deliverables and develop the core PM skills that employers demand.
+              By the end of the program, you&apos;ll have:
             </p>
           </FadeUp>
 
@@ -321,6 +323,43 @@ export default function GradBootcampPage() {
         </div>
       </section>
 
+      {/* Gallery */}
+      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-32 border-t border-[#3F3F3F]/40">
+        <div className="max-w-[1400px] mx-auto">
+          <FadeIn delay={0.2}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[#3F3F3F]/30">
+              <div className="relative bg-black aspect-[4/3] overflow-hidden">
+                <Image
+                  src="/grad-bootcamp/IMG_0509.webp"
+                  alt="Bootcamp participants collaborating"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              </div>
+              <div className="relative bg-black aspect-[4/3] overflow-hidden">
+                <Image
+                  src="/grad-bootcamp/IMG_0115.webp"
+                  alt="Bootcamp presentation session"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              </div>
+              <div className="relative bg-black aspect-[4/3] overflow-hidden">
+                <Image
+                  src="/grad-bootcamp/1761092216594.webp"
+                  alt="Bootcamp cohort group photo"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* Curriculum */}
       <section className="relative z-10 px-6 md:px-16 lg:px-24 pt-32 pb-32 min-h-[100vh]">
         <div className="max-w-[1400px] mx-auto">
@@ -344,19 +383,23 @@ export default function GradBootcampPage() {
         <ProgramApplicationSection
           accentColor={ACCENT}
           steps={applicationSteps}
-          roundsText="Our application consists of 2 rounds."
+          roundsText="Our application process has two rounds:"
           introText={
-            <p>
-              We open applications at the{' '}
-              <strong className="text-[#DBDBDB]">beginning of each semester</strong>.{' '}
-              <a
-                href="#join-us"
-                className="underline underline-offset-4 decoration-current hover:decoration-[#41C9C1] transition-colors"
-              >
-                Subscribe to our newsletter
-              </a>{' '}
-              or follow NYUPMC to be the first to know when applications go live!
-            </p>
+            <>
+              <p className="mb-4">
+                The Graduate PM Bootcamp admits a small, selective cohort to ensure high-quality feedback and mentorship. Applications open at the{' '}
+                <strong className="text-[#DBDBDB]">beginning of the semester</strong>.
+              </p>
+              <p>
+                <a
+                  href="#join-us"
+                  className="underline underline-offset-4 decoration-current hover:decoration-[#41C9C1] transition-colors"
+                >
+                  Subscribe to our newsletter
+                </a>{' '}
+                or follow NYUPMC updates to be the first to know when applications open.
+              </p>
+            </>
           }
         />
       </div>
@@ -397,6 +440,53 @@ export default function GradBootcampPage() {
                   Select cohort of NYU graduate students per session
                 </p>
               </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Featured Speakers From */}
+      <section className="relative z-10 px-6 md:px-16 lg:px-24 py-32 border-t border-[#3F3F3F]/40">
+        <div className="max-w-[1400px] mx-auto">
+          <FadeUp>
+            <h2 className="section-title text-[#DBDBDB] mb-12 text-center">
+              <TextAnimate as="span" animation="slideLeft" by="character" startOnView={true} className="inline">
+                Featured Speakers From
+              </TextAnimate>
+            </h2>
+          </FadeUp>
+
+          <FadeIn delay={0.2}>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-px bg-[#3F3F3F]/30 max-w-4xl mx-auto">
+              {speakerCompanies.map((company) => (
+                <div
+                  key={company.name}
+                  className="flex items-center justify-center h-20 bg-black hover:bg-[#3F3F3F]/10 transition-colors duration-300 px-4"
+                >
+                  {!company.logo ? (
+                    <span className="text-sm font-bold tracking-wide uppercase text-[#DBDBDB]">
+                      {company.name}
+                    </span>
+                  ) : company.logo.startsWith('http') ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={company.logo}
+                      alt={company.name}
+                      className="h-8 w-auto object-contain"
+                      style={company.invert ? { filter: 'brightness(0) invert(1)' } : undefined}
+                    />
+                  ) : (
+                    <Image
+                      src={company.logo}
+                      alt={company.name}
+                      width={120}
+                      height={32}
+                      className="h-8 w-auto object-contain"
+                      style={company.invert ? { filter: 'brightness(0) invert(1)' } : undefined}
+                    />
+                  )}
+                </div>
+              ))}
             </div>
           </FadeIn>
         </div>
@@ -466,7 +556,46 @@ export default function GradBootcampPage() {
       </section>
 
       <JoinUsSection variant="eir" newsletterSource="grad-bootcamp-program" />
-      <FAQSection variant="eir" />
+      <FAQSection
+        variant="eir"
+        items={[
+          {
+            question: 'Who can apply?',
+            answer:
+              'The Graduate Product Management Bootcamp is open to NYU graduate students across all schools and programs. It is designed for students early in their careers, typically with 0\u20131 years of experience in fields such as engineering, design, marketing, analytics, or strategy, who are exploring product management or adjacent roles. Prior PM experience is not required; the program is best suited for students who are curious about how products are built, motivated to learn by doing, and interested in creating a strong, portfolio-ready PM project.',
+          },
+          {
+            question: 'How much interaction do you get with professionals?',
+            answer:
+              'Participants have extensive, direct interaction with industry product managers throughout the program. PMs lead the sessions, teach core concepts, evaluate participant work, and provide real-time feedback during presentations. There are built-in opportunities for live Q&A and one-on-one or small-group conversations during sessions, along with access to recruiting and interview insights. Participants also benefit from networking opportunities, including an exclusive industry office tour, enabling meaningful connections with multiple PMs across companies and industries.',
+          },
+          {
+            question: 'How much individual vs. collaborative work is involved?',
+            answer:
+              'The work is primarily individual, with each participant owning their own end-to-end product case and working independently on their project. At the same time, the program is highly interactive, with structured feedback sessions and presentations where participants review each other\u2019s work, learn from different approaches, and receive critique from both the cohort and the NYU Product Management Club e-board. This setup mirrors real PM environments where individual ownership is paired with peer review and shared learning.',
+          },
+          {
+            question: 'What do the curriculum and deliverables look like?',
+            answer:
+              'The curriculum is structured around the core product management lifecycle and is delivered in a compressed, intensive format. Participants produce a clear problem statement, user research insights, feature ideas and prioritization logic, an MVP scope, a structured PRD, a testing and metrics plan, and a final product narrative. All deliverables build toward a single, cohesive PM case study designed to be portfolio- and interview-ready.',
+          },
+          {
+            question: 'Are we creating a new product?',
+            answer:
+              'No, participants work on an existing product that they already use and understand rather than creating a new one from scratch. This approach allows students to focus on realistic user problems, constraints, and tradeoffs, and to practice applying PM frameworks in real-world contexts. The emphasis is on improving and evolving an existing product, which better reflects how product managers operate in practice.',
+          },
+          {
+            question: 'How is this different from the Product Team?',
+            answer:
+              'Product Team is an undergraduate-focused, semester-long program taught by internal Product Team leads and designed to introduce PM fundamentals over time. The Graduate Product Management Bootcamp is built specifically for graduate students, taught by industry product managers, and delivered in a much more intensive and condensed format. The bootcamp operates at a graduate level, with higher expectations, faster pacing, and a stronger focus on producing a resume-ready PM artifact in a short time frame.',
+          },
+          {
+            question: 'How is this different from the Mentorship Program?',
+            answer:
+              'The Mentorship Program is a personalized and flexible experience centered on career growth, networking, and skill development through one-on-one guidance with industry product managers. It is ideal for students seeking structured support in breaking into product management, refining resumes and portfolios, preparing for internships and full-time roles, and navigating early career decisions. Unlike the Graduate Product Management Bootcamp, which is project-driven and cohort-based, the Mentorship Program focuses on individual development, long-term guidance, and building meaningful professional relationships.',
+          },
+        ]}
+      />
     </div>
   );
 }

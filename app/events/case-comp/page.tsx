@@ -118,7 +118,7 @@ const timelineData = [
     title: 'Mid\u2013Late March',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">Registration Opens</h4>
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">Registration Opens</h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
           Form your team, register through your school&apos;s product club, and
           start preparing. We&apos;ll share resources on product thinking, case
@@ -135,7 +135,7 @@ const timelineData = [
     title: 'April 9\u201310',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">First Round</h4>
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">First Round</h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
           The case prompt drops April 9th at 12:00 AM EST. You have 24 hours to
           research, strategize, and build your deck. On April 10th, teams present
@@ -152,7 +152,7 @@ const timelineData = [
     title: 'April 11\u201312',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">Final Round</h4>
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">Final Round</h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
           The second case prompt drops April 11th at 12:00 PM EST. Another
           24-hour sprint. On April 12th, top teams present online to our senior
@@ -169,7 +169,7 @@ const timelineData = [
     title: 'Post-Competition',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">What Happens Next</h4>
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">What Happens Next</h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
           Finalist decks are shared with sponsor companies (with permission). We
           facilitate warm intros between top performers, judges, and recruiting

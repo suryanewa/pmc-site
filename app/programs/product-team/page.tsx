@@ -21,7 +21,7 @@ const curriculumData = [
     title: 'Weeks 1–3',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">
           Phase 1: Research &amp; Discovery
         </h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
@@ -42,7 +42,7 @@ const curriculumData = [
     title: 'Weeks 4–6',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">
           Phase 2: Ideation &amp; Prototyping
         </h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
@@ -62,7 +62,7 @@ const curriculumData = [
     title: 'Weeks 7–8',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">
           Phase 3: Strategy &amp; Roadmapping
         </h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
@@ -82,7 +82,7 @@ const curriculumData = [
     title: 'Weeks 9–10',
     content: (
       <div>
-        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-center">
+        <h4 className="sub-section-title text-[#DBDBDB] mb-4 text-left">
           Phase 4: Presentations &amp; Feedback
         </h4>
         <p className="text-[#DBDBDB]/70 text-base md:text-lg mb-6">
