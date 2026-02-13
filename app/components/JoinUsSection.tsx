@@ -147,19 +147,15 @@ export function JoinUsSection({
               >
                 <Button
                   href="https://www.linkedin.com/company/nyu-pmc"
-                  borderColor={t.socialBorder}
                   textColor="#FFFFFF"
-                  rippleColor={t.socialRipple}
-                  className="!p-0 !h-16 !w-16 !border"
+                  className="!p-0 !h-16 !w-16"
                 >
                   <LinkedInFilled className="size-7" />
                 </Button>
                 <Button
                   href="https://discord.com/invite/xuxQUsmUQg"
-                  borderColor={t.socialBorder}
                   textColor="#FFFFFF"
-                  rippleColor={t.socialRipple}
-                  className="!p-0 !h-16 !w-16 !border"
+                  className="!p-0 !h-16 !w-16"
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -172,10 +168,8 @@ export function JoinUsSection({
                 </Button>
                 <Button
                   href="https://www.instagram.com/nyupmc"
-                  borderColor={t.socialBorder}
                   textColor="#FFFFFF"
-                  rippleColor={t.socialRipple}
-                  className="!p-0 !h-16 !w-16 !border"
+                  className="!p-0 !h-16 !w-16"
                 >
                   <InstagramFilled className="size-7" />
                 </Button>
