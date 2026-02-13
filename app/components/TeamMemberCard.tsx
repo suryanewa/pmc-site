@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'motion/react';
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import AsciiHoverEffect from '@/components/AsciiHoverEffect';
 
 interface TeamMemberCardProps {
@@ -9,8 +9,18 @@ interface TeamMemberCardProps {
   className?: string;
 }
 
-export function TeamMemberCard({ name, className = '' }: TeamMemberCardProps) {
+function TeamMemberCardComponent({ name, className = '' }: TeamMemberCardProps) {
   const [isHovered, setIsHovered] = useState(false);
+  const [enableAscii, setEnableAscii] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    setEnableAscii(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
 
   return (
     <motion.div
@@ -19,15 +29,17 @@ export function TeamMemberCard({ name, className = '' }: TeamMemberCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       whileHover={{ y: -4 }}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      <AsciiHoverEffect
-        active={isHovered}
-        colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
-        fontSize={10}
-        className="opacity-40 mix-blend-screen"
-      />
+      {enableAscii && (
+        <AsciiHoverEffect
+          active={isHovered}
+          colors="#41C9C1,rgba(219,219,219,0.7),rgba(63,63,63,0.8)"
+          fontSize={10}
+          className="opacity-40 mix-blend-screen"
+        />
+      )}
 
       <div className="relative z-10 flex flex-col gap-1">
         <h3 className="text-xl md:text-2xl font-medium text-[#DBDBDB] tracking-[-0.02em] group-hover:text-[#41C9C1] transition-colors duration-300">
@@ -37,3 +49,5 @@ export function TeamMemberCard({ name, className = '' }: TeamMemberCardProps) {
     </motion.div>
   );
 }
+
+export const TeamMemberCard = memo(TeamMemberCardComponent);
