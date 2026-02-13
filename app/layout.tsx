@@ -21,6 +21,7 @@ import { SmoothScroll } from "./components/SmoothScroll";
 import { ScrollBackground } from "./components/ScrollBackground";
 import { Providers } from "./components/Providers";
 import { PageTransition } from "./components/PageTransition";
+import { PreloaderProvider } from "./components/PreloaderContext";
 
 const gothamMedium = localFont({
   src: "../public/fonts/Gotham Medium.otf",
@@ -79,21 +80,23 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning className="dark">
         <body className={`${GeistSans.variable} ${GeistMono.variable} ${gothamMedium.variable} ${gothamBold.variable} ${satoshi.variable} ${GeistSans.className} antialiased`}>
         <Providers>
-          <a
-            href="#main"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:rounded-md focus:bg-[#3F3F3F] focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-[#DBDBDB] focus:shadow"
-          >
-            Skip to content
-          </a>
-          <Preloader />
-          <SmoothScroll>
-            <ScrollBackground />
-            <RootNavbar />
-            <PageTransition>
-              <main id="main">{children}</main>
-            </PageTransition>
-            <Footer />
-          </SmoothScroll>
+          <PreloaderProvider>
+            <a
+              href="#main"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[9999] focus:rounded-md focus:bg-[#3F3F3F] focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-[#DBDBDB] focus:shadow"
+            >
+              Skip to content
+            </a>
+            <Preloader />
+            <SmoothScroll>
+              <ScrollBackground />
+              <RootNavbar />
+              <PageTransition>
+                <main id="main">{children}</main>
+              </PageTransition>
+              <Footer />
+            </SmoothScroll>
+          </PreloaderProvider>
         </Providers>
       </body>
     </html>

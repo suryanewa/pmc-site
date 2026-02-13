@@ -42,7 +42,8 @@ const ProgramCard = memo(function ProgramCard({
   index: number;
 }) {
   const [isHovered, setIsHovered] = useState(false);
-  const [shouldLoadEmbed, setShouldLoadEmbed] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isPageVisible, setIsPageVisible] = useState(true);
   const [hasInitializedEmbed, setHasInitializedEmbed] = useState(false);
   const cardRef = useRef<HTMLAnchorElement>(null);
 
@@ -52,11 +53,10 @@ const ProgramCard = memo(function ProgramCard({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
+        setIsVisible(entry.isIntersecting);
         if (entry.isIntersecting && !hasInitializedEmbed) {
-          setShouldLoadEmbed(true);
           setHasInitializedEmbed(true);
           void initializeUnicornStudio();
-          observer.disconnect();
         }
       },
       { threshold: 0.1, rootMargin: '100px' }
@@ -65,6 +65,17 @@ const ProgramCard = memo(function ProgramCard({
     observer.observe(card);
     return () => observer.disconnect();
   }, [hasInitializedEmbed]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(document.visibilityState === 'visible');
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
+
+  const shouldRender = isVisible && isPageVisible && hasInitializedEmbed;
 
   return (
     <FadeUp delay={0.1 * index} className="h-full">
@@ -76,7 +87,7 @@ const ProgramCard = memo(function ProgramCard({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        {shouldLoadEmbed && (
+        {shouldRender && (
           <div
             data-us-project={
               program.id === 'investing'

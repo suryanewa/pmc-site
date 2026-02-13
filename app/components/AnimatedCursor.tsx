@@ -17,11 +17,24 @@ export function AnimatedCursor() {
   const [hasPointer, setHasPointer] = React.useState(false);
   const [cursorMode, setCursorMode] = React.useState<'default' | 'interactive' | 'program'>('default');
   const modeRef = React.useRef<'default' | 'interactive' | 'program'>('default');
+  const rafIdRef = React.useRef<number | null>(null);
+  const pendingModeRef = React.useRef<'default' | 'interactive' | 'program' | null>(null);
 
   const updateCursorMode = React.useCallback((next: 'default' | 'interactive' | 'program') => {
     if (modeRef.current === next) return;
-    modeRef.current = next;
-    setCursorMode(next);
+    
+    // Store pending mode and schedule update via RAF
+    pendingModeRef.current = next;
+    
+    if (rafIdRef.current === null) {
+      rafIdRef.current = requestAnimationFrame(() => {
+        if (pendingModeRef.current !== null && modeRef.current !== pendingModeRef.current) {
+          modeRef.current = pendingModeRef.current;
+          setCursorMode(pendingModeRef.current);
+        }
+        rafIdRef.current = null;
+      });
+    }
   }, []);
 
   React.useEffect(() => {
@@ -65,6 +78,11 @@ export function AnimatedCursor() {
     return () => {
       document.removeEventListener('mouseover', handleOver);
       document.removeEventListener('mouseout', handleOut);
+      // Clean up pending RAF on unmount
+      if (rafIdRef.current !== null) {
+        cancelAnimationFrame(rafIdRef.current);
+        rafIdRef.current = null;
+      }
     };
   }, [hasPointer, updateCursorMode]);
 

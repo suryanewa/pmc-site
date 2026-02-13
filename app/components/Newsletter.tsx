@@ -24,7 +24,9 @@ export function Newsletter({ source = 'website', accentColor }: NewsletterProps)
   const [isFocused, setIsFocused] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [sceneScale, setSceneScale] = useState(1);
-  const hasInitializedSceneRef = useRef(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isPageVisible, setIsPageVisible] = useState(true);
+  const [hasInitializedScene, setHasInitializedScene] = useState(false);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -32,16 +34,26 @@ export function Newsletter({ source = 'website', accentColor }: NewsletterProps)
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting || hasInitializedSceneRef.current) return;
-        hasInitializedSceneRef.current = true;
-        void initializeUnicornStudio();
-        observer.disconnect();
+        setIsVisible(entry.isIntersecting);
+        if (entry.isIntersecting && !hasInitializedScene) {
+          setHasInitializedScene(true);
+          void initializeUnicornStudio();
+        }
       },
       { threshold: 0.1, rootMargin: '200px' },
     );
 
     observer.observe(wrapper);
     return () => observer.disconnect();
+  }, [hasInitializedScene]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(document.visibilityState === 'visible');
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   useEffect(() => {
@@ -108,26 +120,30 @@ export function Newsletter({ source = 'website', accentColor }: NewsletterProps)
     }
   };
 
+  const shouldRender = isVisible && isPageVisible && hasInitializedScene;
+
   return (
     <div className="relative w-full max-w-7xl mx-auto py-48 px-8">
       <div
         className="absolute -inset-x-96 -inset-y-32 z-0 overflow-hidden rounded-[2rem]"
         ref={wrapperRef}
       >
-        <div
-          data-us-project={UNICORN_PROJECT_ID}
-          data-us-production="true"
-          className="unicorn-newsletter-scene"
-          style={{
-            width: 1440,
-            height: 900,
-            transform: `translate(-50%, -50%) scale(${sceneScale})`,
-            transformOrigin: 'center',
-            position: 'absolute',
-            left: '50%',
-            top: '50%',
-          }}
-        />
+        {shouldRender && (
+          <div
+            data-us-project={UNICORN_PROJECT_ID}
+            data-us-production="true"
+            className="unicorn-newsletter-scene"
+            style={{
+              width: 1440,
+              height: 900,
+              transform: `translate(-50%, -50%) scale(${sceneScale})`,
+              transformOrigin: 'center',
+              position: 'absolute',
+              left: '50%',
+              top: '50%',
+            }}
+          />
+        )}
       </div>
 
       <div className="relative z-10 flex flex-col items-center text-center max-w-2xl mx-auto">

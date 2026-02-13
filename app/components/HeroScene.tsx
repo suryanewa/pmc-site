@@ -8,8 +8,9 @@ const UNICORN_PROJECT_ID = "iqmKJVFD9SyCutTNbiGK";
 export function HeroScene() {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const [sceneScale, setSceneScale] = useState(1);
-  const [shouldLoadScene, setShouldLoadScene] = useState(false);
-  const hasInitializedSceneRef = useRef(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isPageVisible, setIsPageVisible] = useState(true);
+  const [hasInitializedScene, setHasInitializedScene] = useState(false);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -17,11 +18,10 @@ export function HeroScene() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !hasInitializedSceneRef.current) {
-          hasInitializedSceneRef.current = true;
-          setShouldLoadScene(true);
+        setIsVisible(entry.isIntersecting);
+        if (entry.isIntersecting && !hasInitializedScene) {
+          setHasInitializedScene(true);
           void initializeUnicornStudio();
-          observer.disconnect();
         }
       },
       { threshold: 0.1, rootMargin: '50px' }
@@ -29,6 +29,15 @@ export function HeroScene() {
 
     observer.observe(wrapper);
     return () => observer.disconnect();
+  }, [hasInitializedScene]);
+
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPageVisible(document.visibilityState === 'visible');
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   useEffect(() => {
@@ -65,12 +74,14 @@ export function HeroScene() {
     };
   }, []);
 
+  const shouldRender = isVisible && isPageVisible && hasInitializedScene;
+
   return (
     <div
       ref={wrapperRef}
       className="relative w-full h-full flex items-center justify-center overflow-visible"
     >
-      {shouldLoadScene && (
+      {shouldRender && (
         <div
           data-us-project={UNICORN_PROJECT_ID}
           data-us-production="true"

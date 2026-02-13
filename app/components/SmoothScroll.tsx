@@ -5,13 +5,16 @@ import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useIsMobile } from "../../hooks/use-is-mobile";
+import { usePreloaderComplete } from "./PreloaderContext";
 
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const lenisRef = useRef<Lenis | null>(null);
   const isMobile = useIsMobile();
+  const { isPreloaderComplete } = usePreloaderComplete();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+    if (!isPreloaderComplete) return;
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
@@ -73,7 +76,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, [isMobile]);
+  }, [isMobile, isPreloaderComplete]);
 
   return <>{children}</>;
 }

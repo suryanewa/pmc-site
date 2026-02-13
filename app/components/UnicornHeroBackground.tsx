@@ -1,6 +1,6 @@
 'use client';
 
-import { memo } from 'react';
+import { memo, useRef } from 'react';
 import { useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
 import { useIsMobile } from '../../hooks/use-is-mobile';
@@ -17,6 +17,9 @@ type UnicornHeroBackgroundProps = {
 function UnicornHeroBackgroundBase({ projectId }: UnicornHeroBackgroundProps) {
   const isMobile = useIsMobile();
   const [isEnabled, setIsEnabled] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+  const [isPageVisible, setIsPageVisible] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -28,9 +31,37 @@ function UnicornHeroBackgroundBase({ projectId }: UnicornHeroBackgroundProps) {
     });
   }, [isMobile]);
 
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || !isEnabled) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      { threshold: 0, rootMargin: '100px' }
+    );
+
+    observer.observe(container);
+    return () => observer.disconnect();
+  }, [isEnabled]);
+
+  useEffect(() => {
+    if (!isEnabled) return;
+
+    const handleVisibilityChange = () => {
+      setIsPageVisible(document.visibilityState === 'visible');
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, [isEnabled]);
+
+  const shouldRender = isEnabled && isVisible && isPageVisible;
+
   return (
-    <div className="absolute top-0 left-0 w-full h-[110vh] pointer-events-none">
-      {isEnabled && (
+    <div ref={containerRef} className="absolute top-0 left-0 w-full h-[110vh] pointer-events-none">
+      {shouldRender && (
         <UnicornScene
           projectId={projectId}
           sdkUrl={UNICORN_SDK_URL}

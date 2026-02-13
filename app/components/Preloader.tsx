@@ -3,19 +3,23 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import Image from "next/image";
+import { usePreloaderComplete } from "./PreloaderContext";
 
 const PRELOADER_SHOWN_KEY = "eeg_preloader_shown";
 
 export function Preloader() {
+  const { setPreloaderComplete } = usePreloaderComplete();
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Check if preloader was already shown this session
     if (typeof window !== "undefined") {
-      const alreadyShown = sessionStorage.getItem(PRELOADER_SHOWN_KEY);
-      if (alreadyShown) {
-        requestAnimationFrame(() => setIsLoading(false));
+      const wasPreloaderShownThisSession = sessionStorage.getItem(PRELOADER_SHOWN_KEY);
+      if (wasPreloaderShownThisSession) {
+        requestAnimationFrame(() => {
+          setIsLoading(false);
+          setPreloaderComplete(true);
+        });
         return;
       }
     }
@@ -40,6 +44,7 @@ export function Preloader() {
 
       finishTimeout = setTimeout(() => {
         setIsLoading(false);
+        setPreloaderComplete(true);
         if (typeof window !== "undefined") {
           sessionStorage.setItem(PRELOADER_SHOWN_KEY, "true");
         }
