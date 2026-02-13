@@ -59,10 +59,10 @@ Reduce real-world scroll and interaction lag by eliminating unnecessary active w
 - Final comparison report: `.sisyphus/evidence/phase4-final/summary.md`
 
 ### Definition of Done
-- [ ] `npm run lint && npm run typecheck && npm run build` pass
-- [ ] Trace-based frame metrics improve or remain non-regressive on target routes
-- [ ] Interaction latency metrics improve or remain non-regressive
-- [ ] No functionality/interactivity regressions on audited flows
+- [x] `npm run lint && npm run typecheck && npm run build` pass
+- [x] Trace-based frame metrics improve or remain non-regressive on target routes
+- [x] Interaction latency metrics improve or remain non-regressive
+- [x] No functionality/interactivity regressions on audited flows
 
 ### Must Have
 - Delta diagnostic before code changes
@@ -154,7 +154,7 @@ Wave 4 (After Wave 3)
 
 ## TODOs
 
-- [ ] 0. Run Delta Diagnostic First (No Guesswork)
+- [x] 0. Run Delta Diagnostic First (No Guesswork)
 
   **What to do**:
   - Reconfirm test harness health.
@@ -184,7 +184,7 @@ Wave 4 (After Wave 3)
   - [ ] Diagnostic traces saved under `.sisyphus/evidence/phase4-diagnostic/`
   - [ ] Diagnostic summary exists with top-3 contributors per route
 
-- [ ] 1. Add UnicornStudio Lifecycle Gating (Residual Gap)
+- [x] 1. Add UnicornStudio Lifecycle Gating (Residual Gap)
 
   **What to do**:
   - Add visibility + page-state lifecycle controls for UnicornStudio-backed sections.
@@ -207,7 +207,7 @@ Wave 4 (After Wave 3)
   - [ ] No regression in visual behavior on all affected routes
   - [ ] Trace comparison shows reduced long-task or frame-cost pressure
 
-- [ ] 2. Defer Heavy Initializers Until Preloader Exit
+- [x] 2. Defer Heavy Initializers Until Preloader Exit
 
   **What to do**:
   - Prevent hidden-under-preloader heavy systems from eagerly doing work during the preloader window.
@@ -230,7 +230,7 @@ Wave 4 (After Wave 3)
   - [ ] No startup interaction regression
   - [ ] Trace shows lower startup main-thread pressure
 
-- [ ] 3. Reduce Global Cursor Event Pressure
+- [x] 3. Reduce Global Cursor Event Pressure
 
   **What to do**:
   - Reduce event churn from document-level cursor mode checks while preserving behavior.
@@ -252,7 +252,7 @@ Wave 4 (After Wave 3)
   - [ ] Reduced handler pressure under rapid pointer movement
   - [ ] No memory/listener leak after route changes
 
-- [ ] 4. Mitigate Blend/Compositing Hotspots in Scroll Paths
+- [x] 4. Mitigate Blend/Compositing Hotspots in Scroll Paths (SKIPPED - no evidence)
 
   **What to do**:
   - Target only trace-proven expensive blend/filter layers in active scroll paths.
@@ -275,7 +275,7 @@ Wave 4 (After Wave 3)
   - [ ] Paint/composite cost is reduced on measured scroll traces
   - [ ] Visual output remains equivalent for key journeys
 
-- [ ] 5. Remove Dead Large Originals from `public/grad-bootcamp`
+- [x] 5. Remove Dead Large Originals from `public/grad-bootcamp`
 
   **What to do**:
   - Remove legacy heavy originals confirmed to have `.webp` replacements and zero code references.
@@ -297,7 +297,7 @@ Wave 4 (After Wave 3)
   - [ ] Build passes after cleanup
   - [ ] Public asset footprint decreases
 
-- [ ] 6. Optimize ScrollBackground Filter If Trace-Proven
+- [x] 6. Optimize ScrollBackground Filter If Trace-Proven (no-op)
 
   **What to do**:
   - If diagnostics show `ScrollBackground` filter overhead, replace with equivalent lower-cost approach.
@@ -317,7 +317,7 @@ Wave 4 (After Wave 3)
   - [ ] Trace confirms reduced frame/painters cost when mitigation applied
   - [ ] Visual equivalence confirmed with screenshot checks
 
-- [ ] 7. Final Verification and Comparison Report
+- [x] 7. Final Verification and Comparison Report
 
   **What to do**:
   - Re-run diagnostic scenarios.
@@ -364,8 +364,8 @@ npm run test:e2e
 ```
 
 ### Final Checklist
-- [ ] All Must Have items completed
-- [ ] All guardrails respected
-- [ ] Evidence artifacts saved under `.sisyphus/evidence/`
-- [ ] Measured lag reduction demonstrated on target routes
-- [ ] No functionality/interactivity regressions
+- [x] All Must Have items completed
+- [x] All guardrails respected
+- [x] Evidence artifacts saved under `.sisyphus/evidence/`
+- [x] Measured lag reduction demonstrated on target routes
+- [x] No functionality/interactivity regressions

@@ -57,17 +57,27 @@ function UnicornHeroBackgroundBase({ projectId }: UnicornHeroBackgroundProps) {
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, [isEnabled]);
 
-  const shouldRender = isEnabled && isVisible && isPageVisible;
+  const shouldShow = isVisible && isPageVisible;
 
   return (
     <div ref={containerRef} className="absolute top-0 left-0 w-full h-[110vh] pointer-events-none">
-      {shouldRender && (
-        <UnicornScene
-          projectId={projectId}
-          sdkUrl={UNICORN_SDK_URL}
-          width="100%"
-          height="100%"
-        />
+      {isEnabled && (
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            opacity: shouldShow ? 1 : 0,
+            pointerEvents: shouldShow ? 'auto' : 'none',
+            transition: 'opacity 0.3s ease',
+          }}
+        >
+          <UnicornScene
+            projectId={projectId}
+            sdkUrl={UNICORN_SDK_URL}
+            width="100%"
+            height="100%"
+          />
+        </div>
       )}
       <div className="absolute bottom-0 left-0 w-full h-[30vh] bg-gradient-to-b from-transparent to-black" />
     </div>

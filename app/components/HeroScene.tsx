@@ -74,14 +74,14 @@ export function HeroScene() {
     };
   }, []);
 
-  const shouldRender = isVisible && isPageVisible && hasInitializedScene;
+  const shouldShow = isVisible && isPageVisible;
 
   return (
     <div
       ref={wrapperRef}
       className="relative w-full h-full flex items-center justify-center overflow-visible"
     >
-      {shouldRender && (
+      {hasInitializedScene && (
         <div
           data-us-project={UNICORN_PROJECT_ID}
           data-us-production="true"
@@ -94,6 +94,9 @@ export function HeroScene() {
             position: "absolute",
             left: "50%",
             top: "50%",
+            opacity: shouldShow ? 1 : 0,
+            pointerEvents: shouldShow ? "auto" : "none",
+            transition: "opacity 0.3s ease",
           }}
         />
       )}

@@ -9,13 +9,15 @@ interface PreloaderContextValue {
 
 const PreloaderContext = createContext<PreloaderContextValue | undefined>(undefined);
 
-function getInitialPreloaderState(): boolean {
-  if (typeof window === "undefined") return false;
-  return sessionStorage.getItem("eeg_preloader_shown") !== null;
-}
-
 export function PreloaderProvider({ children }: { children: ReactNode }) {
-  const [isPreloaderComplete, setIsPreloaderComplete] = useState(getInitialPreloaderState);
+  const [isPreloaderComplete, setIsPreloaderComplete] = useState(false);
+
+  // Sync with sessionStorage after hydration to avoid server/client mismatch
+  useEffect(() => {
+    if (sessionStorage.getItem("eeg_preloader_shown") !== null) {
+      setIsPreloaderComplete(true);
+    }
+  }, []);
 
   return (
     <PreloaderContext.Provider
